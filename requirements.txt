@@ -1,0 +1,13 @@
+Bottleneck==1.0.0
+-e git+git@gitlab.com:eugeneyan/eutils.git@1e944409d5f1dbc3a40266d10546088fb06408b0#egg=eutils
+numpy==1.10.4
+pandas==0.17.1
+python-dateutil==2.4.2
+pytz==2015.7
+scikit-learn==0.17
+scipy==0.17.0
+six==1.10.0
+sklearn==0.0
+statsmodels==0.6.1
+wheel==0.29.0
+xgboost==0.4
