@@ -3,6 +3,8 @@ Prepares title and category data by:
 - Extracting category level 1
 - Excluding categories we're not interested in
 - Extracting category paths
+
+python -m data_prep.prep_title_category
 """
 import pandas as pd
 from utils.logger import logger
@@ -61,7 +63,7 @@ def get_category_path(category_path_list):
 if __name__ == '__main__':
 
     # Read data
-    df = pd.read_csv('../data/metadata_categories_only.csv', )
+    df = pd.read_csv('data/metadata_categories_only.csv', )
     logger.info('No. of rows in data: {}'.format(df.shape[0]))
 
     # Drop rows where title is missing
@@ -70,6 +72,7 @@ if __name__ == '__main__':
 
     # Create column for category
     df['category_lvl1'] = df['categories'].apply(get_category_lvl1)
+    logger.info('Category level 1 created')
 
     # Drop columns that have no category data
     df = df[df['category_lvl1'] != '']
@@ -77,6 +80,7 @@ if __name__ == '__main__':
 
     # Create column for category path
     df['category_path'] = df['categories'].apply(get_category_path)
+    logger.info('Category path created')
 
     # Create df of category path counts
     category_path_df = df.groupby('category_path').agg({'title': 'count'})\
@@ -90,5 +94,5 @@ if __name__ == '__main__':
     logger.info('No. of rows after dropping category_paths where count < 10: {}'.format(df.shape[0]))
 
     # Save prepared title and category data to csv
-    df.drop(labels='categories', index=1)
-    df.to_csv('../data/title_category.csv', index=False)
+    df.drop(labels='categories', index=1, inplace=True)
+    df.to_csv('data/title_category.csv', index=False)
