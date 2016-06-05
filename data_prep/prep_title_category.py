@@ -70,6 +70,14 @@ if __name__ == '__main__':
     df.dropna(how='any', inplace=True)
     logger.info('No. of rows after dropping columns with missing values: {}'.format(df.shape[0]))
 
+    # Create column for category
+    df['category_lvl1'] = df['categories'].apply(get_category_lvl1)
+    logger.info('Category level 1 created')
+
+    # Drop columns that have no category data
+    df = df[df['category_lvl1'] != '']
+    logger.info('No. of rows after dropping columns with no category data: {}'.format(df.shape[0]))
+
     # Create df of category counts
     category_df = df.groupby('category_lvl1').agg({'title': 'count'})\
         .sort_values(by='title', ascending=False).reset_index()
@@ -80,14 +88,6 @@ if __name__ == '__main__':
     # # Keep only rows where the category is in category_df
     df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
     logger.info('No. of rows after dropping categories where count < 1500: {}'.format(df.shape[0]))
-
-    # Create column for category
-    df['category_lvl1'] = df['categories'].apply(get_category_lvl1)
-    logger.info('Category level 1 created')
-
-    # Drop columns that have no category data
-    df = df[df['category_lvl1'] != '']
-    logger.info('No. of rows after dropping columns with no category data: {}'.format(df.shape[0]))
 
     # Create column for category path
     df['category_path'] = df['categories'].apply(get_category_path)
