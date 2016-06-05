@@ -4,3 +4,4 @@ data/
 notebooks/
 config.py
 *.pyc
+*.DS_store

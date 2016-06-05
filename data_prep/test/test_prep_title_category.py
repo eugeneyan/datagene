@@ -14,7 +14,7 @@ def test_get_category_lvl1():
     assert get_category_lvl1("[['A']]") == 'A'
 
     # Test when empty List
-    assert get_category_lvl1("[['']]") == 'no_category'
+    assert get_category_lvl1("[['']]") == ''
 
     logger.info('Tests for get_category_lvl1 passed!')
 
@@ -31,6 +31,6 @@ def test_get_category_path():
     assert get_category_path("[['A']]") == 'A'
 
     # Test when empty List
-    assert get_category_path("[['']]") == 'no_category'
+    assert get_category_path("[['']]") == ''
 
     logger.info('Tests for get_category_lvl1 passed!')

@@ -34,13 +34,13 @@ def get_df(path):
     :return: pandas dataframe containing json data
     """
     i = 0
-    df = {}
+    df_dict = {}
     for d in parse(path):
         df[i] = d
         i += 1
         if i % 10000 == 0:
             logger.info('{} rows processed'.format(i))
-    return pd.DataFrame.from_dict(df, orient='index')
+    return pd.DataFrame.from_dict(df_dict, orient='index')
 
 
 if __name__ == '__main__':

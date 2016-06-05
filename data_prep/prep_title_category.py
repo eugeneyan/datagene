@@ -70,6 +70,17 @@ if __name__ == '__main__':
     df.dropna(how='any', inplace=True)
     logger.info('No. of rows after dropping columns with missing values: {}'.format(df.shape[0]))
 
+    # Create df of category counts
+    category_df = df.groupby('category_lvl1').agg({'title': 'count'})\
+        .sort_values(by='title', ascending=False).reset_index()
+
+    # # Keep categories where the count of titles > 1500
+    category_df = category_df[category_df['title'] > 1500]
+
+    # # Keep only rows where the category is in category_df
+    df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
+    logger.info('No. of rows after dropping categories where count < 1500: {}'.format(df.shape[0]))
+
     # Create column for category
     df['category_lvl1'] = df['categories'].apply(get_category_lvl1)
     logger.info('Category level 1 created')
@@ -94,5 +105,5 @@ if __name__ == '__main__':
     logger.info('No. of rows after dropping category_paths where count < 10: {}'.format(df.shape[0]))
 
     # Save prepared title and category data to csv
-    df.drop(labels='categories', index=1, inplace=True)
+    df.drop(labels='categories', axis=1, inplace=True)
     df.to_csv('data/title_category.csv', index=False)
