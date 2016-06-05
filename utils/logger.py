@@ -4,9 +4,8 @@ Prints logs to screen via ch (channel handler), and saves logs to via fh (file h
 """
 import logging
 
-
 # set name of log file
-log_file = 'eutils.log'
+log_file = 'utils.log'
 
 # Logger config
 logger = logging.getLogger('__log__')

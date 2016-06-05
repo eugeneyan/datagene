@@ -7,14 +7,15 @@ python -m data_prep.metadata_json_to_csv
 """
 import pandas as pd
 import gzip
-from eutils.utils.logger import logger
+from utils.logger import logger
 
 
 def parse(path):
     """
     (path) -> generator
 
-    Parses path to gzip folder (containing json data) and returns a generator that yields each line of json
+    Parses path to gzip folder (containing json data) and returns a generator that yields each line of json\
+
     :param path: path to zipped json data
     :return: generator yielding each line of json
     """
@@ -23,12 +24,14 @@ def parse(path):
         yield eval(l)
 
 
-def getDF(path):
+def get_df(path):
     """
     (path) -> pandas dataframe
+
     Parses path to gzip folder (containing json data) and returns pandas dataframe of json data
+
     :param path:
-    :return:
+    :return: pandas dataframe containing json data
     """
     i = 0
     df = {}
@@ -43,7 +46,7 @@ def getDF(path):
 if __name__ == '__main__':
 
     # Get pandas dataframe from metadata json zip file
-    df = getDF('data/metadata.json.gz')
+    df = get_df('data/metadata.json.gz')
     logger.info('df created')
 
     # Save full data to csv

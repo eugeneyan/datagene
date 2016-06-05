@@ -9,7 +9,7 @@ import time
 from email import utils
 from email.mime.text import MIMEText
 
-from eutils import config
+from utils import config
 
 
 class SMTPConnection(object):
@@ -121,5 +121,5 @@ def send_email(subject, content, to, user_email=config.MY_EMAIL, user_password=c
 if __name__ == '__main__':
     # pylint: disable=C0301
     # send_email(subject='test2', content='test_content', to=['eugene.yan@lazada.com'])
-    send_email(subject='[eutils] eutils email test succeeded',
-               content='eutils email test succeeded', to=['eugeneyanziyou@gmail.com'])
+    send_email(subject='[utils] utils email test succeeded',
+               content='utils email test succeeded', to=['eugeneyanziyou@gmail.com'])
