@@ -7,6 +7,7 @@ python -m data_prep.metadata_json_to_csv
 """
 import pandas as pd
 import gzip
+import sys
 from utils.logger import logger
 
 
@@ -36,7 +37,7 @@ def get_df(path):
     i = 0
     df_dict = {}
     for d in parse(path):
-        df[i] = d
+        df_dict[i] = d
         i += 1
         if i % 10000 == 0:
             logger.info('{} rows processed'.format(i))
@@ -54,6 +55,6 @@ if __name__ == '__main__':
     logger.info('full df saved')
 
     # Save only title and categories to csv
-    df = df[['title', 'categories']]
+    df = df[['asin', 'title', 'categories']]
     df.to_csv('data/metadata_categories_only.csv', index=False)
     logger.info('category df saved')
