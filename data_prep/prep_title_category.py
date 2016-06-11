@@ -114,6 +114,9 @@ if __name__ == '__main__':
     # Drop category_paths where the count of titles < 10
     category_path_df = category_path_df[category_path_df['title'] >= 10]
 
+    # Exclude category paths where category_path is at top level
+    category_path_df = category_path_df[category_path_df['category_path'].str.contains('->')]
+
     # Keep only rows where the category is in category_df
     df = df[df['category_path'].isin(category_path_df['category_path'])]
     logger.info('No. of rows after dropping category_paths where count < 10: {}'.format(df.shape[0]))

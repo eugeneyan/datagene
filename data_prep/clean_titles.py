@@ -319,6 +319,31 @@ def remove_stopwords(df, stopwords, title='title_processed'):
     return df
 
 
+# Remove words that are fully numeric
+def remove_numeric(title):
+    """ (list(str)) -> list(str)
+
+    Remove words which are fully numeric
+
+    :param title:
+    :return:
+
+    >>> remove_numeric(['A', 'B', '1', '123', 'C'])
+    ['A', 'B', 'C']
+    >>> remove_numeric(['1', '2', '3', '123'])
+    []
+    """
+
+    return [token for token in title if not token.isdigit()]
+
+
+# Remove words that are solely numeric from df
+def remove_numeric_from_df(df, title='title_processed'):
+    df[title] = df[title].apply(remove_numeric)
+    logger.info('{} solely numeric words removed'.format(title))
+    return df
+
+
 # Remove words with character count below threshold from string
 def remove_chars(title, word_len=1):
     """ (list(str), int) -> list(str)
@@ -521,6 +546,10 @@ if __name__ == '__main__':
     # Remove stopwords (includes spam, colours)
     df = remove_stopwords(df, stopwords=STOP_WORDS, title='title_processed')
     title_metrics(df, 'Remove stopwords')
+
+    # Remove words that are solely numeric
+    df = remove_numeric_from_df(df, title='title_processed')
+    title_metrics(df, 'Remove numerics')
 
     # Remove words with character length == 1
     df = remove_one_char_words(df, word_len=1, title='title_processed')

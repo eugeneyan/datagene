@@ -43,6 +43,13 @@ def test_remove_words():
     logger.info('Test for removal of stop words passed!')
 
 
+def test_remove_numeric():
+
+    assert remove_numeric(['A', 'B', '1', '123', 'C']) == ['A', 'B', 'C']
+    assert remove_numeric(['1', '2', '3', '123']) == []
+    logger.info('Test for remove numeric passed!')
+
+
 def test_remove_chars():
 
     # Test removal of 1 char words
