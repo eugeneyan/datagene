@@ -4,9 +4,11 @@ Prepares title and category data by:
 - Excluding categories we're not interested in
 - Extracting category paths
 
-python -m data_prep.prep_title_category
+python -m data_prep.prep_title_category data metadata_categories_only title_category
 """
 import pandas as pd
+import sys
+import os
 from utils.logger import logger
 
 
@@ -62,8 +64,14 @@ def get_category_path(category_path_list):
 
 if __name__ == '__main__':
 
+    data_dir = sys.argv[1]
+    input_file = sys.argv[2]
+    output_file = sys.argv[3]
+    input_file_path = os.path.join(data_dir, input_file + '.csv')
+    output_file_path = os.path.join(data_dir, output_file + '.csv')
+
     # Read data
-    df = pd.read_csv('data/metadata_categories_only.csv', )
+    df = pd.read_csv(input_file_path)
     logger.info('No. of rows in data: {}'.format(df.shape[0]))
 
     # Drop rows where title is missing
@@ -106,4 +114,4 @@ if __name__ == '__main__':
 
     # Save prepared title and category data to csv
     df.drop(labels='categories', axis=1, inplace=True)
-    df.to_csv('data/title_category.csv', index=False)
+    df.to_csv(output_file_path, index=False)

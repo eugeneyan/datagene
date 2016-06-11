@@ -3,11 +3,12 @@ Reads zipped json data into a pandas dataframe and saves:
 - Full dataframe in metadata.csv
 - Dataframe with only title and category in metadata_categories_only.csv
 
-python -m data_prep.metadata_json_to_csv
+python -m data_prep.json_to_csv data metadata
 """
 import pandas as pd
 import gzip
 import sys
+import os
 from utils.logger import logger
 
 
@@ -46,15 +47,20 @@ def get_df(path):
 
 if __name__ == '__main__':
 
+    data_dir = sys.argv[1]
+    json_file = sys.argv[2]
+    csv_path = os.path.join(data_dir, json_file + '.csv')
+    csv_categories_path = os.path.join(data_dir, json_file + '_categories_only.csv')
+
     # Get pandas dataframe from metadata json zip file
-    df = get_df('data/metadata.json.gz')
+    df = get_df(os.path.join(data_dir, json_file + '.json.gz'))
     logger.info('df created')
 
     # Save full data to csv
-    df.to_csv('data/metadata.csv', index=False)
+    df.to_csv(csv_path, index=False)
     logger.info('full df saved')
 
     # Save only title and categories to csv
     df = df[['asin', 'title', 'categories']]
-    df.to_csv('data/metadata_categories_only.csv', index=False)
+    df.to_csv(csv_categories_path, index=False)
     logger.info('category df saved')
