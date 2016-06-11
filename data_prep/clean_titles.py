@@ -33,7 +33,7 @@ from utils.create_dir import create_output_dir
 
 # Initialize stopwords
 STOP_WORDS = set(stopwords.words('english'))
-SPAM_WORDS = {}  # No spam words for now
+SPAM_WORDS = {'import', 'export', 'day', 'week', 'month', 'year', 'new', 'free', 'international', 'intl', 'oem', ''}
 COLOURS = set(matplotlib.colors.cnames.keys())
 STOP_WORDS = STOP_WORDS.union(SPAM_WORDS).union(COLOURS)
 
