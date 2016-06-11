@@ -16,16 +16,16 @@ Cleans SKUs titles by:
 - Remove empty titles
 
 Sample call:
-python -m data_prep.clean_titles
+python -m data_prep.clean_titles data title_category
 """
 import pandas as pd
 import numpy as np
 import regex as re
-import os
 from nltk.corpus import stopwords
 import unicodedata
 import string
 import sys
+import os
 import matplotlib
 from utils.logger import logger
 from utils.create_dir import create_output_dir
@@ -39,7 +39,7 @@ STOP_WORDS = STOP_WORDS.union(SPAM_WORDS).union(COLOURS)
 
 
 # Load data
-def load_data(csv_file_dir, csv_file, sku_id='id', category='category_path', title='title'):
+def load_data(input_file_path, sku_id='id', category='category_path', title='title'):
     """ (str, str, str, str, str) -> DataFrame
 
     Returns a dataframe after loading data from csv.
@@ -53,20 +53,16 @@ def load_data(csv_file_dir, csv_file, sku_id='id', category='category_path', tit
     :return:
     """
 
-    csv_file_path = os.path.join(csv_file_dir, csv_file)
-    logger.info(csv_file_path)
+    logger.info('Reading file from: {}'.format(input_file_path))
 
-    # product_df = pd.read_csv(csv_file_path, usecols=[sku_id, title, category],
-    #                          dtype={sku_id: 'object', category: 'object', title: 'object'})
-    product_df = pd.read_csv(csv_file_path, usecols=[title, category],
-                             dtype={category: 'object', title: 'object'})
+    product_df = pd.read_csv(input_file_path, usecols=[sku_id, title, category],
+                             dtype={sku_id: 'object', category: 'object', title: 'object'})
 
     logger.info('Columns in input file: %s', product_df.columns)
     logger.debug(product_df.head())
 
     # Keep only necessary columns
-    # product_df = product_df[[sku_id, title, category]]
-    product_df = product_df[[title, category]]
+    product_df = product_df[[sku_id, title, category]]
 
     return product_df
 
@@ -446,7 +442,7 @@ def split_to_keep_and_discard(df, title='title_processed_str', category='categor
 
     # Merge in counts of category and sku
     df = df.merge(cat_count_df, how='left', left_on=title, right_on=title)\
-        .merge(sku_count_df, how='left', left_on=title, right_on=title)
+         .merge(sku_count_df, how='left', left_on=title, right_on=title)
 
     # Split into df for keeping and discarding, and sort
     discard_df = df[df['category_count'] > 1]
@@ -463,7 +459,7 @@ def split_to_keep_and_discard(df, title='title_processed_str', category='categor
     return keep_df, discard_df
 
 
-def save_keep_and_discard(keep_df, discard_df, csv_file_dir, csv_file):
+def save_keep_and_discard(keep_df, discard_df, data_dir, input_file):
     """ (DataFrame, DataFrame, str, str) -> NoneType
 
     Saves the 'keep' and 'discard' DataFrame to csv
@@ -476,17 +472,17 @@ def save_keep_and_discard(keep_df, discard_df, csv_file_dir, csv_file):
     """
 
     # read output and check if empty; if not empty, use last sku processed
-    output_dir_path = os.path.join(csv_file_dir, 'output')
+    output_dir_path = os.path.join(data_dir, 'output')
     logger.info(output_dir_path)
 
-    keep_file = os.path.basename(csv_file.split('.')[0] + '_keep' + '.csv')
+    keep_file = os.path.basename(input_file + '_keep.csv')
     keep_file_path = os.path.join(output_dir_path, keep_file)
 
-    discard_file = os.path.basename(csv_file.split('.')[0] + '_discard' + '.csv')
+    discard_file = os.path.basename(input_file + '_discard.csv')
     discard_file_path = os.path.join(output_dir_path, discard_file)
 
     # Create output directory
-    create_output_dir(csv_file_dir)
+    create_output_dir(data_dir)
 
     keep_df.to_csv(keep_file_path, index=False)
     discard_df.to_csv(discard_file_path, index=False)
@@ -494,13 +490,15 @@ def save_keep_and_discard(keep_df, discard_df, csv_file_dir, csv_file):
 
 
 if __name__ == '__main__':
-    csv_file_dir = 'data/'
-    csv_file = 'title_category.csv'
+
+    data_dir = sys.argv[1]
+    input_file = sys.argv[2]
+    input_path = os.path.join(data_dir, input_file + '.csv')
     title_col = 'title'
     category_col = 'category_path'
 
     # Load data
-    df = load_data(csv_file_dir, csv_file)
+    df = load_data(input_path, sku_id='asin')
     df = create_processed_column(df, title=title_col)
     title_metrics(df, 'Data loaded')
 
@@ -540,4 +538,4 @@ if __name__ == '__main__':
     keep_df, discard_df = split_to_keep_and_discard(df, title='title_processed_str', category=category_col)
 
     # Save to output directory in csv format
-    save_keep_and_discard(keep_df, discard_df, csv_file_dir, csv_file)
+    save_keep_and_discard(keep_df, discard_df, data_dir, input_file)
