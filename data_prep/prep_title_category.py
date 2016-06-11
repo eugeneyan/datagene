@@ -93,9 +93,15 @@ if __name__ == '__main__':
     # # Keep categories where the count of titles > 1500
     category_df = category_df[category_df['title'] > 1500]
 
+    # Exclude categories where titles are not indicative of category
+    category_df = category_df[category_df['category_lvl1'] != 'Books']
+    category_df = category_df[category_df['category_lvl1'] != 'CDs & Vinyl']
+    category_df = category_df[category_df['category_lvl1'] != 'Movies & TV']
+
     # # Keep only rows where the category is in category_df
     df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
-    logger.info('No. of rows after dropping categories where count < 1500: {}'.format(df.shape[0]))
+    logger.info('No. of rows after dropping categories where count < 1500 and dropping'
+                'Books, CDs & Vinyl, and Movies & TV: {}'.format(df.shape[0]))
 
     # Create column for category path
     df['category_path'] = df['categories'].apply(get_category_path)
