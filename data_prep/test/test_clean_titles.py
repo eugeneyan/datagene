@@ -20,10 +20,16 @@ def test_encode_string():
 def test_tokenize_title_string():
 
     # Test regular tokenization of words
-    assert tokenize_title_string('hello world') == ['hello', 'world']
+    assert tokenize_title_string('hello world', '-.') == ['hello', 'world']
 
     # Test tokenization with special characters
-    assert tokenize_title_string('test hyphen-word 0.9 20% green/blue') == \
+    assert tokenize_title_string('test hyphen-word 0.9 20% green/blue', '') == \
+        ['test', 'hyphen', 'word', '0', '9', '20', 'green', 'blue']
+
+    assert tokenize_title_string('test hyphen-word 0.9 20% green/blue', '-.') == \
+        ['test', 'hyphen-word', '0.9', '20', 'green', 'blue']
+
+    assert tokenize_title_string('test hyphen-word 0.9 20% green/blue', '-./%') == \
         ['test', 'hyphen-word', '0.9', '20%', 'green/blue']
 
     logger.info('Tests for tokenize string passed!')
@@ -32,21 +38,21 @@ def test_tokenize_title_string():
 def test_remove_words():
 
     # Test removal of stop words
-    assert remove_words(['python', 'is', 'the', 'best'], STOP_WORDS) == ['python', 'best']
+    assert remove_words_list(['python', 'is', 'the', 'best'], STOP_WORDS) == ['python', 'best']
 
     # Test removal of colours
-    assert remove_words(['grapes', 'come', 'in', 'purple', 'and', 'green'], STOP_WORDS) == ['grapes', 'come']
+    assert remove_words_list(['grapes', 'come', 'in', 'purple', 'and', 'green'], STOP_WORDS) == ['grapes', 'come']
 
     # Test removal of spam words
-    assert remove_words(['spammy', 'title', 'intl', 'import', 'export'], STOP_WORDS) == ['spammy', 'title']
+    assert remove_words_list(['spammy', 'title', 'intl', 'import', 'export'], STOP_WORDS) == ['spammy', 'title']
 
     logger.info('Test for removal of stop words passed!')
 
 
 def test_remove_numeric():
 
-    assert remove_numeric(['A', 'B', '1', '123', 'C']) == ['A', 'B', 'C']
-    assert remove_numeric(['1', '2', '3', '123']) == []
+    assert remove_numeric_list(['A', 'B', '1', '123', 'C']) == ['A', 'B', 'C']
+    assert remove_numeric_list(['1', '2', '3', '123']) == []
     logger.info('Test for remove numeric passed!')
 
 

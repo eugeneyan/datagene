@@ -27,6 +27,8 @@ import string
 import sys
 import os
 import matplotlib
+from HTMLParser import HTMLParser
+from sklearn.cross_validation import train_test_split
 from utils.logger import logger
 from utils.create_dir import create_output_dir
 
@@ -36,6 +38,9 @@ STOP_WORDS = set(stopwords.words('english'))
 SPAM_WORDS = {'import', 'export', 'day', 'week', 'month', 'year', 'new', 'free', 'international', 'intl', 'oem', ''}
 COLOURS = set(matplotlib.colors.cnames.keys())
 STOP_WORDS = STOP_WORDS.union(SPAM_WORDS).union(COLOURS)
+
+# Initialize html parser
+html_parser = HTMLParser()
 
 
 # Load data
@@ -58,7 +63,8 @@ def load_data(input_file_path, sku_id='id', category='category_path', title='tit
     product_df = pd.read_csv(input_file_path, usecols=[sku_id, title, category],
                              dtype={sku_id: 'object', category: 'object', title: 'object'})
 
-    logger.info('Columns in input file: %s', product_df.columns)
+    logger.info('Columns in input file: {}'.format(product_df.columns))
+    logger.info('Rows in input file: {}'.format(product_df.shape[0]))
     logger.debug(product_df.head())
 
     # Keep only necessary columns
@@ -192,7 +198,7 @@ def remove_no_category(df, category='category_path'):
 
 
 # Function to encode string
-def encode_string(title):
+def encode_string(title, parser = html_parser):
     """ (str) -> str
 
     Returns a string that is encoded as ascii
@@ -206,10 +212,13 @@ def encode_string(title):
     'Creme brulee'
     >>> encode_string('åöûëî')
     'aouei'
+    >>> encode_string('Crème brûlée &quot; &amp; &nbsp;')
+    'Creme brulee " & '
     """
 
     try:
         encoded_title = unicodedata.normalize('NFKD', unicode(title, 'utf-8', 'ignore')).encode('ascii', 'ignore')
+        encoded_title = parser.unescape(encoded_title).encode('ascii', 'ignore')
     except TypeError:  # if title is missing and a float
         encoded_title = 'NA'
 
@@ -228,7 +237,7 @@ def encode_title(df, title='title_processed'):
     """
 
     df[title] = df[title].apply(encode_string)
-    logger.info('{} encoded'.format(title))
+    logger.info('{}: encoded'.format(title))
     return df
 
 
@@ -244,12 +253,12 @@ def lowercase_title(df, title='title_processed'):
     """
 
     df[title] = df[title].apply(string.lower)
-    logger.info('{} lowercased'.format(title))
+    logger.info('{}: lowercased'.format(title))
     return df
 
 
 # Tokenize strings
-def tokenize_title_string(title):
+def tokenize_title_string(title, excluded):
     """ (str) -> list(str)
 
     Returns a list of string tokens given a string.
@@ -258,17 +267,20 @@ def tokenize_title_string(title):
     :param title:
     :return:
 
-    >>> tokenize_title_string('hello world')
+    >>> tokenize_title_string('hello world', '-.')
     ['hello', 'world']
-    >>> tokenize_title_string('test hyphen-word 0.9 20% green/blue')
+    >>> tokenize_title_string('test hyphen-word 0.9 20% green/blue', '')
+    ['test', 'hyphen', 'word', '0', '9', '20', 'green', 'blue']
+    >>> tokenize_title_string('test hyphen-word 0.9 20% green/blue', '.-')
+    ['test', 'hyphen-word', '0.9', '20', 'green', 'blue']
+    >>> tokenize_title_string('test hyphen-word 0.9 20% green/blue', '-./%')
     ['test', 'hyphen-word', '0.9', '20%', 'green/blue']
     """
 
-    return re.split("[^-/.%\w]+", title)
-
+    return re.split("[^" + excluded + "\w]+", title)
 
 # Tokenize titles in df
-def tokenize_title(df, title='title'):
+def tokenize_title(df, excluded, title='title'):
     """ (DataFrame, str) -> DataFrame
 
     Returns a dataframe where the title has been tokenized based on function tokenize_title_string
@@ -278,13 +290,13 @@ def tokenize_title(df, title='title'):
     :return:
     """
 
-    df[title] = df[title].apply(tokenize_title_string)
-    logger.info('{} tokenized'.format(title))
+    df[title] = df[title].apply(tokenize_title_string, args=(excluded, ))
+    logger.info('{}: tokenized'.format(title))
     return df
 
 
 # Remove stopwords from string
-def remove_words(title, words_to_remove):
+def remove_words_list(title, words_to_remove):
     """ (list(str), set) -> list(str)
 
     Returns a list of tokens where the stopwords/spam words/colours have been removed
@@ -292,11 +304,11 @@ def remove_words(title, words_to_remove):
     :param title:
     :param words_to_remove:
     :return:
-    >>> remove_words(['python', 'is', 'the', 'best'], STOP_WORDS)
+    >>> remove_words_list(['python', 'is', 'the', 'best'], STOP_WORDS)
     ['python', 'best']
-    >>> remove_words(['grapes', 'come', 'in', 'purple', 'and', 'green'], STOP_WORDS)
+    >>> remove_words_list(['grapes', 'come', 'in', 'purple', 'and', 'green'], STOP_WORDS)
     ['grapes', 'come']
-    >>> remove_words(['spammy', 'title', 'intl', 'buyincoins', 'export'], STOP_WORDS)
+    >>> remove_words_list(['spammy', 'title', 'intl', 'buyincoins', 'export'], STOP_WORDS)
     ['spammy', 'title']
     """
 
@@ -314,13 +326,13 @@ def remove_stopwords(df, stopwords, title='title_processed'):
     :param title:
     :return:
     """
-    df[title] = df[title].apply(remove_words, args=(stopwords, ))
-    logger.info('{} stopwords removed'.format(title))
+    df[title] = df[title].apply(remove_words_list, args=(stopwords, ))
+    logger.info('{}: stopwords removed'.format(title))
     return df
 
 
 # Remove words that are fully numeric
-def remove_numeric(title):
+def remove_numeric_list(title):
     """ (list(str)) -> list(str)
 
     Remove words which are fully numeric
@@ -328,9 +340,9 @@ def remove_numeric(title):
     :param title:
     :return:
 
-    >>> remove_numeric(['A', 'B', '1', '123', 'C'])
+    >>> remove_numeric_list(['A', 'B', '1', '123', 'C'])
     ['A', 'B', 'C']
-    >>> remove_numeric(['1', '2', '3', '123'])
+    >>> remove_numeric_list(['1', '2', '3', '123'])
     []
     """
 
@@ -338,9 +350,9 @@ def remove_numeric(title):
 
 
 # Remove words that are solely numeric from df
-def remove_numeric_from_df(df, title='title_processed'):
-    df[title] = df[title].apply(remove_numeric)
-    logger.info('{} solely numeric words removed'.format(title))
+def remove_numeric(df, title='title_processed'):
+    df[title] = df[title].apply(remove_numeric_list)
+    logger.info('{}: solely numeric words removed'.format(title))
     return df
 
 
@@ -377,7 +389,7 @@ def remove_one_char_words(df, word_len=1, title='title_processed'):
     """
 
     df[title] = df[title].apply(remove_chars, args=(word_len, ))
-    logger.info('{} tokens with char length equals {} removed'.format(title, word_len))
+    logger.info('{}: tokens with char length equals {} removed'.format(title, word_len))
     return df
 
 
@@ -479,6 +491,9 @@ def split_to_keep_and_discard(df, title='title_processed_str', category='categor
     # Add impurity count for discard_df
     discard_df['impurity'] = discard_df['category_count'] / discard_df['sku_count']
 
+    # Remove unnecessary columns in keep_df
+    keep_df = keep_df[['asin', 'title', 'category_path']]
+
     logger.info('Split into keep and discard')
     logger.info('Size of keep: {} | Size of discard: {}'.format(keep_df.shape[0], discard_df.shape[0]))
     return keep_df, discard_df
@@ -496,7 +511,7 @@ def save_keep_and_discard(keep_df, discard_df, data_dir, input_file):
     :return:
     """
 
-    # read output and check if empty; if not empty, use last sku processed
+    # create output directory path
     output_dir_path = os.path.join(data_dir, 'output')
     logger.info(output_dir_path)
 
@@ -512,6 +527,46 @@ def save_keep_and_discard(keep_df, discard_df, data_dir, input_file):
     keep_df.to_csv(keep_file_path, index=False)
     discard_df.to_csv(discard_file_path, index=False)
     logger.info('Keep and discard saved to csv here: {}'.format(output_dir_path))
+
+
+def save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category='category_path'):
+    """ (DataFrame, str, str, str) -> NoneType
+
+    Splits keep DataFrame into train and test
+
+    :param keep_df:
+    :param data_dir:
+    :param input_file:
+    :param category:
+    :return:
+    """
+
+    # create output directory path
+    output_dir_path = os.path.join(data_dir, 'output')
+    logger.info(output_dir_path)
+    logger.info('Number of rows in keep initially: {}'.format(keep_df.shape[0]))
+
+    # Count the number of titles in each category_path
+    category_df = keep_df.groupby(category).agg({'title': 'count'}).reset_index()
+    category_df = category_df[category_df['title'] > 5]
+
+    # Keep only rows where the category is in category_df
+    keep_df = keep_df[keep_df[category].isin(category_df[category])]
+    logger.info('Number of rows in keep after excluding titles where category count < 5: {}'.format(keep_df.shape[0]))
+
+    # Split keep into train and test
+    train, test = train_test_split(keep_df, test_size=test_size, stratify=keep_df[category], random_state=1368)
+    logger.info('Train test split done: Train({}), Test({})'.format(train.shape, test.shape))
+
+    train_file = os.path.basename(input_file + '_train.csv')
+    train_file_path = os.path.join(output_dir_path, train_file)
+
+    test_file = os.path.basename(input_file + '_test.csv')
+    test_file_path = os.path.join(output_dir_path, test_file)
+
+    train.to_csv(train_file_path, index=False)
+    test.to_csv(test_file_path, index=False)
+    logger.info('Train and test saved to csv here: {}'.format(output_dir_path))
 
 
 if __name__ == '__main__':
@@ -548,7 +603,7 @@ if __name__ == '__main__':
     title_metrics(df, 'Remove stopwords')
 
     # Remove words that are solely numeric
-    df = remove_numeric_from_df(df, title='title_processed')
+    df = remove_numeric(df, title='title_processed')
     title_metrics(df, 'Remove numerics')
 
     # Remove words with character length == 1
@@ -568,3 +623,6 @@ if __name__ == '__main__':
 
     # Save to output directory in csv format
     save_keep_and_discard(keep_df, discard_df, data_dir, input_file)
+
+    # Save train and test
+    save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category=category_col)
