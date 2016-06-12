@@ -27,10 +27,10 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
         return pickle.load(handle)
 
 
-tfidf_dict = load_dict('', 'tfidf_dict_samp')
+# tfidf_dict = load_dict('categorize', 'tfidf_dict_samp')
 
 
-class CategorizeSingle:
+class Title:
 
     def __init__(self, title):
         self.title = title
@@ -41,13 +41,13 @@ class CategorizeSingle:
         Returns the title after it has been prepared by the process from clean titles
 
         :return:
-        >>> CategorizeSingle('Crème brûlée &quot; &amp; &nbsp;').prepare()
+        >>> Title('Crème brûlée &quot; &amp; &nbsp;').prepare()
         ['creme', 'brulee']
-        >>> CategorizeSingle('test hyphen-word 0.9 20% green/blue').prepare()
+        >>> Title('test hyphen-word 0.9 20% green/blue').prepare()
         ['test', 'hyphen-word', '0.9']
-        >>> CategorizeSingle('grapes come in purple and green').prepare()
+        >>> Title('grapes come in purple and green').prepare()
         ['grapes', 'come']
-        >>> CategorizeSingle('what remains of a word ! if wordlen is 2').prepare()
+        >>> Title('what remains of a word ! if wordlen is 2').prepare()
         ['remains', 'word', 'wordlen']
         """
 
@@ -57,16 +57,16 @@ class CategorizeSingle:
         self.title = remove_words_list(self.title, STOP_WORDS)
         self.title = remove_numeric_list(self.title)
         self.title = remove_chars(self.title, 1)
-        logger.info(self.title)
+        logger.info('Title after preparation: {}'.format(self.title))
         return self
 
-    def categorize(self):
+    def categorize(self, tfidf_dict):
         """ (CategorizeSingle(str)) -> dict
 
         Categorizes prepared title and returns a dictionary of form {1: 'Cat1', 2: 'Cat2', 3: 'Cat3}
 
         :return:
-        >>> CategorizeSingle('This is a bookshelf with wood and a clock').prepare().categorize()
+        >>> Title('This is a bookshelf with wood and a clock').prepare().categorize()
         {1: 'Electronics -> Home Audio -> Stereo Components -> Speakers -> Bookshelf Speakers',
         2: 'Electronics -> Computers & Accessories -> Data Storage -> USB Flash Drives',
         3: 'Home & Kitchen -> Furniture -> Home Office Furniture -> Bookcases'}
@@ -80,7 +80,7 @@ class CategorizeSingle:
         return result_dict
 
 
-def categorize_single(title):
+def categorize_single(title, tfidf_dict):
     """ (str) -> dict
 
     Initializes given title as CategorizeSingle class and returns a dictionary of top 3 options
@@ -88,4 +88,4 @@ def categorize_single(title):
     :param title:
     :return:
     """
-    return CategorizeSingle(title).prepare().categorize()
+    return Title(title).prepare().categorize(tfidf_dict)
