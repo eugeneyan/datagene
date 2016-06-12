@@ -5,7 +5,7 @@ Returns dictionary model in pickle format.
 Cleans and prepares titles via the same approach in data_prep.clean titles
 
 Sample call:
-python -m categorize.create_dict data/output title_category_keep_samp tfidf_dict
+python -m categorize.create_dict data/output title_category_keep categorize tfidf_dict
 """
 import pandas as pandas
 import math
@@ -148,6 +148,7 @@ def save_dict(tfidf_dict, output_dir, output_name):
     :param output_name:
     :return:
     """
+    output_dir = 'categorize'
     output_dir_path = os.path.join(output_dir, output_name + '.pickle')
 
     with open(output_dir_path, 'wb') as handle:
@@ -159,7 +160,8 @@ if __name__ == '__main__':
 
     data_dir = sys.argv[1]
     input_file = sys.argv[2]
-    output_dict_name = sys.argv[3]
+    output_dir = sys.argv[3]
+    output_dict_name = sys.argv[4]
     input_path = os.path.join(data_dir, input_file + '.csv')
     title_col = 'title'
     category_col = 'category_path'

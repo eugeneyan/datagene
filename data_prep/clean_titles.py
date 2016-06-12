@@ -16,7 +16,7 @@ Cleans SKUs titles by:
 - Remove empty titles
 
 Sample call:
-python -m data_prep.clean_titles data title_category
+python -m data_prep.clean_titles data title_category_samp
 """
 import pandas as pd
 import numpy as np
@@ -40,7 +40,7 @@ COLOURS = set(matplotlib.colors.cnames.keys())
 STOP_WORDS = STOP_WORDS.union(SPAM_WORDS).union(COLOURS)
 
 # Initialize html parser
-html_parser = HTMLParser()
+HTML_PARSER = HTMLParser()
 
 
 # Load data
@@ -198,7 +198,7 @@ def remove_no_category(df, category='category_path'):
 
 
 # Function to encode string
-def encode_string(title, parser = html_parser):
+def encode_string(title, parser=HTML_PARSER):
     """ (str) -> str
 
     Returns a string that is encoded as ascii
@@ -226,7 +226,7 @@ def encode_string(title, parser = html_parser):
 
 
 # Encode titles in df
-def encode_title(df, title='title_processed'):
+def encode_title(df, title='title_processed', parser=HTML_PARSER):
     """ (DataFrame, str) -> DataFrame
 
     Returns a dataframe where the title has been encoded.
@@ -236,7 +236,7 @@ def encode_title(df, title='title_processed'):
     :return:
     """
 
-    df[title] = df[title].apply(encode_string)
+    df[title] = df[title].apply(encode_string, args=(parser, ))
     logger.info('{}: encoded'.format(title))
     return df
 
@@ -587,7 +587,7 @@ if __name__ == '__main__':
     title_metrics(df, 'Remove records with no category')
 
     # Encode title as ascii
-    df = encode_title(df, title='title_processed')
+    df = encode_title(df, title='title_processed', parser=HTML_PARSER)
     title_metrics(df, 'Encode title as ascii')
 
     # Lowercase title
@@ -595,7 +595,7 @@ if __name__ == '__main__':
     title_metrics(df, 'Lowercase titles')
 
     # Tokenize title
-    df = tokenize_title(df, title='title_processed')
+    df = tokenize_title(df, title='title_processed', excluded='-.')
     title_metrics(df, 'Tokenize titles')
 
     # Remove stopwords (includes spam, colours)
