@@ -5,7 +5,7 @@ from utils.logger import logger
 
 
 # Load dictionary
-tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
+# tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
 
 
 @app.route('/')
@@ -34,5 +34,5 @@ def categorize():
     logger.debug('_title from json: {}; type({})'.format(_title, type(_title)))
 
     # Categorize title
-    result = categorize_single(_title, tfidf_dict)
+    result = categorize_single(_title)
     return jsonify(result)

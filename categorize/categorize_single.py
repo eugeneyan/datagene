@@ -27,6 +27,9 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
         return pickle.load(handle)
 
 
+tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
+
+
 class Title:
 
     def __init__(self, title):
@@ -77,7 +80,7 @@ class Title:
         return result_dict
 
 
-def categorize_single(title, tfidf_dict):
+def categorize_single(title):
     """ (str) -> dict
 
     Initializes given title as CategorizeSingle class and returns a dictionary of top 3 options
