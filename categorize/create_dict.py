@@ -5,7 +5,7 @@ Returns dictionary model in pickle format.
 Cleans and prepares titles via the same approach in data_prep.clean titles
 
 Sample call:
-python -m categorize.create_dict data/output title_category_keep_samp_small categorize tfidf_dict
+python -m categorize.create_dict data/output title_category_keep_samp_small categorize categorization_dicts
 """
 import math
 import os
@@ -15,6 +15,40 @@ from collections import defaultdict
 from data_prep.clean_titles import load_data, remove_no_category, encode_title, lowercase_title, tokenize_title, \
     remove_stopwords, remove_numeric, remove_one_char_words, remove_empty_titles, STOP_WORDS
 from utils.logger import logger
+
+
+def create_mapping_dicts(df, category='regional_key'):
+    """ (df, str) -> dict, dict
+
+    Returns two dictionaries mapping category paths to integers, and mapping integers to category_paths
+    :param df:
+    :param category:
+    """
+
+    # Get a array of unique categories
+    category_paths = df[category].unique()
+
+    # Sort category_paths
+    category_paths.sort()
+
+    # Create category_to_int_dict and int to category_dict
+    category_to_int_dict = {key: value for key, value in zip(category_paths, range(len(category_paths)))}
+    int_to_category_dict = {value: key for key, value in category_to_int_dict.items()}
+
+    return category_to_int_dict, int_to_category_dict
+
+
+def convert_category_to_int(df, category_to_int_dict, category='regional_key', ):
+    """
+
+    :param df:
+    :param category:
+    :param category_to_int_dict:
+    :return:
+    """
+    df[category] = df[category].apply(lambda x: category_to_int_dict[x])
+    return df
+
 
 
 def find_ngrams(input_list, n):
@@ -137,21 +171,21 @@ def create_tfidf_dict(train, title='title', category='regional_key'):
     return ngram_dict_tfidf
 
 
-def save_dict(tfidf_dict, output_dir, output_name):
-    """ (defaultdict, str, str) -> NoneType
+def save_dict(tfidf_dict, int_to_category_dict, output_dir, output_name):
+    """ (defaultdict, dict, str, str) -> NoneType
 
-    Saves the dictionary (tfidf_dict) into pickle format
+    Saves the dictionaries (tfidf_dict, int_to_category_dict) into pickle format
 
     :param tfidf_dict:
+    :param int_to_category_dict:
     :param output_dir:
     :param output_name:
     :return:
     """
-    output_dir = 'categorize'
     output_dir_path = os.path.join(output_dir, output_name + '.pickle')
 
     with open(output_dir_path, 'wb') as handle:
-        pickle.dump(tfidf_dict, handle, protocol=2)
+        pickle.dump((tfidf_dict, int_to_category_dict), handle, protocol=2)
         logger.info('Dict saved in {}'.format(output_dir_path))
 
 
@@ -170,6 +204,12 @@ if __name__ == '__main__':
 
     # Remove records with no category
     df = remove_no_category(df, category=category_col)
+
+    # Create mapping dicts
+    category_to_int_dict, int_to_category_dict = create_mapping_dicts(df, category='category_path')
+
+    # Convert categories to integers
+    df = convert_category_to_int(df, category_to_int_dict, category='category_path')
 
     # Encode title as ascii
     df = encode_title(df, title='title')
@@ -194,10 +234,9 @@ if __name__ == '__main__':
 
     # Create ngrams for titles
     df = create_ngram(df, title='title')
-    logger.info('Memory usage: {}'.format(df.memory_usage()))
 
     # Create tf-idf model dictionary
     tfidf_dict = create_tfidf_dict(df, title='title', category='category_path')
 
     # Save dict to pickle file
-    save_dict(tfidf_dict, data_dir, output_dict_name)
+    save_dict(tfidf_dict, int_to_category_dict, output_dir, output_dict_name)
