@@ -31,7 +31,7 @@ def merge_dicts(dicts, defaultdict=defaultdict, int=int):
     return merged
 
 
-def get_score(tokens, ngram_dict, top_n):
+def get_score(tokens, ngram_dict, int_to_category_dict, top_n):
     dict_list = []
 
     # get list of dictionaries based on tokens
@@ -46,6 +46,9 @@ def get_score(tokens, ngram_dict, top_n):
 
     # Get top n regional ids based on score
     top_n_cats = heapq.nlargest(top_n, score, key=score.get)
+
+    # Convert integers back to categories
+    top_n_cats = [int_to_category_dict[idx] for idx in top_n_cats]
 
     return top_n_cats
 

@@ -27,7 +27,8 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
         return pickle.load(handle)
 
 
-tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
+# Load dictionaries
+tfidf_dict, int_to_category_dict = load_dict('categorize', 'categorization_dicts_small')
 
 
 class Title:
@@ -72,7 +73,7 @@ class Title:
         3: 'Home & Kitchen -> Furniture -> Home Office Furniture -> Bookcases'}
         """
 
-        result_list = get_score(self.title, tfidf_dict, 3)
+        result_list = get_score(self.title, tfidf_dict, int_to_category_dict, 3)
         result_dict = dict()
         for i, category in enumerate(result_list):
             result_dict[i + 1] = category

@@ -1,6 +1,6 @@
 from app import app
 from flask import request, jsonify
-from categorize.categorize_single import categorize_single, load_dict
+from categorize.categorize_single import categorize_single
 from utils.logger import logger
 
 
