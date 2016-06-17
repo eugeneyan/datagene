@@ -5,8 +5,7 @@ from utils.logger import logger
 
 
 # Load dictionary
-# tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
-
+# tfidf_dict = load_dict('categorize', 'categorization_dicts_small')
 
 @app.route('/')
 def index():
@@ -16,6 +15,7 @@ def index():
 
     :return:
     """
+
     return 'Welcome to the Product API!'
 
 
@@ -27,6 +27,7 @@ def categorize():
 
     :return:
     """
+
     logger.info('Json received: {}'.format(request.json))
 
     # Read the posted values

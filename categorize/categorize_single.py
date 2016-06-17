@@ -29,6 +29,7 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
 
 # Load dictionaries
 tfidf_dict, int_to_category_dict = load_dict('categorize', 'categorization_dicts_small')
+logger.info('Dictionary loaded in categorized.categorize_single')
 
 
 class Title:
@@ -61,7 +62,7 @@ class Title:
         logger.info('Title after preparation: {}'.format(self.title))
         return self
 
-    def categorize(self, tfidf_dict):
+    def categorize(self):
         """ (CategorizeSingle(str)) -> dict
 
         Categorizes prepared title and returns a dictionary of form {1: 'Cat1', 2: 'Cat2', 3: 'Cat3}
@@ -89,4 +90,4 @@ def categorize_single(title):
     :param title:
     :return:
     """
-    return Title(title).prepare().categorize(tfidf_dict)
+    return Title(title).prepare().categorize()
