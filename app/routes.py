@@ -5,7 +5,7 @@ from utils.logger import logger
 
 
 # Load dictionary
-tfidf_dict = load_dict('categorize', 'tfidf_dict_samp')
+tfidf_dict = load_dict('categorize', 'tfidf_dict_samp_small')
 
 
 @app.route('/')

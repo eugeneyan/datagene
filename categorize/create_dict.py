@@ -5,9 +5,8 @@ Returns dictionary model in pickle format.
 Cleans and prepares titles via the same approach in data_prep.clean titles
 
 Sample call:
-python -m categorize.create_dict data/output title_category_keep categorize tfidf_dict
+python -m categorize.create_dict data/output title_category_keep_samp_small categorize tfidf_dict
 """
-import pandas as pandas
 import math
 import os
 import sys
@@ -195,6 +194,7 @@ if __name__ == '__main__':
 
     # Create ngrams for titles
     df = create_ngram(df, title='title')
+    logger.info('Memory usage: {}'.format(df.memory_usage()))
 
     # Create tf-idf model dictionary
     tfidf_dict = create_tfidf_dict(df, title='title', category='category_path')

@@ -3,8 +3,18 @@
 # To install nltk stopwords
 python -m nltk.downloader stopwords
 
+# To start app on localhost
+python run.py 127.0.0.1 6688
+
+# To start app on web
+python run.py 0.0.0.0 6688
+
 # Sample api call on localhost
-curl -i http://localhost:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"This is a wooden bookshelf with a clock"}'
+curl -i http://localhost:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue iphone 6s handphone case with free strap"}'
+curl -i http://localhost:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"logitech m570 mouse with thumb scroll"}'
+curl -i http://localhost:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue casual ladies little black dress"}'
 
 # Sample api call to machine ipaddress
-curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"This is a wooden bookshelf with a clock"}'
+curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue iphone 6s handphone case with free strap"}'
+curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"logitech m570 mouse with thumb scroll"}'
+curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue casual ladies little black dress"}'

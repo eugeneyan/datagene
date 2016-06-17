@@ -27,9 +27,6 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
         return pickle.load(handle)
 
 
-# tfidf_dict = load_dict('categorize', 'tfidf_dict_samp')
-
-
 class Title:
 
     def __init__(self, title):
