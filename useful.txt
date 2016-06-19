@@ -18,3 +18,11 @@ curl -i http://localhost:6688/categorize -X post -H "Content-type: application/j
 curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue iphone 6s handphone case with free strap"}'
 curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"logitech m570 mouse with thumb scroll"}'
 curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue casual ladies little black dress"}'
+
+# connect to ec2
+ssh -i ~/.ssh/eugene_aws.pem ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com
+
+# upload files to ec2
+scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.tar.gz ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com:product_api/categorize
+
+# clone library

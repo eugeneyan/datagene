@@ -6,3 +6,4 @@ config.py
 *.pyc
 *.DS_store
 *.pickle
+*.tar.gz
