@@ -4,9 +4,6 @@ from categorize.categorize_single import categorize_single
 from utils.logger import logger
 
 
-# Load dictionary
-# tfidf_dict = load_dict('categorize', 'categorization_dicts_small')
-
 @app.route('/')
 def index():
     return render_template('index.html')

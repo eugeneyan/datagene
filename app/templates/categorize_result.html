@@ -13,12 +13,14 @@
                 <h3 class="text-muted">Product API: Categorization Results</h3>
             </div>
 
-            <a href = "#" class = "list-group-item active">
+            <ul class = "list-group-item active">
                 Category Suggestions
-            </a>
+            </ul>
                 {% for key, value in result.iteritems() %}
-                    <a href = "#" class = "list-group-item"> {{ value }} </a>
+                    <li class = "list-group-item"> {{ value }} </li>
                 {% endfor %}
+
+            <h5><a href="http://localhost:6688/categorize">Back to Product Categorization</a></h5>
         </div>
     </body>
 </html>
