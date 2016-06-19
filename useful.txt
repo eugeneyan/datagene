@@ -26,3 +26,4 @@ ssh -i ~/.ssh/eugene_aws.pem ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.a
 scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.tar.gz ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com:product_api/categorize
 
 # clone library
+git clone git@gitlab.com:eugeneyan/product_api.git
