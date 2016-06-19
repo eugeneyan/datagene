@@ -27,7 +27,7 @@ def categorize_post():
 
     # Categorize title
     result = categorize_single(_title)
-    return render_template('result.html', result=result)
+    return render_template('categorize_result.html', result=result)
 
 
 @app.route('/categorize_api', methods=['POST'])

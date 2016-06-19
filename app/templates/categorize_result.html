@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Product Categorization Results</title>
+        <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="header">
+                <h3 class="text-muted">Product API: Categorization Results</h3>
+            </div>
+
+            <a href = "#" class = "list-group-item active">
+                Category Suggestions
+            </a>
+                {% for key, value in result.iteritems() %}
+                    <a href = "#" class = "list-group-item"> {{ value }} </a>
+                {% endfor %}
+        </div>
+    </body>
+</html>
