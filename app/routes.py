@@ -1,5 +1,5 @@
 from app import app
-from flask import request, jsonify
+from flask import request, jsonify, render_template
 from categorize.categorize_single import categorize_single
 from utils.logger import logger
 
@@ -9,17 +9,28 @@ from utils.logger import logger
 
 @app.route('/')
 def index():
-    """
-
-    Returns the homepage for the Product API
-
-    :return:
-    """
-
-    return 'Welcome to the Product API!'
+    return render_template('index.html')
 
 
-@app.route('/categorize', methods=['POST'])
+@app.route('/categorize')
+def categorize_form():
+    return render_template('categorize.html')
+
+
+@app.route('/categorize_result', methods=['POST'])
+def categorize_post():
+    logger.info('Form received: {}'.format(request.form['title']))
+
+    # Read the posted values
+    _title = request.form['title'].encode('utf-8')  # encode to utf 8
+    logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
+
+    # Categorize title
+    result = categorize_single(_title)
+    return render_template('result.html', result=result)
+
+
+@app.route('/categorize_api', methods=['POST'])
 def categorize():
     """
 
@@ -27,7 +38,6 @@ def categorize():
 
     :return:
     """
-
     logger.info('Json received: {}'.format(request.json))
 
     # Read the posted values
