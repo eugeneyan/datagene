@@ -9,25 +9,32 @@ def index():
     return render_template('index.html')
 
 
-@app.route('/categorize')
-def categorize_form():
-    return render_template('categorize.html')
+@app.route('/categorize_web', methods=['GET', 'POST'])
+def categorize_web():
+    """
+
+    Returns top three category options for the title in web. If input form is empty, returns result suggesting user
+    to type something in input form.
+
+    :return:
+    """
+    if request.method == 'POST':
+        logger.info('Title form input: {}'.format(request.form['title']))
+
+        # Read the posted values
+        _title = request.form['title'].encode('utf-8')  # encode to utf 8
+        logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
+        result = categorize_single(_title)
+    else:
+        result = {0: 'Type something in the Product Title field =)'}
+
+    for key, value in result.iteritems():
+        logger.info('Result {}: {}'.format(key, value))
+
+    return render_template('categorize_web.html', result=result)
 
 
-@app.route('/categorize_result', methods=['POST'])
-def categorize_post():
-    logger.info('Form received: {}'.format(request.form['title']))
-
-    # Read the posted values
-    _title = request.form['title'].encode('utf-8')  # encode to utf 8
-    logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
-
-    # Categorize title
-    result = categorize_single(_title)
-    return render_template('categorize_result.html', result=result)
-
-
-@app.route('/categorize_api', methods=['POST'])
+@app.route('/categorize', methods=['POST'])
 def categorize():
     """
 

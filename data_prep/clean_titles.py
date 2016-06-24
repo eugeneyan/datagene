@@ -45,13 +45,12 @@ HTML_PARSER = HTMLParser()
 
 # Load data
 def load_data(input_file_path, sku_id='id', category='category_path', title='title'):
-    """ (str, str, str, str, str) -> DataFrame
+    """ (str, str, str, str) -> DataFrame
 
     Returns a dataframe after loading data from csv.
     Reads sku_id, category, and title as string.
 
-    :param csv_file_dir:
-    :param csv_file:
+    :param input_file_path:
     :param sku_id:
     :param category:
     :param title:

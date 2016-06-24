@@ -4,10 +4,11 @@ Takes in a single title and provides three category options
 """
 import cPickle as pickle
 import os
+from collections import defaultdict
+import heapq
 from utils.logger import logger
 from data_prep.clean_titles import encode_string, tokenize_title_string, remove_words_list, remove_numeric_list, \
     remove_chars, STOP_WORDS, HTML_PARSER
-from categorize.categorize_batch import get_score
 
 
 def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
@@ -28,8 +29,55 @@ def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
 
 
 # Load dictionaries
-tfidf_dict, int_to_category_dict = load_dict('categorize', 'categorization_dicts_small')
+tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts_small')
 logger.info('Dictionary loaded in categorized.categorize_single')
+
+
+def merge_dicts(dicts, defaultdict=defaultdict, int=int):
+    """ (list(dict), type, type) -> dict
+
+    Returns a single dictionary given a list of dictionaries.
+    Values with the same keys are summed and assigned to the key.
+
+    :param dicts:
+    :param defaultdict:
+    :param int:
+    :return:
+
+    >>> merge_dicts([{'A': 1}, {'B': 2}])
+    defaultdict(<type 'int'>, {'A': 1, 'B': 2})
+    >>> merge_dicts([{'A': 1}, {'B': 2}, {'C': 3}, {'A': 10}])
+    defaultdict(<type 'int'>, {'A': 11, 'C': 3, 'B': 2})
+    """
+
+    merged = defaultdict(int)
+    for d in dicts:
+        for k in d:
+            merged[k] += d[k]
+
+    return merged
+
+
+def get_score(tokens, ngram_dict, int_to_category_dict, top_n):
+    dict_list = []
+
+    # get list of dictionaries based on tokens
+    for token in tokens:
+        try:
+            dict_list.append(ngram_dict[token])
+        except KeyError:
+            pass
+
+    # Merge list of dicts together and add values
+    score = merge_dicts(dict_list)
+
+    # Get top n regional ids based on score
+    top_n_cats = heapq.nlargest(top_n, score, key=score.get)
+
+    # Convert integers back to categories
+    top_n_cats = [int_to_category_dict[idx] for idx in top_n_cats]
+
+    return top_n_cats
 
 
 class Title:

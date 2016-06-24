@@ -2,7 +2,7 @@
 <html lang="en">
 
     <head>
-        <title>Product API</title>
+        <title>Datagene APIs</title>
         <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
         <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
     </head>
@@ -10,16 +10,34 @@
     <body>
         <div class="container">
             <div class="header">
-                <h3 class="text-muted">Python API for categorization, review analysis, etc</h3>
+                <h3 class="text-muted">APIs for categorization, review analysis, etc</h3>
             </div>
 
             <div class="row marketing">
                 <div class="col-lg-6">
-                    <h4><a href="http://ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com:6688/categorize">Product Categorization</a></h4>
-                    <p>Suggests three categories for products based on title.</p>
+
+                    <h4><a href="{{ url_for('categorize_web') }}">Product Categorization</a></h4>
+                    <p>Suggests three categories to place your product based on its title.</p>
 
                     <h4>Review Analysis (coming soon...)</h4>
                     <p>Analyzes review including sentiment, etc.</p>
+
+                    <h4>Image Identification (coming soon...)</h4>
+                    <p>Identifies the image via neural networks.</p>
+
+                </div>
+
+                <div class="col-lg-6">
+
+                    <h4>Recommendation (coming soon...)</h4>
+                    <p>Browse through movies and see what is recommended for you.</p>
+
+                    <h4>TBC (coming soon...)</h4>
+                    <p>TBC</p>
+
+                    <h4>TBC (coming soon...)</h4>
+                    <p>TBC</p>
+
                 </div>
             </div>
 
