@@ -28,3 +28,7 @@ pip install regex
 
 # Install nltk stop words
 python -m nltk.downloader stopwords
+
+# Install uwsgi
+sudo apt-get -y install nginx supervisor
+pip install uwsgi
