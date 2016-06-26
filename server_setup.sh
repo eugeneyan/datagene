@@ -2,7 +2,7 @@
 
 # Set up environment
 sudo apt-get -y update
-sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libhdf5-dev libx11-dev llvm git
+sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libhdf5-dev libx11-dev llvm git uwsgi-core libapache2-mod-wsgi
 
 # Download and install anaconda
 wget http://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh
