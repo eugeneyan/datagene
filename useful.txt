@@ -20,13 +20,22 @@ curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: applicati
 curl -i http://192.168.1.107:6688/categorize -X post -H "Content-type: application/json" -d'{"title":"blue casual ladies little black dress"}'
 
 # connect to ec2
-ssh -i ~/.ssh/eugene_aws.pem ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com
+ssh -i ~/.ssh/eugene_aws.pem ubuntu@ec2-54-169-212-169.ap-southeast-1.compute.amazonaws.com
+
+# Generate ssh
+ssh-keygen -t rsa -C "eugeneyanziyou@gmail.com"
+cat .ssh/id_rsa.pub
+
+# Clone library
+git clone git@gitlab.com:eugeneyan/datagene.git
+mkdir -p datagene/data/model
 
 # upload files to ec2
-scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.tar.gz ec2-user@ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com:product_api/categorize
+scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.tar.gz ubuntu@ec2-54-169-212-169.ap-southeast-1.compute.amazonaws.com:datagene/data/model
 
-# clone library
-git clone git@gitlab.com:eugeneyan/product_api.git
+# create virtualenv
+cd datagene
+mkvirtualenv -a $(pwd) test -p /home/ubuntu/anaconda2/bin/python
 
 # Product API site
 http://ec2-52-77-217-245.ap-southeast-1.compute.amazonaws.com:6688

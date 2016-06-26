@@ -9,6 +9,11 @@ def index():
     return render_template('index.html')
 
 
+@app.route('/acknowledgements')
+def acknowledgements():
+    return render_template('acknowledgements.html')
+
+
 @app.route('/categorize_web', methods=['GET', 'POST'])
 def categorize_web():
     """

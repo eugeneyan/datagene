@@ -5,7 +5,7 @@ Returns dictionary model in pickle format.
 Cleans and prepares titles via the same approach in data_prep.clean titles
 
 Sample call:
-python -m categorize.create_dict data/output title_category_keep_samp_small categorize categorization_dicts
+python -m categorize.create_dict data/output title_category_keep_samp_small data/model categorization_dicts
 """
 import math
 import os

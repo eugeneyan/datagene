@@ -3,6 +3,7 @@
 data/
 notebooks/
 config.py
+useful.txt
 *.pyc
 *.DS_store
 *.pickle
