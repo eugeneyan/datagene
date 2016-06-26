@@ -2,7 +2,7 @@
 Run Product API app
 
 Sample call:
-python run.py 0.0.0.0 80
+python run.py 0.0.0.0 6688
 python run.py 127.0.0.1 6688
 """
 import sys
