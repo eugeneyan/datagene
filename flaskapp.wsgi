@@ -1,4 +1,4 @@
 import sys
-sys.path.insert(0, '/var/www/html/datagene/flaskapp.wsgi')
+sys.path.insert(0, '{datagene}')
 
-from app.routes import app as application
+from app import app as application
