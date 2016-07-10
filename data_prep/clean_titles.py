@@ -16,7 +16,7 @@ Cleans SKUs titles by:
 - Remove empty titles
 
 Sample call:
-python -m data_prep.clean_titles data title_category_samp
+python -m data_prep.clean_titles title_category_samp
 """
 import pandas as pd
 import numpy as np
@@ -570,8 +570,8 @@ def save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category='
 
 if __name__ == '__main__':
 
-    data_dir = sys.argv[1]
-    input_file = sys.argv[2]
+    data_dir = 'data'
+    input_file = sys.argv[1]
     input_path = os.path.join(data_dir, input_file + '.csv')
     title_col = 'title'
     category_col = 'category_path'

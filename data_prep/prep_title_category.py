@@ -4,7 +4,7 @@ Prepares title and category data by:
 - Excluding categories we're not interested in
 - Extracting category paths
 
-python -m data_prep.prep_title_category data metadata_categories_only title_category
+python -m data_prep.prep_title_category metadata_categories_only title_category
 """
 import pandas as pd
 import sys
@@ -64,9 +64,9 @@ def get_category_path(category_path_list):
 
 if __name__ == '__main__':
 
-    data_dir = sys.argv[1]
-    input_file = sys.argv[2]
-    output_file = sys.argv[3]
+    data_dir = 'data'
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
     input_file_path = os.path.join(data_dir, input_file + '.csv')
     output_file_path = os.path.join(data_dir, output_file + '.csv')
 

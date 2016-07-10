@@ -14,4 +14,3 @@ if __name__ == '__main__':
     port_number = sys.argv[2]
     # app.run(host=host, port=int(port_number), debug=True)  # Note: this will run two instances of the app
     app.run(host=host, port=int(port_number))
-    # app.run(host=host)
