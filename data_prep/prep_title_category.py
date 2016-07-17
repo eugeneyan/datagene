@@ -9,6 +9,7 @@ python -m data_prep.prep_title_category metadata_categories_only title_category
 import pandas as pd
 import sys
 import os
+from sklearn.cross_validation import train_test_split
 from utils.logger import logger
 
 
@@ -98,10 +99,18 @@ if __name__ == '__main__':
     category_df = category_df[category_df['category_lvl1'] != 'CDs & Vinyl']
     category_df = category_df[category_df['category_lvl1'] != 'Movies & TV']
 
+    # Exclude some other categories to make data smaller
+    category_df = category_df[category_df['category_lvl1'] != 'Musical Instruments']
+    category_df = category_df[category_df['category_lvl1'] != 'Amazon Fashion']
+    category_df = category_df[category_df['category_lvl1'] != 'All Electronics']
+    category_df = category_df[category_df['category_lvl1'] != 'All Beauty']
+    category_df = category_df[category_df['category_lvl1'] != 'Collectibles & Fine Art']
+    category_df = category_df[category_df['category_lvl1'] != 'Grocery & Gourmet Food']
+    category_df = category_df[category_df['category_lvl1'] != 'Pet Supplies']
+
     # # Keep only rows where the category is in category_df
     df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
-    logger.info('No. of rows after dropping categories where count < 1500 and dropping'
-                'Books, CDs & Vinyl, and Movies & TV: {}'.format(df.shape[0]))
+    logger.info('No. of rows after dropping categories where count > 1500: {}'.format(df.shape[0]))
 
     # Create column for category path
     df['category_path'] = df['categories'].apply(get_category_path)
@@ -112,14 +121,37 @@ if __name__ == '__main__':
         .sort_values(by='title', ascending=False).reset_index()
 
     # Drop category_paths where the count of titles < 10
-    category_path_df = category_path_df[category_path_df['title'] >= 10]
+    category_path_df = category_path_df[category_path_df['title'] >= 20]
+    logger.info('No. of category_paths after excluding those with < 20 products: {}'.format(category_path_df.shape[0]))
 
     # Exclude category paths where category_path is at top level
     category_path_df = category_path_df[category_path_df['category_path'].str.contains('->')]
+    logger.info('No. of category_paths after excluding top level categories: {}'.format(category_path_df.shape[0]))
+
+    # Exclude categories that are not deepest category
+    category_path_df.sort_values(by='category_path', inplace=True)
+    category_path_df['category_path_next'] = category_path_df['category_path'].shift(-1)
+    category_path_df.fillna('no_comparison', inplace=True)
+
+    # Create list of category_paths which are deepest category
+    category_path_list = []
+    for i, value in category_path_df.iterrows():
+        category_path = value['category_path']
+        category_path_next = value['category_path_next']
+        if category_path not in category_path_next:
+            category_path_list.append(category_path)
+
+    # Create df of category_path
+    category_path_df = pd.DataFrame(category_path_list, columns=['category_path'])
+    logger.info('No. of category_paths at deepest category: {}'.format(category_path_df.shape[0]))
 
     # Keep only rows where the category is in category_df
     df = df[df['category_path'].isin(category_path_df['category_path'])]
-    logger.info('No. of rows after dropping category_paths where count < 10: {}'.format(df.shape[0]))
+    logger.info('No. of rows in deepest category: {}'.format(df.shape[0]))
+
+    # Sample and only keep 50% of data
+    df, discard = train_test_split(df, train_size=0.5, stratify=df['category_path'], random_state=1368)
+    logger.info('No. of rows in after taking 50% sample: {}'.format(df.shape[0]))
 
     # Save prepared title and category data to csv
     df.drop(labels='categories', axis=1, inplace=True)

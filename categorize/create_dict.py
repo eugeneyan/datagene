@@ -6,6 +6,7 @@ Cleans and prepares titles via the same approach in data_prep.clean titles
 
 Sample call:
 python -m categorize.create_dict title_category_keep_samp_small categorization_dicts
+python -m categorize.create_dict title_category_keep categorization_dicts
 """
 import math
 import os

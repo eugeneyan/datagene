@@ -16,7 +16,7 @@ Cleans SKUs titles by:
 - Remove empty titles
 
 Sample call:
-python -m data_prep.clean_titles title_category_samp
+python -m data_prep.clean_titles title_category
 """
 import pandas as pd
 import numpy as np
@@ -547,6 +547,8 @@ def save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category='
 
     # Count the number of titles in each category_path
     category_df = keep_df.groupby(category).agg({'title': 'count'}).reset_index()
+
+    # Keep only rows where there are more than 5 products from that category
     category_df = category_df[category_df['title'] > 5]
 
     # Keep only rows where the category is in category_df
