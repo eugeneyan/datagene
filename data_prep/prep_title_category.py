@@ -68,12 +68,18 @@ if __name__ == '__main__':
     data_dir = 'data'
     input_file = sys.argv[1]
     output_file = sys.argv[2]
+    selected_category_file = 'categories_to_keep'
     input_file_path = os.path.join(data_dir, input_file + '.csv')
     output_file_path = os.path.join(data_dir, output_file + '.csv')
+    selected_category_file_path = os.path.join(data_dir, selected_category_file + '.csv')
 
     # Read data
     df = pd.read_csv(input_file_path)
     logger.info('No. of rows in data: {}'.format(df.shape[0]))
+
+    # Read selected_category_file
+    filter_df = pd.read_csv(selected_category_file_path)
+    logger.info('No. of categories in selected_category_file_path: {}'.format(filter_df.shape[0]))
 
     # Drop rows where title is missing
     df.dropna(how='any', inplace=True)
@@ -149,8 +155,13 @@ if __name__ == '__main__':
     df = df[df['category_path'].isin(category_path_df['category_path'])]
     logger.info('No. of rows in deepest category: {}'.format(df.shape[0]))
 
-    # Sample and only keep 50% of data
-    df, discard = train_test_split(df, train_size=0.5, stratify=df['category_path'], random_state=1368)
+    # Keep only rows where category in filter_df (only specific to Amazon data)
+    df = df.merge(filter_df, how='inner', left_on='category_path', right_on='category_path')
+    df.dropna(inplace=True)
+    logger.info('No. of rows after excluding categories based on categories_to_keep.csv: {}'.format(df.shape[0]))
+
+    # Sample and only keep 40% of data (to keep the data small)
+    df, discard = train_test_split(df, train_size=0.40, stratify=df['category_path'], random_state=1368)
     logger.info('No. of rows in after taking 50% sample: {}'.format(df.shape[0]))
 
     # Save prepared title and category data to csv

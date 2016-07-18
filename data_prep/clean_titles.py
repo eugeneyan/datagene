@@ -626,4 +626,4 @@ if __name__ == '__main__':
     save_keep_and_discard(keep_df, discard_df, data_dir, input_file)
 
     # Save train and test
-    save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category=category_col)
+    # save_train_and_test(keep_df, data_dir, input_file, test_size=0.1, category=category_col)
