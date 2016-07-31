@@ -71,6 +71,7 @@ if __name__ == '__main__':
     selected_category_file = 'categories_to_keep'
     input_file_path = os.path.join(data_dir, input_file + '.csv')
     output_file_path = os.path.join(data_dir, output_file + '.csv')
+    output_category_file_path = os.path.join(data_dir, 'categories_available' + '.csv')
     selected_category_file_path = os.path.join(data_dir, selected_category_file + '.csv')
 
     # Read data
@@ -111,8 +112,6 @@ if __name__ == '__main__':
     category_df = category_df[category_df['category_lvl1'] != 'All Electronics']
     category_df = category_df[category_df['category_lvl1'] != 'All Beauty']
     category_df = category_df[category_df['category_lvl1'] != 'Collectibles & Fine Art']
-    category_df = category_df[category_df['category_lvl1'] != 'Grocery & Gourmet Food']
-    category_df = category_df[category_df['category_lvl1'] != 'Pet Supplies']
 
     # # Keep only rows where the category is in category_df
     df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
@@ -126,9 +125,10 @@ if __name__ == '__main__':
     category_path_df = df.groupby('category_path').agg({'title': 'count'})\
         .sort_values(by='title', ascending=False).reset_index()
 
-    # Drop category_paths where the count of titles < 10
-    category_path_df = category_path_df[category_path_df['title'] >= 20]
-    logger.info('No. of category_paths after excluding those with < 20 products: {}'.format(category_path_df.shape[0]))
+    # Drop category_paths where the count of titles < 30
+    category_path_df = category_path_df[category_path_df['title'] >= 30]  # After taking 33% sample, each path will
+    # have 10 samples only
+    logger.info('No. of category_paths after excluding those with < 30 products: {}'.format(category_path_df.shape[0]))
 
     # Exclude category paths where category_path is at top level
     category_path_df = category_path_df[category_path_df['category_path'].str.contains('->')]
@@ -160,10 +160,26 @@ if __name__ == '__main__':
     df.dropna(inplace=True)
     logger.info('No. of rows after excluding categories based on categories_to_keep.csv: {}'.format(df.shape[0]))
 
-    # Sample and only keep 40% of data (to keep the data small)
-    df, discard = train_test_split(df, train_size=0.40, stratify=df['category_path'], random_state=1368)
+    # Sample and only keep 33% of data (to keep the data small)
+    df, discard = train_test_split(df, train_size=0.33, stratify=df['category_path'], random_state=1368)
     logger.info('No. of rows in after taking 50% sample: {}'.format(df.shape[0]))
+
+    # After sampling, exclude category paths which have less than 10 products
+    # Create df of category path counts (again)
+    category_path_df = df.groupby('category_path').agg({'title': 'count'}) \
+        .sort_values(by='title', ascending=False).reset_index()
+
+    # Drop category_paths where the count of titles < 10
+    category_path_df = category_path_df[category_path_df['title'] >= 10]
+    logger.info('No. of category_paths after excluding those with < 10 products: {}'.format(category_path_df.shape[0]))
+
+    # Keep only rows where the category is in category_df
+    df = df[df['category_path'].isin(category_path_df['category_path'])]
+    logger.info('No. of rows in deepest category: {}'.format(df.shape[0]))
 
     # Save prepared title and category data to csv
     df.drop(labels='categories', axis=1, inplace=True)
     df.to_csv(output_file_path, index=False)
+
+    # Save category_path_df which contains all category paths in data
+    category_path_df.to_csv(output_category_file_path, index=False)
