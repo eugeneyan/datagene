@@ -1,0 +1,15 @@
+<% if game %>
+	<div class="progress success round">
+		<span class="meter" style="width: 100%;"><p>Complete</p></span>
+	</div>
+<% else %>
+	<div class="game-progress-button">
+		<% if game_type == 1 %>
+			<a href="/play-game/1" class="button radius">Start Game 1</a>
+		<% elsif game_type == 2 %>
+			<a href="/play-game/2" class="button radius">Start Game 2</a>
+		<% elsif game_type == 3 %>
+			<a href="/play-game/3" class="button radius">Start Game 3</a>
+		<% end %>
+	</div>
+<% end %>

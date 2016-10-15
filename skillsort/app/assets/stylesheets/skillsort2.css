@@ -1,0 +1,190 @@
+.control-col h3, h5{
+	text-align: center;	
+}
+
+.axis-col.col-1, .axis-col.col-3, .axis-col.col-5 {
+	min-height: 700px;
+	background-color: #FAFAFA;
+}
+
+/*.control-col.col-6{
+	background-color: #E6E6E6;	
+}*/
+
+.axis-label {
+	height: 60px;
+	padding: 0;
+}
+
+.axis-label h6 {
+	text-align: center;
+	font-size: 16px;
+	font-weight: bold;
+	padding: 0;
+	margin: 0;
+}
+
+.axis-label p {
+	text-align: center;
+	font-size: 12px;
+	padding: 0;
+	margin: 0;
+}
+
+.deck {
+	height: 90px;
+}
+
+.submit {
+	float: left;
+	position: absolute;
+	z-index: 30;
+	padding: 5px 10px;
+	margin: 25px 32px;
+
+}
+
+.card-desc {
+	height: 150px;
+}
+
+.card-desc p {
+	font-size: 14px;
+	text-align: center;
+}
+
+ul.button-group.radius.hide-for-small-only.select-options > li > button {
+	width: 27px;
+}
+
+.button-options-large {
+	padding: 8px 5.2px;
+	border: 1px solid white;
+	display: inline;
+	float: left;
+}
+
+.button-options-small {
+	width: 20%;
+	padding: 16px 0;
+	border: 1px solid white;
+}
+
+#hours {
+	text-align: center;
+	margin: -10px auto 10px auto;
+}
+
+#slider {
+	margin-bottom: 20px;
+}
+
+.button-undo-column {
+	text-align: center;
+}
+
+.button-round {
+	padding: 8px 10px;
+}
+
+.instructions p, ul, li {
+	font-size: 14px;
+}
+
+.skillcard {
+	width: 100%;
+	float: left;
+	position: absolute;
+}
+
+.skillcard.ng-move{
+	-webkit-transition: 0.8s ease all;
+  	transition: 0.5s ease all;
+  	top: -200px;
+}
+
+.skillcard.ng-move.ng-move-active {
+	top: 0px;
+}
+
+.skillcard-outer {
+	width: 100%;
+	height: 60px;
+	background-color: #FFC400;
+	margin: 10px auto;
+	padding: 3px;
+	border-radius: 5px;
+}
+
+.skillcard-inner {
+	width: 100.5%;
+	height: 54px;
+	display: table;
+	
+	border-radius: 5px;
+	background-color: white;
+}
+
+.skillcard-inner p {
+	/*cursor: help;*/
+	display: table-cell;
+	vertical-align: middle;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	line-height: 1.5em;
+}
+
+.love {
+	background:#00FF44;
+}
+
+.circle-outer {
+	display: table;
+	width:100px;
+	height:100px;
+	padding: 2px;
+	border-radius:50px;
+	margin: 5px auto;
+}
+
+.circle-inner {
+	width:96px;
+	height:96px;
+	border-radius:48px;
+	display: table-cell;
+	vertical-align: middle;
+	text-align:center;
+	background:#fff;	
+}
+
+.circle-inner > p {
+	/*cursor: help;*/
+	margin: 0;
+	padding: 0;
+	font-size:10px;
+	font-weight: bold;
+	color:#000;
+}
+
+.results-header {
+	text-align: center;
+}
+
+.row.top-5-skills-header {
+	margin-bottom: 30px;
+	text-align: center;
+}
+
+.row.results-text {
+	margin-top: 30px;
+}
+
+.register{
+	margin-top: 45px;
+	margin-bottom: 45px;
+}
+
+.skills {
+	text-align: center;
+}

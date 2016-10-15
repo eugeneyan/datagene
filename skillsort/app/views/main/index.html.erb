@@ -1,0 +1,131 @@
+
+<div class="small-0 large-7 columns main-left">
+	
+	<div class="tagline">
+		<h4>Data-Driven Career Discovery</h4>
+	</div>
+	<div class="main-left-img">
+		<img src="/images/welcome_gears.png" alt="Welcome">
+	</div>
+	
+</div>
+
+<div class="small-12 large-5 columns main-right" >
+
+	<!-- BEGIN DISPLAY ERROR MESSAGE IF EXIST -->  
+    <div class="row">
+    	<div class="small-12 large-8 small-offset-0 large-offset-1 columns">
+	    	<% if notice || alert %> <div class="panel radius callout"><%= notice || alert %></div> <% end %>
+	    </div>
+    </div>
+    <!-- END DISPLAY ERROR MESSAGE IF EXIST -->
+
+	<% if !current_user %>
+			
+		<%= form_for( :user, url: user_registration_path(:user), html: { id: 'register-form' } ) do |f| %>
+			<div class="row register-form">
+				<div class="small-12 large-10 small-offset-0 large-offset-0 columns">
+					<h3>Get Started -- It's free!</h3>
+					<p>Registration takes less than two minutes.</p>
+					
+					<div class="row">
+						<div class="small-6 large-6 columns">
+							<input class="radius" type="text" name="user[first_name]" placeholder="First Name" required>
+						</div>
+						<div class="small-6 large-6 columns">
+							<input class="radius" type="text" name="user[last_name]" placeholder="Last Name" required>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="small-12 large-12 columns">
+							<input class="radius" type="email" name="user[email]" placeholder="E-mail address" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="small-6 large-6 columns">
+							<input id="password1" class="radius" type="password" name="user[password]" placeholder="Password" required>	
+						</div>
+						<div class="small-6 large-6 columns">
+							<input id="password2" class="radius" type="password" name="user[password_confirmation]" placeholder="Re-type password" required>
+						</div>
+					</div>
+
+					<div class="row">
+						<div class="small-3 large-3 columns">
+							<label>Birthday: </label>
+						</div>
+						<div class="small-9 large-9 columns">
+							<select id="user[birthday_day]" class="radius" name="user[birthday_day]" style="width: 20%" required>
+								<option value="">- Day -</option>
+								<% (1..31).each do |i| %>
+								<option value="<%= i %>"><%= i %></option>
+								<% end %>
+							</select>
+							<select id="user[birthday_month]" class="radius" name="user[birthday_month]" style="width: 50%" required>
+								<option value="">- Month -</option>
+								<option value="1">January</option>
+								<option value="2">February</option>
+								<option value="3">March</option>
+								<option value="4">April</option>
+								<option value="5">May</option>
+								<option value="6">June</option>
+								<option value="7">July</option>
+								<option value="8">August</option>
+								<option value="9">September</option>
+								<option value="10">October</option>
+								<option value="11">November</option>
+								<option value="12">December</option>
+							</select>
+							<select id="user[birthday_year]" class="radius" name="user[birthday_year]" style="width: 25%" required>
+								<option value="">- Year -</option>
+								<% (1965..2014).each do |i| %>
+								<option value="<%= i %>"><%= i %></option>
+								<% end %>
+							</select>
+						</div>						
+					</div>
+
+					<div class="row">
+						<div class="small-3 large-3 columns">
+							<label>Gender: </label>
+						</div>
+						<div class="small-9 large-9 columns">
+							<input type="radio" name="user[gender]" value="Male" id="genderMale" required><label for="genderMale">Male</label>
+	  						<input type="radio" name="user[gender]" value="Female" id="genderFemale" required><label for="genderFemale">Female</label>
+						</div>
+					</div>
+
+					<div class="row submit-button-row">
+						<div class="small-3 large-3 small-centered large-centered columns">
+							<button class="button radius">Register</button>
+						</div>
+					</div>
+
+				</div>
+			</div>
+		<% end %>
+
+	<% else %>
+
+		<div class="row logged-in">
+			<div class="small-12 large-8 small-offset-0 large-offset-1 columns">
+				<h3>Logged in as</h3>
+	      		<h2><%= current_user.email %></h2>
+	      		<hr />
+	      		<%= link_to 'Start SkillSort!', '/play-game/1', class: 'button radius start-button' %>
+	      		<hr />
+	      		<%= link_to 'Sign out', destroy_user_session_path, method: :delete, class: 'button radius logout-button' %>
+	      		<hr />
+			</div>
+		</div>
+
+	<% end %>
+
+</div>
+
+
+<%= content_for :page_scripts do %>
+	<%= javascript_include_tag 'validate' %>
+<% end %>

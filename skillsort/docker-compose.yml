@@ -1,0 +1,28 @@
+app:
+  build: .
+  command: ./script/start
+  volumes:
+    - .:/skillsort/skillsort
+  volumes_from:
+    - box
+  ports:
+    - "5555:5555"
+  links:
+    - postgres
+postgres:
+  image: postgres:9.5
+  volumes:
+    - ./postgresql:/var/lib/postgresql
+    - ./postgresql/data:/var/lib/postgresql/data
+  ports:
+    - "5432"
+box:
+  image: busybox
+  volumes:
+    - /box
+nginx:
+  build: nginx/
+  links:
+      - app
+  ports:
+    - "80:80"

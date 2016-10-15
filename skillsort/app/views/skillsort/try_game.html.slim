@@ -1,0 +1,15 @@
+- content_for :head do
+  == stylesheet_link_tag "skillsort2"
+
+div.container ng-app="skillsortApp" ng-controller="GameCtrl"
+  div.row
+    div.large-10.columns ng-controller="StageCtrl"
+      p
+        | This is the stage
+    div.large-2.columns ng-controller="SideCtrl"
+      h3 Skill Cards
+      div.cards
+        skillcard(ng-repeat)
+
+- content_for :page_scripts do
+  == javascript_include_tag 'skillsort3'

@@ -1,0 +1,37 @@
+<%= form_for(@axis, url: admin_axis_path(@axis)) do |f| %>
+  <% if @axis.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@axis.errors.count, "error") %> prohibited this axis from being saved:</h2>
+
+      <ul>
+      <% @axis.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :value %><br>
+    <%= f.number_field :value %>
+  </div>
+  <div class="field">
+    <%= f.label :game_type %><br>
+    <%= f.number_field :game_type %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br>
+    <%= f.check_box :active %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

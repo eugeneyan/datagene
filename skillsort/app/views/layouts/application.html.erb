@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en" >
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title><%= content_for?(:title) ? yield(:title) : "SortMySkills" %></title>
+    <%= stylesheet_link_tag    "application" %>
+    <%= yield(:head) if content_for?(:head) %>
+    <%= javascript_include_tag "vendor/modernizr" %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+    <!-- Facebook Conversion Code for SortMySkills Landing Page -->
+    <script>
+      (function() {
+          var _fbq = window._fbq || (window._fbq = []);
+          if (!_fbq.loaded) {
+            var fbds = document.createElement('script');
+            fbds.async = true;
+            fbds.src = '//connect.facebook.net/en_US/fbds.js';
+            var s = document.getElementsByTagName('script')[0];
+            s.parentNode.insertBefore(fbds, s);
+            _fbq.loaded = true;
+          }
+        })();
+        window._fbq = window._fbq || [];
+          window._fbq.push(['track', '6018576804535', {'value':'0.00','currency':'SGD'}]);
+    </script>
+    <noscript><img height="1" width="1" alt="" style="display:none" src="https://www.facebook.com/tr?ev=6018576804535&amp;cd[value]=0.00&amp;cd[currency]=SGD&amp;noscript=1" /></noscript>
+
+    <!-- BEGIN HEADER -->  
+    <%= render 'layouts/header' %>
+    <!-- END HEADER -->
+
+
+    <!-- BEGIN MAIN CONTENT -->
+    <%= yield %>
+    <!-- END MAIN CONTENT -->
+
+
+    <!-- BEGIN FOOTER -->
+    <%= render 'layouts/footer' %>
+    <!-- END FOOTER -->
+    
+
+    <%= javascript_include_tag "application" %>
+    <%= content_for?(:page_scripts) ? yield(:page_scripts) : "" %>
+  </body>
+</html>

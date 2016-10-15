@@ -1,0 +1,32 @@
+<div class="row">
+<h1>Listing industries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Active</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @industries.each do |industry| %>
+      <tr>
+        <td><%= industry.name %></td>
+        <td><%= industry.active %></td>
+        <td><%= link_to 'Show', admin_industry_path(industry) %></td>
+        <td><%= link_to 'Edit', edit_admin_industry_path(industry) %></td>
+        <td><%= link_to 'Destroy', admin_industry_path(industry), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Industry', new_admin_industry_path %>
+
+</div>

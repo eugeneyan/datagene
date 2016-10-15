@@ -1,0 +1,31 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag "skillsort2" %>
+<% end %>
+
+
+<div class="container" ng-app="skillsortApp2" ng-controller="GameCtrl" game-type="3"></div>
+
+<ol class="joyride-list" data-joyride>
+  <li data-button="Next">
+    <h4>Welcome to Game 3: Measure Usage</h4>
+    <br>
+    <p>Welcome! Game 3 helps you measure how often you use certain skills in your current job role.</p>
+  </li>
+
+  <li data-id="deck" data-button="Next" data-options="tip_location:left;">
+    <p>Core skills are displayed on the stack of skill cards here with its description below.</p>
+  </li>
+
+  <li data-id="slider-group" data-options="tip_location:left;">
+    <p>Sort the skill cards in order of usage at work by sliding to the number of hours and click the "Tick" button for each skill.</p>
+  </li>
+
+  <li data-id="skillcard-1" data-button="Start Game!" data-options="tip_location:left;">
+    <p>To return a card, click on the card to return it to the deck.</p>
+  </li>
+</ol>
+
+
+<% content_for :page_scripts do %>
+	<%= javascript_include_tag 'skillsort2' %>
+<% end %>

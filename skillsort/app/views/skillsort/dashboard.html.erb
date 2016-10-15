@@ -1,0 +1,198 @@
+<% content_for :head do %>
+	<%= stylesheet_link_tag 'dashboard' %>
+<% end %>
+
+
+<div class="row">
+	<div class="large-12 columns">
+		<h2>Dashboard</h2>	
+		<hr>
+		<div class="row">
+
+			<!-- Start Main Left Column -->
+			<div class="large-8 columns">
+				
+				<div class="row">
+					<div class="large-12 columns">
+						<h4>Skill Preferences Overview</h4>
+						
+						<% if @presenter.game1? %>
+						<!-- Start Skill:Love Section -->
+						<div class="row skill-section">
+							<div class="large-12 columns">
+
+								<div class="row">
+									<div class="large-12 columns">
+										<h6>Energizes Me</h6>
+									</div>
+								</div>
+
+								<div class="row">
+									<% @presenter.love_skills.each do |s| %>
+									<div class="small-4 large-2 columns">
+										<div class="circle-outer love">
+											<div class="circle-inner">
+												<p data-tooltip title="<%= s.description %>"><%= s.name %></p>
+											</div>
+										</div>
+									</div>
+									<% end %>
+									<div class="large-2 columns"></div>
+								</div>
+
+							</div>
+						</div>
+						<!-- End Skill:Love Section -->
+
+
+						<!-- Start Skill:Like Section -->
+						<div class="row skill-section">
+							<div class="large-12 columns">
+
+								<div class="row">
+									<div class="large-12 columns">
+										<h6>Like Using</h6>
+									</div>
+								</div>
+								
+
+								<div class="row">
+									<% @presenter.like_skills.each do |s| %>
+									<div class="small-4 large-2 columns">
+										<div class="circle-outer like">
+											<div class="circle-inner">
+												<p data-tooltip title="<%= s.description %>"><%= s.name %></p>
+											</div>
+										</div>
+									</div>
+									<% end %>
+								</div>
+							</div>
+						</div>
+						<!-- End Skill:Like Section -->
+
+
+
+						<div class="row skill-section">
+							<div class="large-12 columns">
+								
+								<div class="row">
+									<dl class="accordion" data-accordion>
+									  <dd>
+									    <a href="#panel1"><i class="fa fa-plus"></i> &nbsp; Neutral</a>
+									    <div id="panel1" class="content">
+									      <div class="row">
+									      	<% @presenter.neutral_skills.each do |s| %>
+											<div class="small-4 large-2 columns">
+												<div class="circle-outer neutral">
+													<div class="circle-inner">
+														<p data-tooltip title="<%= s.description %>"><%= s.name %></p>
+													</div>
+												</div>
+											</div>
+											<% end %>
+									      </div>
+									    </div>
+									  </dd>
+									  <dd>
+									    <a href="#panel2"><i class="fa fa-plus"></i> &nbsp; Dislike Using</a>
+									    <div id="panel2" class="content">
+									      <div class="row">
+									      	<% @presenter.dislike_skills.each do |s| %>
+											<div class="small-4 large-2 columns">
+												<div class="circle-outer dislike">
+													<div class="circle-inner">
+														<p data-tooltip title="<%= s.description %>"><%= s.name %></p>
+													</div>
+												</div>
+											</div>
+											<% end %>
+									      </div>
+									    </div>
+									  </dd>
+									  <dd>
+									    <a href="#panel3"><i class="fa fa-plus"></i> &nbsp; Hate Using</a>
+									    <div id="panel3" class="content">
+									      <div class="row">
+									      	<% @presenter.hate_skills.each do |s| %>
+											<div class="small-4 large-2 columns">
+												<div class="circle-outer hate">
+													<div class="circle-inner">
+														<p data-tooltip title="<%= s.description %>"><%= s.name %></p>
+													</div>
+												</div>
+											</div>
+											<% end %>
+									      </div>
+									    </div>
+									  </dd>
+									</dl>
+								</div>
+								
+							</div>
+						</div>
+
+						<% else %>
+
+						<div class="row skill-section">
+							<div class="small-12 large-12 columns" >
+								<br/>
+								<h6>Start on Game 1 to get an overview of your skill preferences!</h6>
+								<br/><br/>
+								<a href="/play-game/1" class="button success radius">Start Game 1!</a>
+							</div>
+						</div>
+
+						<% end %>						
+
+					</div>
+				</div>
+			</div>
+			<!-- End Main Left Column -->
+
+
+
+			<!-- Start Side Right Column -->
+			<div class="large-4 columns">
+				<h4>Game Progress</h4>
+				
+				<div class="panel radius game-progess-panel">
+				  <div class="row">
+				  	<div class="large-6 columns">
+				  		<p class="game-title"><strong>Game 1:</strong><br/>Discover your Passion</p>
+				  	</div>
+				  	<div class="large-6 columns">
+				  		<%= render 'game_status', game: @presenter.game1?, game_type: 1 %>
+				  	</div>
+				  </div>
+				</div>
+
+				<div class="panel radius game-progess-panel">
+				  <div class="row">
+				  	<div class="large-6 columns">
+				  		<p class="game-title"><strong>Game 2:</strong><br/>Gauge Proficiency</p>
+				  	</div>
+				  	<div class="large-6 columns">
+				  		<%= render 'game_status', game: @presenter.game2?, game_type: 2 %>
+				  	</div>
+				  </div>
+				</div>
+
+				<div class="panel radius game-progess-panel">
+				  <div class="row">
+				  	<div class="large-6 columns">
+				  		<p class="game-title"><strong>Game 3:</strong><br/>Quantify Usage</p>
+				  	</div>
+				  	<div class="large-6 columns">
+				  		<%= render 'game_status', game: @presenter.game3?, game_type: 3 %>
+				  	</div>
+				  </div>
+				</div>
+
+			</div>
+			<!-- End Side Right Column -->
+
+
+		</div>
+	</div>
+</div>

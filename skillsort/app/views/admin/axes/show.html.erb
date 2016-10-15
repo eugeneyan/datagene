@@ -1,0 +1,29 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @axis.name %>
+</p>
+
+<p>
+  <strong>Description:</strong>
+  <%= @axis.description %>
+</p>
+
+<p>
+  <strong>Value:</strong>
+  <%= @axis.value %>
+</p>
+
+<p>
+  <strong>Game Type:</strong>
+  <%= @axis.game_type %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @axis.active %>
+</p>
+
+<%= link_to 'Edit', edit_admin_axis_path(@axis) %> |
+<%= link_to 'Back', admin_axes_path %>

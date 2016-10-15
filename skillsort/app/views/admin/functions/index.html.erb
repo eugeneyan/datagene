@@ -1,0 +1,32 @@
+<div class="row">
+<h1>Listing functions</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Active</th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @functions.each do |function| %>
+      <tr>
+        <td><%= function.name %></td>
+        <td><%= function.active %></td>
+        <td><%= link_to 'Show', admin_function_path(function) %></td>
+        <td><%= link_to 'Edit', edit_admin_function_path(function) %></td>
+        <td><%= link_to 'Destroy', admin_function_path(function), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Function', new_admin_function_path %>
+
+</div>

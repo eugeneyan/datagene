@@ -1,0 +1,180 @@
+<div class="row">
+	<div class="small-12 columns">
+		<p>SortMySkills strive to bring utmost value to our users around the world and help them in their future career endeavours. SortMySkills welcomes your feedback on our services. Begin by filling up the feedback form below, open-ended questions are optional.</p>
+
+		<hr>
+
+		<!-- BEGIN DISPLAY FEEDBACK MESSAGE IF EXIST -->  
+	    <div class="row">
+	    	<div class="small-12 large-12 columns">
+		    	<% if notice || alert %> <div class="panel radius callout"><%= notice || alert %></div> <% end %>
+		    </div>
+	    </div>
+	    <!-- END DISPLAY FEEDBACK MESSAGE IF EXIST --> 
+
+		<h3>Feedback Form</h3>
+		<%= form_tag '/feedback-submit', method: :post do %>
+			
+			<div class="row">
+				<div class="small-12 columns">
+					<p>Rate each question from a scale of 1 to 5, with 5 being the most useful.</p>
+				</div>
+			</div>
+
+			<div class="row panel">
+				
+				<!-- Game 1 Questions Start -->
+				<h5>Game 1</h5>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is SortMySkill in helping you find your favourite skill sets?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn1]" value="5" id="qn1-5" required><label for="qn1-5">5</label>
+						<input type="radio" name="feedback[qn1]" value="4" id="qn1-4" required><label for="qn1-4">4</label>
+						<input type="radio" name="feedback[qn1]" value="3" id="qn1-3" required><label for="qn1-3">3</label>
+						<input type="radio" name="feedback[qn1]" value="2" id="qn1-2" required><label for="qn1-2">2</label>
+						<input type="radio" name="feedback[qn1]" value="1" id="qn1-1" required><label for="qn1-1">1</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is the information about your top 5 skills that you love to use?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn2]" value="5" id="qn2-5" required><label for="qn2-5">5</label>
+						<input type="radio" name="feedback[qn2]" value="4" id="qn2-4" required><label for="qn2-4">4</label>
+						<input type="radio" name="feedback[qn2]" value="3" id="qn2-3" required><label for="qn2-3">3</label>
+						<input type="radio" name="feedback[qn2]" value="2" id="qn2-2" required><label for="qn2-2">2</label>
+						<input type="radio" name="feedback[qn2]" value="1" id="qn2-1" required><label for="qn2-1">1</label>
+					</div>
+				</div>
+				<!-- Game 1 Questions End -->
+
+				<hr>
+
+				<!-- Game 2 Questions Start -->
+				<h5>Game 2</h5>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is SortMySkill in helping you find the gap between your current situation and the desired place where you want to be?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn3]" value="5" id="qn3-5" required><label for="qn3-5">5</label>
+						<input type="radio" name="feedback[qn3]" value="4" id="qn3-4" required><label for="qn3-4">4</label>
+						<input type="radio" name="feedback[qn3]" value="3" id="qn3-3" required><label for="qn3-3">3</label>
+						<input type="radio" name="feedback[qn3]" value="2" id="qn3-2" required><label for="qn3-2">2</label>
+						<input type="radio" name="feedback[qn3]" value="1" id="qn3-1" required><label for="qn3-1">1</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is the information about the gap?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn4]" value="5" id="qn4-5" required><label for="qn4-5">5</label>
+						<input type="radio" name="feedback[qn4]" value="4" id="qn4-4" required><label for="qn4-4">4</label>
+						<input type="radio" name="feedback[qn4]" value="3" id="qn4-3" required><label for="qn4-3">3</label>
+						<input type="radio" name="feedback[qn4]" value="2" id="qn4-2" required><label for="qn4-2">2</label>
+						<input type="radio" name="feedback[qn4]" value="1" id="qn4-1" required><label for="qn4-1">1</label>
+					</div>
+				</div>
+				<!-- Game 2 Questions End -->
+
+				<hr>
+
+				<!-- Game 3 Questions Start -->
+				<h5>Game 3</h5>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is SortMySkill in helping you realise the amount of time you have spent on each skill?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn5]" value="5" id="qn5-5" required><label for="qn5-5">5</label>
+						<input type="radio" name="feedback[qn5]" value="4" id="qn5-4" required><label for="qn5-4">4</label>
+						<input type="radio" name="feedback[qn5]" value="3" id="qn5-3" required><label for="qn5-3">3</label>
+						<input type="radio" name="feedback[qn5]" value="2" id="qn5-2" required><label for="qn5-2">2</label>
+						<input type="radio" name="feedback[qn5]" value="1" id="qn5-1" required><label for="qn5-1">1</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>How useful is the information about the time spent on each skill?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn6]" value="5" id="qn6-5" required><label for="qn6-5">5</label>
+						<input type="radio" name="feedback[qn6]" value="4" id="qn6-4" required><label for="qn6-4">4</label>
+						<input type="radio" name="feedback[qn6]" value="3" id="qn6-3" required><label for="qn6-3">3</label>
+						<input type="radio" name="feedback[qn6]" value="2" id="qn6-2" required><label for="qn6-2">2</label>
+						<input type="radio" name="feedback[qn6]" value="1" id="qn6-1" required><label for="qn6-1">1</label>
+					</div>
+				</div>
+				<!-- Game 3 Questions End -->
+
+				<hr>
+
+				<!-- Overall Questions Start -->
+				<h5>Overall</h5>
+
+				<div class="row">
+					<div class="small-8 large-8 columns">
+						<p>Which game would you find most useful?</p>
+					</div>
+					<div class="small-4 large-4 columns">
+						<input type="radio" name="feedback[qn7]" value="1" id="qn7-1" required><label for="qn7-1">Game 1</label>
+						<input type="radio" name="feedback[qn7]" value="2" id="qn7-2" required><label for="qn7-2">Game 2</label>
+						<input type="radio" name="feedback[qn7]" value="3" id="qn7-3" required><label for="qn7-3">Game 3</label>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-12 columns">
+						<p>Are there any enhancement or feature you would like us to build in future? (Optional)</p>
+						<textarea name="feedback[qn8]" cols="25" rows="5"></textarea>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-12 columns">
+						<p>Are there any bugs you would like to report? (Optional)</p>
+						<textarea name="feedback[qn9]" cols="25" rows="5"></textarea>
+					</div>
+				</div>
+
+				<div class="row">
+					<div class="small-12 columns">
+						<p>Was the design of the game easy to use? Please help us understand by elaborating. (Optional)</p>
+						<textarea name="feedback[qn10]" cols="25" rows="5"></textarea>
+					</div>
+				</div>
+
+
+				<div class="row">
+					<div class="small-12 columns">
+						<p>Any other comments (Optional)</p>
+						<textarea name="feedback[qn11]" cols="25" rows="5"></textarea>
+					</div>
+				</div>
+
+			</div>
+
+			<br><br>
+
+			<div class="row">
+				<div class="small-3 large-3 small-centered large-centered columns">
+					<button class="button expand radius">Submit Feedback!</button>
+				</div>
+			</div>
+
+		<% end %>
+
+		<hr>
+
+	</div>
+</div>

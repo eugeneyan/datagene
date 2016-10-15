@@ -1,0 +1,107 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the top of the
+ * compiled file, but it's generally better to create a new file per style scope.
+ *
+ *= require foundation
+ *= require font-awesome/font-awesome.min
+ *= require jquery-ui/jquery-ui-1.10.4.custom.min
+ *= require_self
+ *= require foundation_and_overrides
+ */
+
+@font-face {
+    font-family: 'sofia_pro_lightregular';
+    src: url('/fonts/SofiaProLight-webfont.eot');
+    src: url('/fonts/SofiaProLight-webfont.eot?#iefix') format('embedded-opentype'),
+         url('/fonts/SofiaProLight-webfont.woff') format('woff'),
+         url('/fonts/SofiaProLight-webfont.ttf') format('truetype'),
+         url('/fonts/SofiaProLight-webfont.svg#sofia_pro_lightregular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+	font-family: 'sofia_pro_lightregular';	
+}
+
+section.top-bar-section ul li > a {
+	font-family: 'sofia_pro_lightregular';
+	font-size: 14px;
+}
+
+.body {
+	position: relative;
+}
+.main-left {
+	margin: 20px 0;
+}
+.main-left-img {
+	width: 85%;
+	margin: 0 auto;
+}
+.main-right {
+	margin: 80px 0 0 0;
+}
+div.row.logged-in > div > h3 {
+	font-family: 'sofia_pro_lightregular';
+}
+div.row.logged-in > div > h2 {
+	font-family: 'sofia_pro_lightregular';
+	font-weight: bolder;
+}
+a.button.radius.start-button {
+	background-color: #58C944;
+	margin: 0 0;
+	width: 100%;
+}
+a.button.radius.start-button:hover {
+	background-color: #7BEB67;
+}
+a.button.radius.logout-button {
+	background-color: #EB4B4B;
+	margin: 0 0;
+	width: 100%;
+}
+a.button.radius.logout-button:hover {
+	background-color: #BA3C3C;
+}
+.logo {
+	height: 33px;
+	margin: 8px 20px;
+}
+.submit-button-row {
+	padding-top: 20px;
+}
+.tagline h4 {
+	text-align: center;
+	font-weight: bolder;
+	font-size: 26px;	
+}
+.footer {
+	margin-top: 25px;
+	padding: 10px 5px;
+	background: url('/images/geometry.png') repeat;
+	height: 50px;
+}
+.footer .text-link {
+	position: relative;
+	top: -5px;
+	margin: 0 8px;
+	font-size: 14px;
+	color: #6B6B6B;
+}
+.footer .icon-link {
+	color: #3566AB;
+	/*color: #6B6B6B;*/
+	margin: 30px 6px;
+}
+nav {
+	z-index: 9999;
+}
+

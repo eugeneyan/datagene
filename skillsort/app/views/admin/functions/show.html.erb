@@ -1,0 +1,14 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <strong>Name:</strong>
+  <%= @function.name %>
+</p>
+
+<p>
+  <strong>Active:</strong>
+  <%= @function.active %>
+</p>
+
+<%= link_to 'Edit', edit_admin_function_path(@function) %> |
+<%= link_to 'Back', admin_functions_path %>

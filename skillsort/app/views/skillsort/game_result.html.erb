@@ -1,0 +1,12 @@
+<div class="container">
+	<div class="row">
+		<div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+			<h1>This is a game result</h1>
+			<ul>
+				<% @games.each do |g| %>
+				<li><%= g.result_hash %></li>
+				<% end %>
+			</ul>
+		</div>
+	</div>
+</div>

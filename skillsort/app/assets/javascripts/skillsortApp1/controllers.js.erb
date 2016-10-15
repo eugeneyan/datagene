@@ -1,0 +1,322 @@
+'use strict';
+
+/* Controllers */
+app1.controller('GameCtrl', ['$scope', '$http', function($scope, $http){
+
+	//------------------------------
+	// Set Game Controller variables
+	//------------------------------
+	$scope.current_card_index = 0;		// index 0 is the first card on top of the deck
+	$scope.top_z_index = 100;			// this keeps track of the latest top z-index, to keep card on top of others when moved
+	$scope.droppedin_flag = false;		// keeps track of whether a card dropped in a cardholder when moving
+	$scope.result = {};
+	
+	//--------------------------
+	// Define Setup functions
+	//--------------------------
+	
+	// Initialize new game. This runs when the page loads.
+	$scope.setupGame = function(){
+		
+		// Get Skills resource
+		$http.get('/skillsort-skills.json').success(function(data) {
+    		$scope.skills = data;
+    		// Get Axis resource
+			$http.get('/skillsort-axes.json').success(function(data) {
+    			$scope.axes = data;
+
+    			// Set the game stage once resources have been loaded.
+    			setTimeout(function(){ $scope.setGameStage($scope); }, 10);
+
+  			});
+  		});	
+	};
+
+	// Set the game stage
+	$scope.setGameStage = function($scope){
+		// Loading bar remove
+		$("#loading-bar").remove();
+
+		// Set the Skill card row and column
+		// $("#skillsort-app-1").append('<div id="skillcard-row" class="row" style="height: 200px"></div>');
+		// $("#skillcard-row").append('<div class="col-lg-5"></div>');
+		// $("#skillcard-row").append('<div id="skillcard-column" class="col-lg-2"></div>');
+		// $("#skillcard-row").append('<div class="col-lg-5"></div>');
+
+		// Set the Cardholder row and 5 columns
+		$("#skillsort-app-1").append('<div id="cardholder-row" class="row"></div>');
+		$("#cardholder-row").append('<div class="col-lg-1"></div>');
+		for (var i=1; i<=5; i++){
+			$("#cardholder-row").append('<div id="cardholder-column-'+i+'" class="col-lg-2"></div>');
+		}
+		$("#cardholder-row").append('<div class="col-lg-1"></div>');
+
+		// Create and place cardholders on the page
+		for(var i=0; i< $scope.axes.length; i++){
+			var cardholder = $scope.createCardholder($scope.axes[i]);
+			$('#cardholder-column-'+(i+1)).append(cardholder);
+		}
+
+		// Create and place skillcard holder on the page
+		// $("#skillcard-column").append('<div id="skillcardholder" style="	width: 160px;\
+		// 																	height: 180px;\
+		// 																	float: left;\
+		// 																	position: absolute;\
+		// 																	z-index: 1;">\
+		// 																	</div>');
+
+		// Set the deck of skill cards
+		for(var i=0; i < $scope.skills.length; i++){
+			var skill = $scope.createSkillCard($scope.skills[$scope.skills.length - 1 - i], i);
+			$('#skillcard-column').append(skill);
+		}
+
+		// Set skill cardholder properties
+		$scope.setCardholderProperties($("#skillcardholder"), 50);
+		$("#skillcardholder").data('count', 50);
+
+		// Set skill card properties
+		var skillcards = $(".skillcard");
+		for(var i=0; i<skillcards.length; i++){
+			$scope.setSkillCardProperties($('#'+skillcards[i].id));
+		}
+
+		// Set placeholder properties and capacity
+		var cardholders = $(".cardholder");
+		$scope.setCardholderProperties($(cardholders[0]), 5);
+		$scope.setCardholderProperties($(cardholders[1]), 50);
+		$scope.setCardholderProperties($(cardholders[2]), 50);
+		$scope.setCardholderProperties($(cardholders[3]), 50);
+		$scope.setCardholderProperties($(cardholders[4]), 50);
+
+		$scope.$apply();
+	};
+
+	// This function returns a string of the cardholder DOM element
+	$scope.createCardholder = function(axis){
+
+		var name = (axis.name) ? axis.name : '';
+		var description = (axis.description) ? '('+axis.description+')' : '';
+
+		return '<div id="ax-'+axis.id+'" class="cardholder" style="width: 100%; \
+												height: 180px; \
+												border: 3px; \
+												background-color: #EDEDED; \
+												text-align: center; \
+												padding-top: 80px; \
+												z-index: 0; \
+												"></div>\
+				<p style="text-align: center; padding-top: 10px">'+name+'<br/>'+description+'</p>';
+	};
+
+	// This function returns a string of the skill card DOM element
+	$scope.createSkillCard = function(skill, index){
+
+		var name = (skill.name) ? skill.name : '';
+		var description = (skill.description) ? skill.description : '';
+
+		return '<div id="sk-'+skill.id+'" class="skillcard" style="	width: 160px; \
+												height: 180px; \
+												border: 3px; \
+												background-color: #FFFECC; \
+												text-align: center; \
+												padding-top: 80px; \
+												position: absolute; \
+												float: left; \
+												z-index: '+(index+4)+'; \
+												">'+name+'</div>';
+	};
+
+	// This functions set the properties of the skill card.
+	$scope.setSkillCardProperties = function(skillcard){
+
+		skillcard.data("location_id", "skillcardholder");
+		skillcard.draggable({
+			revert: false,
+			start: function(event, ui){
+				// Assign top_z_index
+				skillcard.css('z-index', $scope.top_z_index);
+				$scope.top_z_index++;
+			},
+			stop: function(event, ui){
+				if(!$scope.droppedin_flag){
+					// Revert to original position					
+					$scope.animateShiftCard( skillcard[0].id, skillcard.data('location_id') );
+				}
+				$scope.droppedin_flag = false;
+			}
+		});
+
+	};
+
+	// This functions set the properties of the skill card.
+	$scope.setCardholderProperties = function(cardholder, capacity){
+
+		cardholder.data('count', 0);
+		cardholder.data('capacity', capacity);
+		cardholder.move = function(source_id, target_id){
+			// Get Skillcard source cardholder id
+			var source_cardholder = $('#'+source_id);
+			var target_cardholder = $('#'+target_id);
+
+			// Remove from source and add to target
+			source_cardholder.data('count', source_cardholder.data('count') - 1);
+			target_cardholder.data('count', target_cardholder.data('count') + 1);
+		}
+		
+		cardholder.droppable({
+			tolerance: "pointer",
+			drop: function(event, ui){
+
+				var sk_id = $(ui)[0].draggable[0].id;
+				var ch_id = $(this)[0].id;
+
+				// Check if cardholder is full, return
+				if(cardholder.data('count') >= cardholder.data('capacity')) return;
+
+				// Increase the cardholder count and animate card to move to cardholder
+				var source_ch_id = $('#'+sk_id).data('location_id');
+				var target_ch_id = ch_id;
+				cardholder.move(source_ch_id, target_ch_id);
+				
+				// Update location of card to current cardholder id
+				$('#'+sk_id).data('location_id', ch_id);
+
+				// Animate card to move to cardholder position
+				$scope.animateShiftCard(sk_id, ch_id);
+				
+				// Update to display next skill description
+				$scope.current_card_index = $scope.showNextSkillDescription();
+				$scope.$apply();
+				
+				// Track dropped in
+				$scope.droppedin_flag = true;
+
+				// Store result
+				$scope.result[sk_id.substring(3)] = ch_id.substring(3);
+
+				// Reload variables on page
+				$scope.$apply();
+			}
+		});
+	};
+
+
+	//--------------------------------
+	// Define the In-game functions
+	//--------------------------------
+
+	// This function animates the shift of object when a card is dropped.
+	// Inputs are the id of the DOM element
+	$scope.animateShiftCard = function(source, target){
+
+		var src = $('#'+source);
+		var trg = $('#'+target);
+
+		src.position({
+			my: "center",
+			at: "center",
+			of: trg
+		});
+
+	};
+
+	// This function sets the next skill description based on the card on the top of the cards deck
+	$scope.showNextSkillDescription = function(){
+
+		var skillcards = $(".skillcard");
+		var on_deck = [];
+		
+		// Get all the cards at the skill cards deck position
+		for(var i=0; i<skillcards.length; i++){
+			var card = $(skillcards[i]);
+			var top_num = pixelToNumber(card.css("top"));
+			var left_num = pixelToNumber(card.css("left"));
+
+			if(!top_num) top_num = 0; 			// Fix Chrome issue, since top value is 'auto'
+			if(!left_num) left_num = 15;		// Fix Chrome issue, since left value is 'auto'
+			
+			if( (top_num > -1 && top_num < 1) &&
+				(left_num > 14 && left_num < 16) ) {
+				// This card is on the skills deck
+				on_deck.push(card);
+			}
+		}
+
+		if(on_deck.length > 0){
+			
+			// Get the card with the maximum z-index
+			var top_card = $('#'+on_deck[0][0].id);
+
+			for(var i=1; i<on_deck.length; i++){
+				var card = $('#'+on_deck[i][0].id);
+				
+				if( Number(card.css("z-index")) > Number(top_card.css("z-index")) ){
+					top_card = card;
+				}
+			}
+
+			// Set skill description
+			var index = Number(top_card[0].id.substring(3)) - 1;
+			return index;	
+		} else {
+			return -1;
+		}
+		
+	};
+
+	// This function converts a hash into a string upon game submit.
+	$scope.resultToString = function(){
+		var str = '';
+		for(var key in $scope.result){
+			str += key + ',' + $scope.result[key] + ';'
+		}
+		return str;
+	}
+
+	// This function is called when the player clicks on the game submit button.
+	$scope.completeGame = function(){
+
+		var host = "<%= (Rails.env == 'production') ? 'http://sortmyskills.codingops.com' : 'http://localhost:3000' %>"
+		
+		// Set JSON object with user_id, version, result
+		var game = {
+			version: 'v0.1',
+			result: $scope.resultToString()
+		};
+
+		// Submit results to server...
+		$http.post(host + '/submit-game.json', game).success(function(response) {
+			
+			// Response returned should be a javascript object of a saved game.
+			if (response.user_id == null) {
+
+				$('#skillsort-app-1').remove();
+				$('#main-page').append('<p>'+response.result+'</p>');
+
+			} else {
+				window.location.replace(host + '/dashboard');
+			}
+
+		});
+	};
+
+	$scope.publishResult = function() {
+		// Remove the game stage
+
+		// Add in results
+	};
+
+	//--------------------
+	// Helper Functions
+	//--------------------
+	function pixelToNumber(str) {
+		return Number( str.substring(0, str.length-2) );
+	}
+	
+	//-----------------
+	// Execution
+	//-----------------
+	$scope.setupGame();
+
+}]);

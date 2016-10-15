@@ -1,0 +1,104 @@
+<div class="container">
+	
+	<div class="row">
+		<h2 style="text-align: center;">Create your SortMySkills Account!</h2>
+		<hr>
+		<p>Fill up the form below to create an account in less than 1 minute!</p>
+		<% if devise_error_messages! != '' %>
+			<div class="alert alert-danger"> <%= devise_error_messages! %> </div>
+		<% end %>
+		<br/>
+	</div>
+
+	<div class="row">
+		<%= form_for(resource, :as => resource_name, :url => registration_path(resource_name)) do |f| %>
+		
+		<div class="row">
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+	    			<h3 class="panel-title">Account Details</h3>
+	  			</div>
+					<div class="panel-body">
+	    			<input type="email" name="user[email]" id="user_email" class="form-control" placeholder="Email address" required autofocus style="margin-top: 10px">
+						<input type="password" name="user[password]" class="form-control" placeholder="Password" required style="margin-top: 10px">
+					  <input type="password" name="user[password_confirmation]" class="form-control" placeholder="Type password again" required style="margin-top: 10px">
+	  			</div>
+				</div>
+			</div>
+
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div class="panel panel-success">
+					<div class="panel-heading">
+	    			<h3 class="panel-title">Basic Information</h3>
+	  			</div>
+					<div class="panel-body">
+	    			<input type="text" name="user[first_name]" class="form-control" placeholder="First Name" required style="margin-top: 10px">
+						<input type="text" name="user[last_name]" class="form-control" placeholder="Last Name" required style="margin-top: 10px">
+						<select class="form-control" name="user[gender]" required style="margin-top: 10px">
+						  <option>Male</option>
+						  <option>Female</option>
+						</select>
+						<label>Birthday: </label>
+						<select class="form-control" name="user[birthday_day]" required style="margin-top: 10px; display: inline; width: 20%;">
+							<% (1..31).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+							<% end %>
+						</select>
+						<select class="form-control" name="user[birthday_month]" required style="margin-top: 10px; display: inline; width: 30%;">
+							<option value="1">January</option>
+							<option value="2">February</option>
+							<option value="3">March</option>
+							<option value="4">April</option>
+							<option value="5">May</option>
+							<option value="6">June</option>
+							<option value="7">July</option>
+							<option value="8">August</option>
+							<option value="9">September</option>
+							<option value="10">October</option>
+							<option value="11">November</option>
+							<option value="12">December</option>
+						</select>
+						<select class="form-control" name="user[birthday_year]" required style="margin-top: 10px; display: inline; width: 27%;">
+							<% (1965..2014).each do |i| %>
+							<option value="<%= i %>"><%= i %></option>
+							<% end %>
+						</select>
+	  			</div>
+				</div>
+			</div>
+
+			<div class="col-xs-4 col-sm-4 col-md-4 col-lg-4">
+				<div class="panel panel-info">
+					<div class="panel-heading">
+	    			<h3 class="panel-title">Other Information</h3>
+	  			</div>
+					<div class="panel-body">
+						<label>Education: </label>
+						<select class="form-control" name="user[education]" required style="margin-top: 10px; display: inline; width: 75%;">
+							<option value="">- Select Highest Education Level -</option>
+							<option value="O/A/N Level">O/A/N Level</option>
+							<option value="Diploma">Diploma</option>
+							<option value="Bachelor Degree">Bachelor Degree</option>
+							<option value="Masters Degree">Masters Degree</option>
+							<option value="PhD">PhD</option>
+						</select>
+						<input type="text" name="user[function]" class="form-control" placeholder="Function" style="margin-top: 10px">
+						<input type="text" name="user[industry]" class="form-control" placeholder="Industry" style="margin-top: 10px">
+						<input type="text" name="user[job_role]" class="form-control" placeholder="Job Role" style="margin-top: 10px">
+	  			</div>
+				</div>
+			</div>
+
+		</div>
+
+		<div class="row" style="margin-top: 30px;">
+			<div class="col-lg-2 col-lg-offset-5">
+				<button class="btn btn-lg btn-success btn-block" type="submit">Register</button>
+			</div>
+		</div>
+
+		<% end %>
+
+	</div>
+</div>

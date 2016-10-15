@@ -1,0 +1,25 @@
+<%= form_for(@industry, url: admin_industry_path(@industry)) do |f| %>
+  <% if @industry.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@industry.errors.count, "error") %> prohibited this industry from being saved:</h2>
+
+      <ul>
+      <% @industry.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :active %><br>
+    <%= f.check_box :active %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

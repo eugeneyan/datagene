@@ -1,0 +1,43 @@
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+      <h1>Listing games</h1>
+
+      <table class="table table-striped table-hover table-responsive">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Version</th>
+            <th>Game Type</th>
+            <th>Result</th>
+            <th></th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @games.each do |game| %>
+            <tr>
+              <td><%= game.user_id %></td>
+              <td><%= game.version %></td>
+              <td><%= game.game_type %></td>
+              <td><%= game.result.truncate(50) if game.result != nil %></td>
+              <td><%= link_to 'Show', admin_game_path(game) %></td>
+              <td><%= link_to 'Download', admin_download_game_path(game) %></td>
+              <td><%= link_to 'Edit', edit_admin_game_path(game) %></td>
+              <td><%= link_to 'Destroy', admin_game_path(game), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <br>
+
+      <a href="/download-all" class="btn btn-success">Download All</a>
+
+    </div>
+  </div>
+</div>

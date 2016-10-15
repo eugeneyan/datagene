@@ -1,0 +1,41 @@
+
+<div class="container">
+  <div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+      <h1>Listing skills</h1>
+
+      <table class="table table-striped table-hover table-responsive">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Active</th>
+            <th></th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @skills.each do |skill| %>
+            <tr>
+              <td><%= skill.id %></td>
+              <td><%= skill.name %></td>
+              <td><%= skill.description %></td>
+              <td><%= skill.active %></td>
+              <td><%= link_to 'Show', admin_skill_path(skill) %></td>
+              <td><%= link_to 'Edit', edit_admin_skill_path(skill) %></td>
+              <td><%= link_to 'Destroy', admin_skill_path(skill), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+
+      <br/>
+      <%= link_to 'New Skill', new_admin_skill_path %>
+      <br/><br/>
+
+    </div>
+  </div>
+</div>

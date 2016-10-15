@@ -1,0 +1,59 @@
+<nav class="top-bar" data-topbar>
+  
+  <ul class="title-area">
+    <li class="name">
+      <a href="/"><img class="logo" src="/images/sortmyskills_logo_navbar_2.png" alt=""></a>
+    </li>
+    <li class="toggle-topbar menu-icon"><a href="#">Menu</a></li>
+  </ul>
+
+  <section class="top-bar-section">
+    <% if !current_user %>
+      <ul class="right">
+        <%= form_for(:user, :url => session_path(:user), html: { id: 'login-form' } ) do |f| %>
+          <li><a href="/play-game/1"><i class="fa fa-th-large"></i> Try SortMySkills!</a></li>
+          <li class="has-form">
+            <input type="text" name="user[email]" placeholder="E-mail Address">
+          </li>
+          <li class="has-form">
+            <input type="password" name="user[password]" placeholder="Password">
+          </li>
+          <li class="has-form">
+            <button type="submit" class="button tiny radius">Login</button>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      
+
+      
+
+        <% if current_user.role == 'admin' %>
+          <ul>
+            <li><a href="/admin/industries"><i class="fa fa-building-o"></i> Industries</a></li>
+            <li><a href="/admin/functions"><i class="fa fa-briefcase"></i> Functions</a></li>
+            <li><a href="/admin/skills"><i class="fa fa-rocket"></i> Skills</a></li>
+            <li><a href="/admin/axes"><i class="fa fa-arrows-h"></i> Axis</a></li>
+            <li><a href="/admin/games"><i class="fa fa-bar-chart-o"></i> Results</a></li>
+          </ul>
+        <% end %>
+      
+
+      <ul class="right">
+
+        <li><a href="/dashboard"><i class="fa fa-dashboard"></i> Dashboard</a></li>
+        <li class="has-dropdown">
+            <a href=""><i class="fa fa-th-large"></i> SortMySkills!</a>
+            <ul class="dropdown">
+              <li><a href="/play-game/1">Game 1: Discover your Passion</a></li>
+              <li><a href="/play-game/2">Game 2: Evaluate Proficiency</a></li>
+              <li><a href="/play-game/3">Game 3: Measure Usage</a></li>
+            </ul>
+          </li>
+        <li><%= link_to 'Log out', destroy_user_session_path, method: :delete %></li>
+        
+      </ul>
+    <% end %>
+  </section>
+
+</nav>

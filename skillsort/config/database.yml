@@ -1,0 +1,21 @@
+default: &default
+  adapter: postgresql 
+  encoding: unicode 
+  pool: 5 
+  timeout: 5000 
+  username: postgres 
+  host: postgres
+
+development:
+  <<: *default
+  database: skillsort_development
+
+test:
+  adapter: sqlite3
+  database: db/test.sqlite3
+  pool: 5
+  timeout: 5000
+
+production:
+  <<: *default
+  database: skillsort_production

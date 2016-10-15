@@ -1,0 +1,598 @@
+'use strict';
+
+/* Directives */
+angular.module('skillsortApp2.directives', []).
+
+	/**
+	 *	Skillcard. The card displays the skill name.
+	 *	Scenario 1:
+	 *		Given that it is in a deck of cards,
+	 *		When the choice is clicked,
+	 *		Then the card moves to the column of the selected choice.
+	 *	Scenario 2:
+	 *		Given that it is not in the deck of cards and it is in one of the columns
+	 *		When the card is clicked,
+	 *		Then the card moves back to the deck of cards and it is on top.
+	 */
+	directive('skillcard', ['$animate' ,function($animate){
+
+		$animate.enabled(true);
+
+		var link_fn = function(scope, element, attrs, controller){
+
+			// Set element z-index
+			element.css('z-index', scope.$parent.z_index_counter);
+
+			var skillcard_outer = angular.element('<div id="skillcard-'+scope.skill.id+'" class="skillcard-outer" ></div>');
+			var skillcard_inner = angular.element('<div class="skillcard-inner"></div>');
+			var skillcard_content = angular.element('<p title="'+scope.skill.description+'" data-options="disable_for_touch:true" data-tooltip>'+scope.skill.name+'</p>');
+
+			element.append(skillcard_outer);
+			skillcard_outer.append(skillcard_inner);
+			skillcard_inner.append(skillcard_content);
+
+			scope.$parent.skillcardCtrls.push(controller);
+
+			// Create move back behaviour
+			element.bind('click', function(){
+				controller.moveBack();
+			})
+		}
+
+		var controller_fn = ['$scope', '$element', '$attrs', '$animate', function($scope, $element, $attrs, $animate){
+
+			this.id = "skillcard"+$scope.skill.id+"Ctrl";
+			this.skill = $scope.skill
+			this.value = 0;
+			this.isInDeck = true;
+
+			this.moveOutTo = function(parent_element){
+
+				if(this.isInDeck){
+					$animate.move($element, parent_element);
+					$element.css('float', 'none');
+					$element.css('position', 'relative');
+					$element.css('z-index', $scope.$parent.z_index_counter);
+					this.isInDeck = false;
+					$scope.$parent.no_deck_cards--;
+					$scope.$parent.z_index_counter++;
+					$scope.$parent.updateCardDescription();	
+				}
+			}
+			this.moveBack = function(){
+
+				if(!this.isInDeck){
+					$animate.move($element, $scope.$parent.deck);
+					$element.css('float', 'left');
+					$element.css('position', 'absolute');
+					$element.css('z-index', $scope.$parent.z_index_counter);
+					this.isInDeck = true;
+					$scope.$parent.no_deck_cards++;
+					$scope.$parent.z_index_counter++;
+					$scope.$parent.updateCardDescription();
+
+					if(this.value == 5){
+						$scope.$parent.col_5_count--;
+					}
+				}
+			}
+			this.setValue = function(value){
+					this.value = value;
+			}
+			this.getSkillcardId = function(){
+				return this.skill.id;
+			}
+			this.getSkillcardName = function(){
+				return this.skill.name;
+			}
+			this.getSkillcardDescription = function(){
+				return this.skill.description;
+			}
+			this.getTop = function(){
+				return $element.css('top');
+			}
+			this.getLeft = function(){
+				return $element.css('left');
+			}
+			this.getZIndex = function(){
+				return $element.css('z-index');
+			}
+			this.getIsInDeck = function(){
+				return this.isInDeck;
+			}
+
+		}];
+
+		return {
+			restrict: 'E',
+			scope: {
+				skill: '=',
+				back: '&'
+			},
+			link: link_fn,
+			controller: controller_fn
+		};
+	}]).
+
+	/**
+	 * Axis directive
+	 */
+	directive('axis', function(){
+
+		var link_fn = function(scope, element){
+
+			var name = (scope.axis.name) ? scope.axis.name : '';
+			var desc = (scope.axis.description) ? scope.axis.description : '';
+
+			var axis_label = angular.element('<div class="axis-label"></div>');
+			var axis_name = angular.element('<h6>'+name+'</h6>');
+			var axis_desc = angular.element('<p>'+desc+'</p>');
+			element.append(axis_label);
+			if(name != '') axis_label.append(axis_name);
+			if(desc != '') axis_label.append(axis_desc);
+
+		};
+
+		return {
+			restrict: 'E',
+			scope: {
+				axis: '='
+			},
+			link: link_fn
+		};
+
+	}).
+
+	/**
+	 *	The stage sets the deck of cards and the columns for the axis.
+	 *	Controls are available in the stage.
+	 */
+	directive('stage', ['$compile', '$http', '$animate', function($compile, $http, $animate){
+
+		var link_fn = function(scope, element, attrs, controllers){
+
+			/**
+			 *	Set up game stage
+			 */
+
+			scope.game_type = scope.$parent.game_type;
+			scope.axes = scope.$parent.axes;
+			scope.skills = scope.$parent.skills;
+			scope.no_deck_cards = scope.skills.length;
+			scope.card_description = scope.skills[0].description;
+			scope.col_5_count = 0;
+			scope.lastSelected = [];
+			scope.result = {};
+      scope.$parent.stage_scope = scope;
+      console.log("Linked stage scope");
+
+
+    	// Set the stage layout, to 6 columns ( 5 axis, 1 control )
+    	var element_row = angular.element('<div id="stage-container" class="row">' + '</div>');
+    	var element_col_1 = angular.element('<div class="hide-for-small-only large-2 columns axis-col col-1">' + '</div>');
+    	var element_col_2 = angular.element('<div class="hide-for-small-only large-2 columns axis-col col-2">' + '</div>');
+    	var element_col_3 = angular.element('<div class="hide-for-small-only large-2 columns axis-col col-3">' + '</div>');
+    	var element_col_4 = angular.element('<div class="hide-for-small-only large-2 columns axis-col col-4">' + '</div>');
+    	var element_col_5 = angular.element('<div class="hide-for-small-only large-2 columns axis-col col-5">' + '</div>');
+    	var element_col_6 = angular.element('<div class="large-2 columns control-col col-6">' + '</div>');
+    	element.append(element_row);
+    	element_row.append(element_col_1);
+    	element_row.append(element_col_2);
+    	element_row.append(element_col_3);
+    	element_row.append(element_col_4);
+    	element_row.append(element_col_5);
+    	element_row.append(element_col_6);
+
+    	// Set Control
+    	var element_control_title_label = angular.element('<h3>Skill Cards</h3>');
+    	var element_control_deck_row = angular.element('<div class="row"></div>');
+      var element_control_deck_desc = angular.element('<div id="deck"></div>');
+    	var element_control_deck = angular.element('<div class="small-4 large-10 small-centered large-centered columns deck" style="padding: 0;"></div>');
+    	var element_control_card_desc = angular.element('<div class="card-desc">'+
+    																										'<p>{{card_description}}</p>' +
+    																									'</div>');
+    	if (scope.game_type == 1 || scope.game_type == 2){
+    		var element_control_select_options = angular.element( '<div class="row">' +
+    																													'<div id="button-group" class="small-8 large-12 small-centered large-centered columns">' + 
+    																														'<h5>Select Option:</h5>' +
+		    																												'<ul class="button-group radius hide-for-small-only select-options">' +
+		  																														'<li><button class="button button-options-large" ng-click="selected(5)">5</button></li>' +
+		  																														'<li><button class="button button-options-large" ng-click="selected(4)">4</button></li>' +
+		  																														'<li><button class="button button-options-large" ng-click="selected(3)">3</button></li>' +
+		  																														'<li><button class="button button-options-large" ng-click="selected(2)">2</button></li>' +
+		  																														'<li><button class="button button-options-large" ng-click="selected(1)">1</button></li>' +
+																																'</ul>' +
+																																'<div class="radius show-for-small-only">' +
+		  																														'<button class="button button-options-small" ng-click="selected(5)">5</button>' +
+		  																														'<button class="button button-options-small" ng-click="selected(4)">4</button>' +
+		  																														'<button class="button button-options-small" ng-click="selected(3)">3</button>' +
+		  																														'<button class="button button-options-small" ng-click="selected(2)">2</button>' +
+		  																														'<button class="button button-options-small" ng-click="selected(1)">1</button>' +
+																																'</div>' +
+																															'</div>' +
+																														'</div>'
+																														);	
+    	}
+    	if (scope.game_type == 3) {
+    		var element_control_select_options = angular.element('<div id="slider-group">' + 
+                                                              '<div class="slider row">' +
+    																														'<div class="large-12 columns">' + 
+    																															'<div><p>Slide to # of hours:</p></div>' +
+    																															'<div id="hours">15</div>' +
+    																															'<div id="slider"></div>' +
+    																														'</div>' +
+    																													'</div>' +
+    																													'<div class="row">' +
+    																														'<div class="small-2 large-12 columns small-centered large-centered button-undo-column">' +
+    																															'<button class="button round button-round"  ng-click="sortHours()"><i class="fa fa-check"></i></button>' +
+    																														'</div>' +
+    																													'</div>' +
+                                                             '<div>'
+    																												);
+    	}
+    	var element_control_undo_option = angular.element('<div class="row show-for-small-only">' +
+    																											'<div class="small-2 large-12 columns small-centered large-centered button-undo-column">' +
+    																												'<button class="button round button-round" ng-click="undo()"><i class="fa fa-undo"></i></button>' +
+    																											'</div>' +
+    																										'</div>');
+
+
+    	if(scope.game_type == 1){
+    		var element_control_instructions = angular.element('<br/><h5>Instructions</h5>'+
+    																												'<div class="instructions">'+
+		    																											'<p>Sort the skills by selecting the option for each skill.</p>' +
+		    																											'<ul>' +
+		    																												'<li>5 - Love using</li>' +
+		    																												'<li>4 - Like using</li>' +
+		    																												'<li>3 - Neutral</li>' +
+		    																												'<li>2 - Dislike using</li>' +
+		    																												'<li>1 - Hate using</li>' +
+		    																											'</ul>'+
+    																												'</div>');	
+    	}
+    	if(scope.game_type == 2){
+    		var element_control_instructions = angular.element('<h5>Instructions</h5>'+
+    																												'<div class="instructions">'+
+		    																											'<p>Sort the skills by selecting the option for each skill.</p>' +
+		    																											'<ul>' +
+		    																												'<li>5 - Exceeds my desired skill level</li>' +
+		    																												'<li>4 - Above my desired skill level</li>' +
+		    																												'<li>3 - At my desired skill level</li>' +
+		    																												'<li>2 - Below my desired skill level</li>' +
+		    																												'<li>1 - Lack the desired skill level</li>' +
+		    																											'</ul>'+
+    																												'</div>');	
+    	}
+    	if(scope.game_type == 3){
+    		var element_control_instructions = angular.element('<h5>Instructions</h5>'+
+    																												'<div class="instructions">'+
+		    																											'<p>Sort the skills by selecting the option based on the number of hours spent using the skill in a week.</p>' +
+		    																											'<ul>' +
+		    																												'<li>5 - > 25 hours</li>' +
+		    																												'<li>4 - 16 - 25 hours</li>' +
+		    																												'<li>3 - 6 - 15 hours</li>' +
+		    																												'<li>2 - 0 - 5 hours</li>' +
+		    																												'<li>1 - Do not use at all</li>' +
+		    																											'</ul>'+
+    																												'</div>');	
+    	}
+    	
+    	var element_control_submit = angular.element('<button id="submit-game" class="button success submit radius" ng-click="completeGame()">Submit</button>');
+			$compile(element_control_card_desc)(scope);
+    	$compile(element_control_select_options)(scope);
+    	$compile(element_control_undo_option)(scope);
+    	$compile(element_control_submit)(scope);
+
+      // Append 'Skill Cards' Title
+      element_col_6.append(element_control_title_label);
+      
+      // Append 'Deck of cards'
+      element_col_6.append(element_control_deck_desc);
+      element_control_deck_desc.append(element_control_deck_row)
+      element_control_deck_desc.append(element_control_card_desc)
+      element_control_deck_row.append(element_control_deck);
+
+      // Append 'Select Options'    	
+    	element_col_6.append(element_control_select_options);
+    	element_col_6.append(element_control_undo_option);
+    	element_col_6.append(element_control_instructions);
+    	element_control_deck.append(element_control_submit);
+
+    	// Set Axis
+    	var axes = scope.axes;
+    	var axes_col = [element_col_1,
+    					element_col_2,
+    					element_col_3,
+    					element_col_4,
+    					element_col_5,
+    					element_col_6];
+    	for(var i=0; i<axes.length; i++){
+    		var axis = angular.element('<axis axis="axes['+i+']"></axis>');
+    		$compile(axis)(scope);
+    		axes_col[i].append(axis);
+    	}
+
+    	// Create all skillcards
+    	scope.skillcardCtrls = [];
+    	scope.z_index_counter = 100; 			// Start z-index from 5
+    	for(var i=0; i<scope.skills.length; i++){
+    		var card = angular.element('<skillcard class="skillcard" skill="skills['+i+']" ng-click="moveBack()"></skillcard>');
+    		$compile(card)(scope);
+    		element_control_deck.append(card);
+    		scope.z_index_counter--;
+    	}
+    	scope.z_index_counter = 101;		// Restart z-index to count from 101
+
+    	// Create reference to deck
+    	scope.deck = element_control_deck;
+
+
+
+    	/**
+    	 *	Set in-game behaviors
+    	 */
+
+    	scope.selected = function(value){
+
+    		// Get card element with highest z-index
+    		var inDeck = [];
+    		for(var i=0; i<scope.skillcardCtrls.length; i++){
+    			if(scope.skillcardCtrls[i].getIsInDeck()) inDeck.push(scope.skillcardCtrls[i]);
+    		}
+
+    		// Return if no more cards
+    		if(inDeck.length == 0) return;
+
+    		var max = inDeck[0];
+    		for(var i=1; i<inDeck.length; i++){
+    			if(Number(inDeck[i].getZIndex()) > Number(max.getZIndex()) ){
+    					max = inDeck[i];
+    			}
+    		}
+
+    		// Calculate coordinates to move to
+    		if(value == 1) {
+    			max.setValue(1);
+    			max.moveOutTo(element_col_5);
+    		}
+    		if(value == 2) {
+    			max.setValue(2);
+    			max.moveOutTo(element_col_4);
+    		}
+    		if(value == 3) {
+    			max.setValue(3);
+    			max.moveOutTo(element_col_3);
+    		}
+    		if(value == 4) {
+    			max.setValue(4);
+    			max.moveOutTo(element_col_2);
+    		}
+    		if(value == 5) {
+    			// If game type = 1,check maximum limit 5 for column before inserting
+    			if (scope.game_type == 1){
+    				if(scope.col_5_count < 5){
+	    				max.setValue(5);
+	    				max.moveOutTo(element_col_1);	
+	    				scope.col_5_count++;
+    				}
+    			}
+    			else {
+    				max.setValue(5);
+	    			max.moveOutTo(element_col_1);	
+    			}
+    		}
+
+    		// Record results
+    		scope.result[max.getSkillcardId()] = value;
+
+    		// Record last selected
+    		scope.lastSelected.push(max);
+    		
+    	}
+
+      scope.moveBack = function(skillcard_id) {
+        scope.skillcardCtrls[skillcard_id-1].moveBack();
+      }
+
+    	scope.sortHours = function() {
+
+    		var slider_no_of_hours = Number($('#hours')[0].innerHTML);
+
+    		// Get card element with highest z-index
+    		var inDeck = [];
+    		for(var i=0; i<scope.skillcardCtrls.length; i++){
+    			if(scope.skillcardCtrls[i].getIsInDeck()) inDeck.push(scope.skillcardCtrls[i]);
+    		}
+
+    		// Return if no more cards
+    		if(inDeck.length == 0) return;
+
+    		var max = inDeck[0];
+    		for(var i=1; i<inDeck.length; i++){
+    			if(Number(inDeck[i].getZIndex()) > Number(max.getZIndex()) ){
+    					max = inDeck[i];
+    			}
+    		}
+
+    		if(slider_no_of_hours == 0) {
+    			max.setValue(slider_no_of_hours);
+    			max.moveOutTo(element_col_5);
+    		}
+    		if(slider_no_of_hours >= 1 && slider_no_of_hours <= 5) {
+    			max.setValue(slider_no_of_hours);
+    			max.moveOutTo(element_col_4);
+    		}
+    		if(slider_no_of_hours >= 6 && slider_no_of_hours <= 15) {
+    			max.setValue(slider_no_of_hours);
+    			max.moveOutTo(element_col_3);
+    		}
+    		if(slider_no_of_hours >= 16 && slider_no_of_hours <= 25) {
+    			max.setValue(slider_no_of_hours);
+    			max.moveOutTo(element_col_2);
+    		}
+    		if(slider_no_of_hours >= 26) {
+    			max.setValue(slider_no_of_hours);
+	    		max.moveOutTo(element_col_1);	
+    		}
+
+    		// Record results
+    		scope.result[max.getSkillcardId()] = slider_no_of_hours;
+
+    		// Record last selected
+    		scope.lastSelected.push(max);
+
+    	};
+
+    	scope.updateCardDescription = function(){
+
+    		// Get card element with highest z-index
+    		var inDeck = [];
+    		for(var i=0; i<scope.skillcardCtrls.length; i++){
+    			if(scope.skillcardCtrls[i].getIsInDeck()) inDeck.push(scope.skillcardCtrls[i]);
+    		}
+
+    		// If no cards left in deck return blank string
+    		if(inDeck.length == 0) {
+    			scope.card_description = '';
+    			return;	
+    		}
+
+    		var max = inDeck[0];
+    		for(var i=1; i<inDeck.length; i++){
+    			if(Number(inDeck[i].getZIndex()) > Number(max.getZIndex()) ){
+    					max = inDeck[i];
+    			}
+    		}
+
+    		// Update card description to top most card
+    		scope.card_description = max.getSkillcardDescription();
+    	}
+
+    	scope.undo = function(){
+    		if(scope.lastSelected != undefined) {
+    			scope.lastSelected.pop().moveBack();
+    		}
+    	}
+
+    	scope.completeGame = function(){
+    		var host = "<%= if (Rails.env == 'production')
+                                'http://localhost'
+                            else
+                                ''
+                            end
+                                 %>"
+            if (host == '') {
+                host = 'http://'+window.location.href.split('//')[1].split('/')[0]
+            }
+
+		
+				// Set JSON object with user_id, version, result
+				var game = {
+					version: 'v0.3',
+					game_type: scope.game_type,
+					result: scope.resultToString()
+				};
+
+				// Submit results to server...
+				$http.post(host + '/submit-game.json', game).success(function(response) {
+
+          // Response returned should be a javascript object of a game.
+          // If the user is logged in, the user will be redirected to the dashboard.
+          // If the user is unregistered, the top 5 skills will be displayed.
+          if (response.user_id == null) {
+
+            element_row.remove();
+            element.append(scope.generateResultsDOM());
+
+            // Configure the tooltips style
+            $(document).foundation({
+              tooltips: {
+                selector : '.has-tip',
+                additional_inheritable_classes : [],
+                tooltip_class : '.tooltip',
+                touch_close_text: 'tap to close',
+                disable_for_touch: false,
+                tip_template : function (selector, content) {
+                  return '<span data-selector="' + selector + '" class="'
+                    + Foundation.libs.tooltips.settings.tooltipClass.substring(1)
+                    + '">' + content + '<span class="nub"></span></span>';
+                }
+              }
+            });
+          } else {
+            window.location.replace(host + '/dashboard');
+          }
+          
+				});
+    	}
+
+    	scope.resultToString = function(){
+				var str = '';
+				for(var key in scope.result){
+					str += key + ',' + scope.result[key] + ';'
+				}
+				return str;
+		  }
+
+      scope.generateResultsDOM = function(){
+
+        // Get top 5 skills skillcard controller
+        var top_5_skills = [];
+        for(var key in scope.result) {
+          
+          if ( scope.result[key] == 5 ) {
+            for(var i=0; i<scope.skillcardCtrls.length; i++){
+              if( scope.skillcardCtrls[i].getSkillcardId() == +key ) top_5_skills.push(scope.skillcardCtrls[i]);
+            }
+          }
+        }
+        
+        // Create skill card DOM elements
+        var skills_element = '';
+        for(var i=0; i<top_5_skills.length; i++){
+          var ctrl = top_5_skills[i];
+          var element = '<div class="small-4 large-2 columns skills">' +
+                          '<div class="circle-outer love">' +
+                              '<div class="circle-inner">' +
+                                  '<p data-tooltip title="'+ctrl.getSkillcardDescription()+'">'+ctrl.getSkillcardName()+'</p>' +
+                              '</div>' + 
+                          '</div>' + 
+                        '</div>';
+          skills_element += element;
+        }
+
+        var element_row = angular.element('<div class="row"></div>');
+        var element_column = angular.element('<div class="small-12 columns results-header"></div>');
+        var element_results = angular.element('<h2>Game 1 Result</h2>' +
+                                              '<hr>' +
+                                              '<div class="row top-5-skills-header">' +
+                                                '<h3>Your Top 5 Preferred Skills Are</h3>'+
+                                              '</div>' +
+                                              '<div class="row">' +
+                                                '<div class="large-1 columns"><p> </p></div>' +
+                                                skills_element +
+                                                '<div class="large-1 columns"></div>' +
+                                              '</div>' +
+                                              '<div class="row results-text">' +
+                                                '<p>Hope you have found what you really like to do through <em>Game 1: Discover your Passion</em>. SortMySkills believes that one can self actualize if their passion and career are aligned. SortMySkills provides two more games to help you gauge your current proficiency and plot your desired career path. Register an account to continue!</p>' +
+                                              '</div>' +
+                                              '<div class="row">' +
+                                                '<div class="small-3 large-3 small-centered large-centered columns register">' +
+                                                  '<a href="/" class="button expand radius">Register Here!</a>' +
+                                                '</div>' +
+                                              '</div>');
+        element_row.append(element_column);
+        element_column.append(element_results);
+
+        return element_row;
+      }
+
+    }
+
+    return {
+    	restrict: 'E',
+    	link: link_fn,
+    	scope: {}
+    };
+
+	}]);

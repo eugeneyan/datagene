@@ -1,0 +1,121 @@
+<div class="row">
+	<div class="small-8 small-offset-2 columns">
+		<h3>Before starting Game 3...</h3>
+		<p>Tell us more about the industry, function and role in your current job, so that we can benchmark against the your skill preferences...</p>
+
+		<%= form_tag '/job-information-submit', method: :post do %>
+			
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Industry: </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<select id="select-industry" class="radius" name="industry" required>
+						<option value="">-- Select an Industry --</option>
+						<% @industries.each do |i| %>
+							<option value="<%= i.name %>"><%= i.name %></option>
+						<% end %>
+					</select>
+				</div>
+			</div>
+			<div id="industry-others" class="row">
+				<div class="small-4 large-4 columns"></div>
+				<div class="small-8 large-8 columns">
+					<input type="text" placeholder="If 'Others', type industry here..." name="others_industry">
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Function: </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<select id="select-function" class="radius" name="function" required>
+						<option value="">-- Select a Function --</option>
+						<% @functions.each do |f| %>
+							<option value="<%= f.name %>"><%= f.name %></option>
+						<% end %>
+					</select>
+				</div>
+			</div>
+			<div id="function-others" class="row">
+				<div class="small-4 large-4 columns"></div>
+				<div class="small-8 large-8 columns">
+					<input type="text" placeholder="If 'Others', type function here..." name="others_function">
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Years in current job: </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<select class="radius" name="seniority" required>
+						<option value="">-- Select --</option>
+						<option value="0-2 years">0-2 years</option>
+						<option value="3-6 years">3-6 years</option>
+						<option value="7-8 years">7-8 years</option>
+						<option value="10++ years">10++ years</option>
+					</select>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Country: </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<select id="select-country" class="radius" name="country" required>
+						<option value="">-- Select a Country --</option>
+						<% @countries.each do |c| %>
+							<option value="<%= c.name %>"><%= c.name %></option>
+						<% end %>
+					</select>
+				</div>
+			</div>
+
+
+
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Organization (Optional): </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<input type="text" placeholder="Type in your organization/company" name="organization">
+				</div>
+			</div>
+
+
+			
+			<div class="row">
+				<div class="small-4 large-4 columns">
+					<h5>Job Role (Optional): </h5>
+				</div>
+				<div class="small-8 large-8 columns">
+					<input type="text" placeholder="Type in your job role..." name="job_role">
+				</div>
+			</div>
+
+			
+			<br/><br/>
+
+			<div class="row">
+				<div class="small-4 large-4 columns small-centered large-centered">
+					<button class="button radius success" type="submit"> Start Game! </button>
+				</div>
+			</div>
+
+		<% end %>
+
+	</div>
+</div>
+
+<% content_for :page_scripts do %>
+	<%= javascript_include_tag 'job_information' %>
+<% end %>
