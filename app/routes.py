@@ -14,6 +14,11 @@ def acknowledgements():
     return render_template('acknowledgements.html')
 
 
+@app.route('/about_me')
+def about_me():
+    return render_template('about_me.html')
+
+
 @app.route('/categorize_web', methods=['GET', 'POST'])
 def categorize_web():
     """
