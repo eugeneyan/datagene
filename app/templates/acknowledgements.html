@@ -13,19 +13,30 @@
                 <h3 class="text-muted">Acknowledgements</h3>
             </div>
 
-            <p>Thanks to Julian McAuley for sharing the Amazon data from his papers below: </p>
+            <form class="form-inline well" action = "{{ url_for('categorize_web') }}" method = "POST">
+                <div class="form-group">
+                    <p>Thanks to Julian McAuley for sharing the Amazon data from his papers below: </p>
 
-            <p>
-                <b>Image-based recommendations on styles and substitutes</b> <br>
-                J. McAuley, C. Targett, J. Shi, A. van den Hengel <br>
-                <i>SIGIR, 2015</i>
-            </p>
+                    <p>
+                        <b>Image-based recommendations on styles and substitutes</b> <br>
+                        J. McAuley, C. Targett, J. Shi, A. van den Hengel <br>
+                        <i>SIGIR, 2015</i>
+                    </p>
 
-            <p>
-                <b>Inferring networks of substitutable and complementary products</b> <br>
-                J. McAuley, R. Pandey, J. Leskovec <br>
-                <i>Knowledge Discovery and Data Mining, 2015</i>
-            </p>
+                    <p>
+                        <b>Inferring networks of substitutable and complementary products</b> <br>
+                        J. McAuley, R. Pandey, J. Leskovec <br>
+                        <i>Knowledge Discovery and Data Mining, 2015</i>
+                        </div>
+            </form>
+
+            <form class="form-inline well" action = "{{ url_for('categorize_web') }}" method = "POST">
+                <div class="form-group">
+                    <p>Thanks for Kenneth Lim for the collaboration on Sort My Skills. We had a great time building it
+            together during our time at IBM.</p>
+                </div>
+            </form>
+
         </div>
     </body>
 

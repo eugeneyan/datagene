@@ -1,4 +1,4 @@
-from data_prep.prep_title_category import *
+from data_prep.prep_category import *
 from utils.logger import logger
 
 
