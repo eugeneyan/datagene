@@ -63,32 +63,42 @@ def download_image_worker(url_q, log_q):
             queue_full = False
 
 
-def image_log_worker(image_log_file, log_q, count):
+def image_log_worker(image_log_file, log_q, count, max_log_size=10000):
     """
 
     Writes image download status to image log file based on log queue
 
     :param image_log_file:
     :param log_q:
+    :param count:
+    :param max_log_size:
     :return:
     """
-    try:
-        with open(image_log_file, 'a') as img_file:
-            while True:
+    file_number = count / max_log_size
+
+    while True:
+
+        with open(image_log_file + str(file_number) + '.json', 'a') as img_file:
+
+            for i in range(max_log_size):
+
                 result_dict = log_q.get(block=True)
                 result_dict_str = json.dumps(result_dict)
+
+                count += 1
+
                 img_file.write(result_dict_str)
                 img_file.write('\n')
 
-                count += 1
-                if count % 1000 == 0:
-                    img_file.flush()
-                    logger.info('Images downloaded: {}'.format(count))
-
                 log_q.task_done()
 
-    except IOError:  # If there is no log file yet
-        pass
+                if count % 100 == 0:
+                    img_file.flush()
+
+                if count % 1000 == 0:
+                    logger.info('Images downloaded: {}'.format(count))
+
+            file_number += 1
 
 
 def download_images_from_df(df, output_dir, nthreads):
@@ -117,21 +127,32 @@ def download_images_from_df(df, output_dir, nthreads):
     log_q = Queue.Queue()
 
     # Load previous log files and loads list of successfully downloaded images
-    log_file = os.path.join(data_dir, 'image_download_log.json')
+    log_dir = os.path.join(data_dir, 'image_download_logs')
+    log_file_name = os.path.join(data_dir, 'image_download_logs', 'image_log')
     completed = set()
-    try:
-        with open(log_file) as json_log:
-            for line in json_log:
-                try:
-                    entry = json.loads(line.strip())
-                    if entry.get('downloaded', '') == 'success':
-                        completed.add(entry['product_id'])
-                except ValueError as e:
-                    logger.error('Json error: {}'.format(e))
+
+    if os.path.exists(log_dir):
+        for log_file in os.listdir(log_dir):
+            log_file = os.path.join(log_dir, log_file)
+
+            if log_file.endswith('.json'):
+                logger.info('loading image download logs from: {}'.format(log_file))
+
+                with open(log_file) as json_log:
+                    i = 0
+                    for line in json_log:
+                        try:
+                            entry = json.loads(line.strip())
+                            if entry.get('downloaded', '') == 'success':
+                                completed.add(entry['product_id'])
+                        except ValueError as e:
+                            logger.error('Json error in {} on line {}: {} '.format(log_file, i, e))
+                        i += 1
+
         logger.info('No. of images downloaded: {}'.format(len(completed)))
 
-    except IOError:  # If log file does not exist
-        pass
+    else:  # If log dir does not exist
+        os.makedirs(log_dir)
 
     # Start download threads
     for i in xrange(nthreads):
@@ -140,7 +161,7 @@ def download_images_from_df(df, output_dir, nthreads):
         t.start()
 
     # Start writer thread
-    writer_thread = threading.Thread(target=image_log_worker, args=(log_file, log_q, len(completed)))
+    writer_thread = threading.Thread(target=image_log_worker, args=(log_file_name, log_q, len(completed)))
     writer_thread.daemon = True
     writer_thread.start()
 
@@ -164,12 +185,8 @@ def download_images_from_df(df, output_dir, nthreads):
             url_q.put((url, product_id, save_path))
 
     # Block until all tasks are done
-    try:
-        url_q.join()
-        log_q.join()
-    except KeyboardInterrupt:
-        logger.info("Shutting down")
-        sys.exit(1)
+    url_q.join()
+    log_q.join()
 
     logger.info('Image downloads complete!')
 
