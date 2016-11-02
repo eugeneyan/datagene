@@ -93,14 +93,11 @@ if __name__ == '__main__':
 
     # Drop columns that have no category data
     df = df[df['category_lvl1'] != 'no_category']
-    logger.info('No. of rows after dropping columns with no category data: {}'.format(df.shape[0]))
+    logger.info('No. of products after dropping columns with no category data: {}'.format(df.shape[0]))
 
     # Create df of category counts
     category_df = df.groupby('category_lvl1').agg({'asin': 'count'})\
         .sort_values(by='asin', ascending=False).reset_index()
-
-    # # Keep categories where the count of titles > 1500
-    category_df = category_df[category_df['asin'] > 1500]
 
     # Exclude categories where titles are not indicative of category
     category_df = category_df[category_df['category_lvl1'] != 'Books']
@@ -116,7 +113,7 @@ if __name__ == '__main__':
 
     # # Keep only rows where the category is in category_df
     df = df[df['category_lvl1'].isin(category_df['category_lvl1'])]
-    logger.info('No. of rows after dropping categories where count < 1500: {}'.format(df.shape[0]))
+    logger.info('No. of products after dropping certain top level categories: {}'.format(df.shape[0]))
 
     # Create column for category path
     df['category_path'] = df['categories'].apply(get_category_path)
@@ -126,15 +123,14 @@ if __name__ == '__main__':
     category_path_df = df.groupby('category_path').agg({'asin': 'count'})\
         .sort_values(by='asin', ascending=False).reset_index()
 
-    # Drop category_paths where the count of titles < 30
-    category_path_df = category_path_df[category_path_df['asin'] >= 30]  # After taking 33% sample, each path will
-    # have 10 samples only
-    logger.info('No. of category_paths after excluding those with < 30 products: {}'.format(category_path_df.shape[0]))
-
     # Exclude category paths where category_path is at top level
     category_path_df = category_path_df[category_path_df['category_path'].str.contains('->')]
     logger.info('No. of category_paths after excluding top level categories: {}'.format(category_path_df.shape[0]))
 
+    # Drop category_paths where the count of products > 1000
+    category_path_df = category_path_df[category_path_df['asin'] >= 1000]  # We need a lot of image data
+    logger.info('No. of category_paths after excluding those with < 1000 products: {}'.format(category_path_df.shape[
+                                                                                                  0]))
     # Exclude categories that are not deepest category
     category_path_df.sort_values(by='category_path', inplace=True)
     category_path_df['category_path_next'] = category_path_df['category_path'].shift(-1)
@@ -152,31 +148,33 @@ if __name__ == '__main__':
     category_path_df = pd.DataFrame(category_path_list, columns=['category_path'])
     logger.info('No. of category_paths at deepest category: {}'.format(category_path_df.shape[0]))
 
-    # Keep only rows where the category is in category_df
-    df = df[df['category_path'].isin(category_path_df['category_path'])]
-    logger.info('No. of rows in deepest category: {}'.format(df.shape[0]))
-
     # Keep only rows where category in filter_df (only specific to Amazon data)
-    df = df.merge(filter_df, how='inner', left_on='category_path', right_on='category_path')
-    df.dropna(inplace=True)
-    logger.info('No. of rows after excluding categories based on categories_to_keep.csv: {}'.format(df.shape[0]))
-
-    # Sample and only keep 33% of data (to keep the data small)
-    df, discard = train_test_split(df, train_size=0.33, stratify=df['category_path'], random_state=1368)
-    logger.info('No. of rows in after taking 50% sample: {}'.format(df.shape[0]))
-
-    # After sampling, exclude category paths which have less than 10 products
-    # Create df of category path counts (again)
-    category_path_df = df.groupby('category_path').agg({'asin': 'count'}) \
-        .sort_values(by='asin', ascending=False).reset_index()
-
-    # Drop category_paths where the count of titles < 10
-    category_path_df = category_path_df[category_path_df['asin'] >= 10]
-    logger.info('No. of category_paths after excluding those with < 10 products: {}'.format(category_path_df.shape[0]))
+    category_path_df = category_path_df.merge(filter_df, how='inner', left_on='category_path', right_on='category_path')
+    category_path_df.dropna(inplace=True)
+    logger.info('No. of categories after excluding categories based on categories_to_keep.csv: {}'.format(
+        category_path_df.shape[0]))
 
     # Keep only rows where the category is in category_df
     df = df[df['category_path'].isin(category_path_df['category_path'])]
     logger.info('No. of rows in deepest category: {}'.format(df.shape[0]))
+
+    # Count number of products in each category path
+    category_counts = df[['category_path', 'asin']].groupby('category_path').count().sort_values(by='asin',
+                                                                                  ascending=False).reset_index()
+    category_counts.rename(columns={'asin': 'count'}, inplace=True)
+
+    # # Keep only rows where category in filter_df (only specific to Amazon data)
+    # df = df.merge(filter_df, how='inner', left_on='category_path', right_on='category_path')
+    # df.dropna(inplace=True)
+    # logger.info('No. of rows after excluding categories based on categories_to_keep.csv: {}'.format(df.shape[0]))
+
+    # # Sample and only keep 33% of data (to keep the data small)
+    # df, discard = train_test_split(df, train_size=0.33, stratify=df['category_path'], random_state=1368)
+    # logger.info('No. of rows in after taking 50% sample: {}'.format(df.shape[0]))
+
+    # Take only the 1000 products from each category path to keep training fast
+    # df = df.groupby('category_path').head(1000).reset_index(drop=True)
+    # logger.info('No. of rows after taking top 1000 products: {}'.format(df.shape[0]))
 
     # Save prepared asin and category data to csv
     df.drop(labels='categories', axis=1, inplace=True)
@@ -184,4 +182,5 @@ if __name__ == '__main__':
     logger.info(df.columns)
 
     # Save category_path_df which contains all category paths in data
-    category_path_df.to_csv(output_category_file_path, index=False)
+    # category_path_df.to_csv(output_category_file_path, index=False)
+    category_counts.to_csv(output_category_file_path, index=False)
