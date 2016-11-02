@@ -142,7 +142,6 @@ if __name__ == '__main__':
     test = 'test' + dataset
 
     weights_path = 'data/images/model/vgg16_weights.h5'
-    train_bottleneck_features_path = 'data/images_clothes/bottleneck_features/bottleneck_features_' + train
     img_width = 150
     img_height = 150
     batch_size = 32

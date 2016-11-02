@@ -8,7 +8,7 @@ import sys
 import os
 from data_prep.clean_titles import load_data, encode_title, lowercase_title, tokenize_title, \
     remove_stopwords, remove_numeric, remove_one_char_words, STOP_WORDS, HTML_PARSER
-from categorize.create_dict import create_ngram
+from categorize.build_dict import create_ngram
 from categorize.categorize_utils import load_dict, get_score, get_top_n_score
 from utils.create_dir import create_output_dir
 from utils.logger import logger
