@@ -9,7 +9,10 @@ python -m image.prep_image_dir images_clothes
 import os
 import shutil
 import sys
+from PIL import Image
+import imagehash
 from utils.logger import logger
+
 
 
 # Create new directory structure to directory
@@ -19,7 +22,7 @@ def mirror_dir_structure(current_dir, new_dir):
             try:
                 os.makedirs(os.path.join(new_dir, image_dir))
             except OSError:
-                print '{} already exists in {}'.format(image_dir, new_dir)
+                logger.info('{} already exists in {}'.format(image_dir, new_dir))
 
 
 # Discard images below threshold size
@@ -40,6 +43,39 @@ def discard_images_below_size(current_dir, discard_dir, threshold_size=4000):
                         discarded_images += 1
 
             logger.info('{} has {} images discarded'.format(image_dir, discarded_images))
+
+
+# Check for duplicate images and move all but one to duplicate image dir
+def discard_duplicate_images(current_dir, duplicate_dir):
+    for image_dir in os.listdir(current_dir):
+        if not image_dir.startswith('.'):
+            image_paths = os.listdir(os.path.join(current_dir, image_dir))
+            initial_count = len(image_paths)
+
+            duplicate_hash_set = set()
+            duplicate_image_set = set()
+
+            for image in image_paths:
+                if not image.startswith('.'):
+                    image_path = os.path.join(train_dir, image_dir, image)
+                    image_open = Image.open(image_path)
+                    hash_str = str(imagehash.phash(image_open))
+                    if hash_str in duplicate_hash_set:
+                        duplicate_image_set.add(image)
+                    else:
+                        duplicate_hash_set.add(hash_str)
+
+            duplicate_images = 0
+            for image in duplicate_image_set:
+                duplicate_images += 1
+                image_path = os.path.join(current_dir, image_dir, image)
+                image_open = Image.open(image_path)
+                hash_str = str(imagehash.phash(image_open))
+                duplicate_path = os.path.join(duplicate_dir, image_dir, hash_str + '_' + image)
+                shutil.move(image_path, duplicate_path)
+
+            logger.info('{} has {}/{} duplicate images moved'.format(image_dir, duplicate_images, initial_count))
+            logger.info('Images remaining: {}'.format(initial_count - duplicate_images))
 
 
 # Copy images into a directory (from current dir to new dir)
@@ -88,14 +124,20 @@ if __name__ == '__main__':
     val_samp_dir = os.path.join('data', main_dir, 'val_samp')
     test_samp_dir = os.path.join('data', main_dir, 'test_samp')
     discard_dir = os.path.join('data', main_dir, 'discard')
+    duplicate_dir = os.path.join('data', main_dir, 'duplicate')
 
-    # Create dir structure for discard and discard images
+    # Create dir structure for discard and remove images that are too small in size
+    # Usually, these images are incorrect
     mirror_dir_structure(train_dir, discard_dir)
     discard_images_below_size(train_dir, discard_dir, 4000)
 
+    # Create dir structure for duplicate and remove duplicate images (only keeping one)
+    mirror_dir_structure(train_dir, duplicate_dir)
+    discard_duplicate_images(train_dir, duplicate_dir)
+
     # Create dir structure for train sample and copy 1000 images
     mirror_dir_structure(train_dir, train_samp_dir)
-    copy_to_dir(train_dir, train_samp_dir, 1000)
+    copy_to_dir(train_dir, train_samp_dir, 500)
 
     # Split sample into train and val, with 0.1 split
     mirror_dir_structure(train_samp_dir, val_samp_dir)
