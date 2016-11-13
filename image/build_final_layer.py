@@ -1,8 +1,8 @@
 """
 Build final layer of deep learning network (for classification of bottleneck features)
 
-python -m image.build_final_layer images_clothes subset vgg16 20
-python -m image.build_final_layer images_clothes subset inception3 20
+python -m image.build_final_layer images_clothes vgg16 20 subset
+python -m image.build_final_layer images_clothes inception3 20 subset
 """
 import os
 import sys
@@ -66,13 +66,13 @@ def get_test_accuracy(model, test_data, test_labels):
 if __name__ == '__main__':
 
     main_dir = sys.argv[1]  # images_clothes
+    dl_model = sys.argv[2]
+    epoches = int(sys.argv[3])
     try:
-        dataset = sys.argv[2]
+        dataset = sys.argv[4]
         dataset = '_' + dataset
     except IndexError:
         dataset = ''
-    dl_model = sys.argv[3]
-    epoches = int(sys.argv[4])
 
     train = 'train' + dataset
     val = 'val' + dataset

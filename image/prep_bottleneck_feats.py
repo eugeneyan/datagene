@@ -1,8 +1,8 @@
 """
 Loads pre-trained model and prepares bottleneck features
 
-python -m image.prep_bottleneck_feats images_clothes samp vgg16
-python -m image.prep_bottleneck_feats images_clothes samp inception3
+python -m image.prep_bottleneck_feats images_clothes vgg16 samp
+python -m image.prep_bottleneck_feats images_clothes inception3 samp
 """
 import os
 import sys
@@ -78,12 +78,12 @@ def create_bottleneck_features(datagen, load_dir, model, labels, save_path, img_
 if __name__ == '__main__':
 
     main_dir = sys.argv[1]  # images_clothes
+    dl_model = sys.argv[2]
     try:
-        dataset = sys.argv[2]
+        dataset = sys.argv[3]
         dataset = '_' + dataset
     except IndexError:
         dataset = ''
-    dl_model = sys.argv[3]
 
     # Load pre-trained model
     if dl_model == 'vgg16':
