@@ -86,14 +86,14 @@ if __name__ == '__main__':
                                          'bottleneck_feat_' + train + '.npy')
     val_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
                                        'bottleneck_feat_' + val + '.npy')
-    test_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
-                                        'bottleneck_feat_' + test + '.npy')
+    # test_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
+    #                                     'bottleneck_feat_' + test + '.npy')
     model_save_path = os.path.join('data', main_dir, 'model', 'final_layer_weights' + '_' + dl_model + dataset + '.h5')
 
     # Load bottleneck features
     train_data = np.load(open(train_bottleneck_path))
     val_data = np.load(open(val_bottleneck_path))
-    test_data = np.load(open(test_bottleneck_path))
+    # test_data = np.load(open(test_bottleneck_path))
 
     # Create category dictionary
     category_dict = create_category_dict(train_dir)
@@ -101,7 +101,7 @@ if __name__ == '__main__':
     # Create labels
     train_labels = create_labels(train_dir, category_dict)
     val_labels = create_labels(val_dir, category_dict)
-    test_labels = create_labels(test_dir, category_dict)
+    # test_labels = create_labels(test_dir, category_dict)
 
     # Build model
     if dl_model == 'vgg16':
