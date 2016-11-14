@@ -64,6 +64,7 @@ def largest_divisor(n, threshold=100):
 
 # Create bottleneck features
 def create_bottleneck_features(datagen, load_dir, model, labels, save_path, img_width=299, img_height=299):
+    logger.info('No. of labels: {}; Largest divisor: {}'.format(labels.shape[0], largest_divisor(labels.shape[0])))
     generator = datagen.flow_from_directory(
         load_dir,
         target_size=(img_width, img_height),

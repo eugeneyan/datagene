@@ -4,6 +4,10 @@ Run Product API app
 Sample call:
 python run.py 0.0.0.0 6688
 python run.py 127.0.0.1 6688
+
+Note: Start anaconda env first!
+export PATH=/home/ubuntu/anaconda2/bin:$PATH
+source .bashrc
 """
 import sys
 from app.routes import app
