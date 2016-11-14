@@ -2,7 +2,7 @@
 Build final layer of deep learning network (for classification of bottleneck features)
 
 python -m image.build_final_layer images_clothes vgg16 20 subset
-python -m image.build_final_layer images_clothes inception3 20
+python -m image.build_final_layer images_clothes inception3 20 samp
 """
 import os
 import sys
@@ -47,7 +47,7 @@ def build_final_layer_inception3(train_data, train_labels, val_data, val_labels,
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
     model.add(Dense(512, activation='relu', init='glorot_uniform'))
-    model.add(Dropout(0.5))
+    # model.add(Dropout(0.5))
     model.add(Dense(output_dim=train_labels.shape[1], activation='softmax'))
 
     model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
