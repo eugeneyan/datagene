@@ -45,7 +45,7 @@ def create_labels(load_dir, category_dict):
     # Create training labels
     train_labels = to_categorical(list(itertools.chain.from_iterable([[tup[0]] * tup[1] for tup in train_tuples])))
 
-    logger.info('{} labels created'.format(load_dir))
+    logger.info('{} labels created ({})'.format(load_dir, len(train_tuples)))
     return train_labels
 
 
