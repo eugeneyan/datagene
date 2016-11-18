@@ -127,6 +127,6 @@ if __name__ == '__main__':
     datagen = load_data_generator()
 
     # Create bottleneck features
-    create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
+    # create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
     create_bottleneck_features(datagen, val_dir, model, val_labels, val_bottleneck_path, img_width, img_height)
     # create_bottleneck_features(datagen, test_dir, model, test_labels, test_bottleneck_path, img_width, img_height)
