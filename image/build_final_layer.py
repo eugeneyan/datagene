@@ -2,7 +2,7 @@
 Build final layer of deep learning network (for classification of bottleneck features)
 
 python -m image.build_final_layer images_clothes vgg16 20 subset
-python -m image.build_final_layer images_clothes inception3 20 samp
+python -m image.build_final_layer images_clothes inception3 20 subset
 """
 import os
 import sys
@@ -15,8 +15,8 @@ from image.prep_bottleneck_feats import create_category_dict, create_labels
 
 
 # Optimizers
-sgd = SGD(lr=0.001, momentum=0.01, decay=0.00, nesterov=False)
-rmsprop = RMSprop(lr=0.001, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
+sgd = SGD(lr=0.01, momentum=0.01, decay=0.00, nesterov=False)
+rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
 
 # Initializers
 # g_uniform = initializations.glorot_uniform()
