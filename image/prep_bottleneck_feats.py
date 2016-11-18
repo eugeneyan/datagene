@@ -2,7 +2,7 @@
 Loads pre-trained model and prepares bottleneck features
 
 python -m image.prep_bottleneck_feats images_clothes vgg16 samp
-python -m image.prep_bottleneck_feats images_clothes inception3
+python -m image.prep_bottleneck_feats images_clothes inception3 subset
 nohup python -m image.prep_bottleneck_feats images_clothes inception3 samp >> bottleneck.log 2>&1&
 """
 import os

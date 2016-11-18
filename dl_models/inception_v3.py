@@ -256,7 +256,7 @@ def InceptionV3(include_top=True, weights='imagenet',
                   mode='concat', concat_axis=channel_axis,
                   name='mixed' + str(9 + i))
 
-    x = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(x)  # Moved here for transfer learning
+    # x = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(x)  # Moved here for transfer learning
 
     if include_top:
         # Classification block
