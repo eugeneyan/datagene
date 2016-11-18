@@ -17,7 +17,7 @@ from image.prep_bottleneck_feats import create_category_dict, create_labels
 
 
 # Optimizers
-sgd = SGD(lr=0.01, momentum=0.9, decay=0.00, nesterov=False)
+sgd = SGD(lr=0.01, momentum=0.00, decay=0.00, nesterov=False)
 rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
 
 # Initializers
