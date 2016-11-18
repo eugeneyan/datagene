@@ -11,6 +11,7 @@ from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras.optimizers import SGD, RMSprop
 from keras import initializations
+from keras import metrics
 from image.prep_bottleneck_feats import create_category_dict, create_labels
 
 
@@ -20,6 +21,9 @@ rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clip
 
 # Initializers
 # g_uniform = initializations.glorot_uniform()
+
+# Metrics
+top_n = metrics.top_k_categorical_accuracy()
 
 
 def build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, optimizer, nb_epoch,
@@ -46,6 +50,8 @@ def build_final_layer_inception3(train_data, train_labels, val_data, val_labels,
 
     model = Sequential()
     model.add(Flatten(input_shape=train_data.shape[1:]))
+    model.add(Dense(512, activation='relu', init='glorot_uniform'))
+    model.add(Dropout(0.5))
     model.add(Dense(512, activation='relu', init='glorot_uniform'))
     model.add(Dropout(0.5))
     model.add(Dense(output_dim=train_labels.shape[1], activation='softmax'))
