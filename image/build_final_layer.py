@@ -3,6 +3,7 @@ Build final layer of deep learning network (for classification of bottleneck fea
 
 python -m image.build_final_layer images_clothes vgg16 20 subset
 python -m image.build_final_layer images_clothes inception3 30
+nohup python -m image.build_final_layer images_clothes inception3 368 >> final_layer.log 2>&1&
 """
 import os
 import sys
@@ -113,6 +114,6 @@ if __name__ == '__main__':
     if dl_model == 'vgg16':
         model = build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, sgd, epoches, model_save_path)
     elif dl_model == 'inception3':
-        model = build_final_layer_inception3(train_data, train_labels, val_data, val_labels, sgd, epoches, model_save_path)
+        model = build_final_layer_inception3(train_data, train_labels, val_data, val_labels, rmsprop, epoches, model_save_path)
     else:
         raise ValueError('Model should be either "vgg16" or "inception3"')
