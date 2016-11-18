@@ -3,7 +3,7 @@ Loads pre-trained model and prepares bottleneck features
 
 python -m image.prep_bottleneck_feats images_clothes vgg16 samp
 python -m image.prep_bottleneck_feats images_clothes inception3 subset
-nohup python -m image.prep_bottleneck_feats images_clothes inception3 samp >> bottleneck.log 2>&1&
+nohup python -m image.prep_bottleneck_feats images_clothes inception3 >> bottleneck.log 2>&1&
 """
 import os
 import sys
@@ -127,6 +127,6 @@ if __name__ == '__main__':
     datagen = load_data_generator()
 
     # Create bottleneck features
-    create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
+    # create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
     create_bottleneck_features(datagen, val_dir, model, val_labels, val_bottleneck_path, img_width, img_height)
     # create_bottleneck_features(datagen, test_dir, model, test_labels, test_bottleneck_path, img_width, img_height)
