@@ -56,7 +56,7 @@ def build_final_layer_inception3(train_data, train_labels, val_data, val_labels,
     model.add(Dropout(0.5))
     model.add(Dense(output_dim=train_labels.shape[1], activation='softmax'))
 
-    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
 
     model.fit(train_data, train_labels,
               nb_epoch=nb_epoch, batch_size=32,
