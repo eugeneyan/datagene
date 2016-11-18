@@ -17,7 +17,7 @@ from image.prep_bottleneck_feats import create_category_dict, create_labels
 
 
 # Optimizers
-sgd = SGD(lr=0.01, momentum=0.01, decay=0.00, nesterov=False)
+sgd = SGD(lr=0.01, momentum=0.9, decay=0.00, nesterov=False)
 rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
 
 # Initializers
@@ -114,6 +114,7 @@ if __name__ == '__main__':
     if dl_model == 'vgg16':
         model = build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, sgd, epoches, model_save_path)
     elif dl_model == 'inception3':
-        model = build_final_layer_inception3(train_data, train_labels, val_data, val_labels, rmsprop, epoches, model_save_path)
+        model = build_final_layer_inception3(train_data, train_labels, val_data, val_labels, sgd, epoches,
+                                             model_save_path)
     else:
         raise ValueError('Model should be either "vgg16" or "inception3"')
