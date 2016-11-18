@@ -23,7 +23,7 @@ rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clip
 # g_uniform = initializations.glorot_uniform()
 
 # Metrics
-top_n = metrics.top_k_categorical_accuracy()
+# top_n = metrics.top_k_categorical_accuracy()
 
 
 def build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, optimizer, nb_epoch,
