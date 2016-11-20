@@ -101,7 +101,7 @@ def InceptionV3(include_top=True, weights='imagenet',
         if include_top:
             input_shape = (299, 299, 3)
         else:
-            input_shape = (None, None, 3)
+            input_shape = (299, 299, 3)
 
     if input_tensor is None:
         img_input = Input(shape=input_shape)
