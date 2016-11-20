@@ -43,24 +43,27 @@ def load_data_generator():
         horizontal_flip=True)
     return datagen
 
-datagen = load_data_generator()
+train_datagen = load_data_generator()
 
-train_generator = datagen.flow_from_directory(train_dir,
+validation_datagen = ImageDataGenerator(rescale=1./255)
+
+train_generator = train_datagen.flow_from_directory(train_dir,
                                               target_size=(img_width, img_height),
                                               batch_size=32,
                                               class_mode='categorical',
-                                              shuffle=False,
+                                              shuffle=True,
                                               seed=1368)
 
-validation_generator = datagen.flow_from_directory(val_dir,
+validation_generator = validation_datagen.flow_from_directory(val_dir,
                                               target_size=(img_width, img_height),
                                               batch_size=32,
                                               class_mode='categorical',
-                                              shuffle=False,
+                                              shuffle=True,
                                               seed=1368)
 
 # train the model on the new data for a few epochs
-model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=10, validation_data=validation_generator)
+model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=10, validation_data=validation_generator,
+                    nb_val_samples=50)
 
 # at this point, the top layers are well trained and we can start fine-tuning
 # convolutional layers from inception V3. We will freeze the bottom N layers
