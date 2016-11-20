@@ -3,7 +3,8 @@ python -m image.tune_inceptionv3.py
 """
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
-from prep_bottleneck_feats import *
+from keras.preprocessing.image import ImageDataGenerator
+from dl_models.inception_v3 import InceptionV3
 
 
 img_width = 299
@@ -12,7 +13,7 @@ train_dir = 'data/images_clothes/train_subset'
 val_dir = 'data/images_clothes/val_subset'
 
 # create the base pre-trained model
-base_model = InceptionV3(weights='imagenet', include_top=False)
+base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
 
 # add top model
 x = base_model.output
@@ -84,6 +85,6 @@ model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossent
 
 # we train our model again (this time fine-tuning the top 2 inception blocks
 # alongside the top Dense layers
-model.fit_generator(train_generator, nb_epoch=168, validation_data=validation_generator)
+model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=20, validation_data=validation_generator)
 
 model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
