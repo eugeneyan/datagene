@@ -1,9 +1,8 @@
-from keras.applications.inception_v3 import InceptionV3
-from keras.preprocessing import image
+"""
+python -m image.tune_inceptionv3.py
+"""
 from keras.models import Model
-from keras.layers import Dense, GlobalAveragePooling2D, Flatten, Dropout
-from keras import backend as K
-from keras.preprocessing.image import ImageDataGenerator
+from keras.layers import Dense, Flatten, Dropout
 from prep_bottleneck_feats import *
 
 
@@ -34,6 +33,7 @@ for layer in base_model.layers:
 # compile the model (should be done *after* setting layers to non-trainable)
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy')
 
+
 # Load Data Genenerator
 def load_data_generator():
     datagen = ImageDataGenerator(rescale=1./255,
@@ -59,7 +59,7 @@ validation_generator = datagen.flow_from_directory(val_dir,
                                               seed=1368)
 
 # train the model on the new data for a few epochs
-model.fit_generator(train_generator, nb_epoch=10, validation_data=validation_generator)
+model.fit_generator(train_generator, samples_per_epoch=100000, nb_epoch=10, validation_data=validation_generator)
 
 # at this point, the top layers are well trained and we can start fine-tuning
 # convolutional layers from inception V3. We will freeze the bottom N layers

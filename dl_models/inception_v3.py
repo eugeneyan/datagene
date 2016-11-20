@@ -96,7 +96,7 @@ def InceptionV3(include_top=True, weights='imagenet',
         if include_top:
             input_shape = (3, 299, 299)
         else:
-            input_shape = (3, None, None)
+            input_shape = (3, 299, 299)
     else:
         if include_top:
             input_shape = (299, 299, 3)
