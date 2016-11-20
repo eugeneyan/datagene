@@ -9,8 +9,8 @@ from dl_models.inception_v3 import InceptionV3
 
 img_width = 299
 img_height = 299
-train_dir = 'data/images_clothes/train_subset'
-val_dir = 'data/images_clothes/val_subset'
+train_dir = 'data/images_clothes/train'
+val_dir = 'data/images_clothes/val'
 
 # create the base pre-trained model
 base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
@@ -22,7 +22,7 @@ x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
 x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
-pred_layer = Dense(output_dim=2, activation='softmax')(x)
+pred_layer = Dense(output_dim=65, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=pred_layer)
 
@@ -38,9 +38,10 @@ model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['ac
 # Load Data Genenerator
 def load_data_generator():
     datagen = ImageDataGenerator(rescale=1./255,
-        shear_range=0.2,
-        zoom_range=0.2,
-        horizontal_flip=True)
+                                 rotation_range=15,
+                                 shear_range=0.2,
+                                 zoom_range=0.2,
+                                 horizontal_flip=True)
     return datagen
 
 train_datagen = load_data_generator()
@@ -62,8 +63,9 @@ validation_generator = validation_datagen.flow_from_directory(val_dir,
                                               seed=1368)
 
 # train the model on the new data for a few epochs
-model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=10, validation_data=validation_generator,
-                    nb_val_samples=50)
+model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
+                    validation_data=validation_generator,
+                    nb_val_samples=validation_generator.N)
 
 # at this point, the top layers are well trained and we can start fine-tuning
 # convolutional layers from inception V3. We will freeze the bottom N layers
@@ -88,6 +90,8 @@ model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossent
 
 # we train our model again (this time fine-tuning the top 2 inception blocks
 # alongside the top Dense layers
-model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=20, validation_data=validation_generator)
+model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=68,
+                    validation_data=validation_generator,
+                    nb_val_samples=validation_generator.N)
 
 model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
