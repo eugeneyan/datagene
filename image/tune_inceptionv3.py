@@ -1,5 +1,5 @@
 """
-python -m image.tune_inceptionv3.py
+nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
 """
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
@@ -44,8 +44,9 @@ def load_data_generator():
                                  horizontal_flip=True)
     return datagen
 
-train_datagen = load_data_generator()
+# train_datagen = load_data_generator()
 
+train_datagen = ImageDataGenerator(rescale=1./255)
 validation_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(train_dir,
