@@ -59,7 +59,7 @@ validation_generator = datagen.flow_from_directory(val_dir,
                                               seed=1368)
 
 # train the model on the new data for a few epochs
-model.fit_generator(train_generator, samples_per_epoch=100000, nb_epoch=10, validation_data=validation_generator)
+model.fit_generator(train_generator, samples_per_epoch=1000, nb_epoch=10, validation_data=validation_generator)
 
 # at this point, the top layers are well trained and we can start fine-tuning
 # convolutional layers from inception V3. We will freeze the bottom N layers
