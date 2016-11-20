@@ -22,7 +22,7 @@ x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
 x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
-pred_layer = Dense(output_dim=65, activation='softmax')(x)
+pred_layer = Dense(output_dim=2, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=pred_layer)
 
