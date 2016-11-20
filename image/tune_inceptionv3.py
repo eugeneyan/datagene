@@ -48,14 +48,14 @@ datagen = load_data_generator()
 train_generator = datagen.flow_from_directory(train_dir,
                                               target_size=(img_width, img_height),
                                               batch_size=32,
-                                              class_mode=None,
+                                              class_mode='categorical',
                                               shuffle=False,
                                               seed=1368)
 
 validation_generator = datagen.flow_from_directory(val_dir,
                                               target_size=(img_width, img_height),
                                               batch_size=32,
-                                              class_mode=None,
+                                              class_mode='categorical',
                                               shuffle=False,
                                               seed=1368)
 
