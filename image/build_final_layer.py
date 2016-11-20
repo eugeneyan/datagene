@@ -3,7 +3,7 @@ Build final layer of deep learning network (for classification of bottleneck fea
 
 python -m image.build_final_layer images_clothes vgg16 20 subset
 python -m image.build_final_layer images_clothes inception3 30
-nohup python -m image.build_final_layer images_clothes inception3 368 >> final_layer.log 2>&1&
+nohup python -m image.build_final_layer images_clothes inception3 68 >> final_layer.log 2>&1&
 """
 import os
 import sys
