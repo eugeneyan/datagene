@@ -21,7 +21,7 @@ train_data_dir = 'data/images_clothes/train_subset'
 validation_data_dir = 'data/images_clothes/val_subset'
 nb_train_samples = 950
 nb_validation_samples = 50
-nb_epoch = 20
+nb_epoch = 38
 
 def largest_divisor(n, threshold=100):
     factors_set = set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
