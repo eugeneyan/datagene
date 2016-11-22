@@ -18,11 +18,11 @@ top_model_weights_path = 'data/images_clothes/model/bottleneck_fc_model.h5'
 # dimensions of our images.
 img_width, img_height = 224, 224
 
-train_data_dir = 'data/train'
-validation_data_dir = 'data/validation'
+train_data_dir = 'data/images_clothes/train_subset'
+validation_data_dir = 'data/images_clothes/val_subset'
 nb_train_samples = 950
 nb_validation_samples = 50
-nb_epoch = 50
+nb_epoch = 38
 
 # build the VGG16 network
 model = Sequential()
