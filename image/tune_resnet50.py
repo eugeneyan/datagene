@@ -5,6 +5,7 @@ nohup python -m image.tune_inceptionv3.py >> fine_resnet50.log 2>&1&
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
+from keras.optimizers import SGD, RMSprop
 from dl_models.resnet50 import ResNet50
 from utils.logger import logger
 
@@ -39,8 +40,12 @@ logger.info('Pred layer added')
 for layer in base_model.layers:
     layer.trainable = False
 
+# Optimizers
+sgd = SGD(lr=0.01, momentum=0.00, decay=0.00, nesterov=False)
+rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
+
 # compile the model (should be done *after* setting layers to non-trainable)
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
+model.compile(optimizer=sgd, loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
 
 logger.info('Full model compiled')
 
