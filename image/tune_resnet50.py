@@ -53,9 +53,9 @@ def load_data_generator():
                                  horizontal_flip=True)
     return datagen
 
-# train_datagen = load_data_generator()
+train_datagen = load_data_generator()
 
-train_datagen = ImageDataGenerator(rescale=1./255)
+# train_datagen = ImageDataGenerator(rescale=1./255)
 validation_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(train_dir,
@@ -94,9 +94,9 @@ for i, layer in enumerate(base_model.layers):
 
 # we chose to train the top 2 inception blocks, i.e. we will freeze
 # the first 172 layers and unfreeze the rest:
-for layer in model.layers[:163]:
+for layer in model.layers[:154]:
    layer.trainable = False
-for layer in model.layers[163:]:
+for layer in model.layers[154:]:
    layer.trainable = True
 
 # we need to recompile the model for these modifications to take effect
