@@ -1,3 +1,6 @@
+"""
+python -m image.sample_tunevgg1.py
+"""
 import os
 import h5py
 import numpy as np
@@ -80,7 +83,7 @@ def save_bottlebeck_features():
     generator = datagen.flow_from_directory(
             train_data_dir,
             target_size=(img_width, img_height),
-            batch_size=32,
+            batch_size=50,
             class_mode=None,
             shuffle=False)
     bottleneck_features_train = model.predict_generator(generator, nb_train_samples)
@@ -89,7 +92,7 @@ def save_bottlebeck_features():
     generator = datagen.flow_from_directory(
             validation_data_dir,
             target_size=(img_width, img_height),
-            batch_size=32,
+            batch_size=50,
             class_mode=None,
             shuffle=False)
     bottleneck_features_validation = model.predict_generator(generator, nb_validation_samples)
