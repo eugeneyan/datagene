@@ -1,5 +1,5 @@
 """
-python -m image.sample_tunevgg1.py
+python -m image.sample_tunevgg1
 
 """
 import os
@@ -120,7 +120,7 @@ def train_top_model():
     train_data = np.load(open('bottleneck_features_train.npy'))
     train_labels = np.array([0] * (nb_train_samples / 2) + [1] * (nb_train_samples / 2))
 
-    validation_data = np.load(open('bottleneck_features_validation.npy'))
+    validation_data = np.load(open('bottleneck_features_val.npy'))
     validation_labels = np.array([0] * (nb_validation_samples / 2) + [1] * (nb_validation_samples / 2))
 
     model = Sequential()
