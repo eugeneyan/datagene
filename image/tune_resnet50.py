@@ -114,6 +114,7 @@ model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epo
 
 logger.info('Model fine-tuned')
 
-model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
+model.save_weights('data/images_clothes/model/resnet_finetuned.h5')  # always save your weights after training or
+# during training
 
 logger.info('Weights saved')
