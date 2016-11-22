@@ -8,3 +8,4 @@ useful.txt
 *.DS_store
 *.pickle
 *.tar.gz
+*/old/
