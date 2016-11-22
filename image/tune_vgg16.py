@@ -75,7 +75,7 @@ logger.info('Train samples: {}'.format(train_generator.N))
 logger.info('Validation samples: {}'.format(validation_generator.N))
 
 # train the model on the new data for a few epochs
-model.fit_generator(train_generator, samples_per_epoch=32, nb_epoch=18,
+model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
 
