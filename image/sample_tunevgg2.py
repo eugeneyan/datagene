@@ -1,3 +1,8 @@
+"""
+python -m image.sample_tunevgg2
+
+"""
+
 import os
 import h5py
 import numpy as np
