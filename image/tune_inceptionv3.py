@@ -1,5 +1,5 @@
 """
-python -m image.tune_inceptionv3.py
+python -m image.tune_inceptionv3
 nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
 """
 from keras.models import Model
@@ -11,8 +11,8 @@ from utils.logger import logger
 
 img_width = 299
 img_height = 299
-train_dir = 'data/images_clothes/train_subset'
-val_dir = 'data/images_clothes/val_subset'
+train_dir = 'data/images_clothes/train'
+val_dir = 'data/images_clothes/val'
 
 # create the base pre-trained model
 base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)

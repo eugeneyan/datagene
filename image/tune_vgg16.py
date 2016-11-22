@@ -11,8 +11,8 @@ from utils.logger import logger
 
 img_width = 224
 img_height = 224
-train_dir = 'data/images_clothes/train_subset'
-val_dir = 'data/images_clothes/val_subset'
+train_dir = 'data/images_clothes/train'
+val_dir = 'data/images_clothes/val'
 
 # create the base pre-trained model
 base_model = VGG16(include_top=False, weights='imagenet', input_tensor=None)
@@ -26,7 +26,7 @@ x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
 x = Dense(512, activation='relu', init='glorot_uniform')(x)
 x = Dropout(0.5)(x)
-pred_layer = Dense(output_dim=2, activation='softmax')(x)
+pred_layer = Dense(output_dim=65, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=pred_layer)
 
@@ -91,7 +91,7 @@ for i, layer in enumerate(base_model.layers):
    print(i, layer.name)
 
 # we chose to train the top 2 inception blocks, i.e. we will freeze
-# the first 172 layers and unfreeze the rest:
+# the first 25 layers and unfreeze the rest:
 for layer in model.layers[:25]:
    layer.trainable = False
 for layer in model.layers[25:]:
