@@ -73,6 +73,8 @@ validation_generator = validation_datagen.flow_from_directory(val_dir,
                                                               seed=1368)
 
 logger.info('Train and val generators created')
+logger.info('Train samples: {}'.format(train_generator.N))
+logger.info('Validation samples: {}'.format(validation_generator.N))
 
 # train the model on the new data for a few epochs
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
@@ -106,7 +108,7 @@ logger.info('Model to be fine-tuned compiled')
 
 # we train our model again (this time fine-tuning the top 2 inception blocks
 # alongside the top Dense layers
-model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=68,
+model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=38,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
 
