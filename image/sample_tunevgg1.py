@@ -1,5 +1,6 @@
 """
 python -m image.sample_tunevgg1.py
+
 """
 import os
 import h5py
@@ -23,11 +24,13 @@ nb_train_samples = 950
 nb_validation_samples = 50
 nb_epoch = 38
 
+
 def largest_divisor(n, threshold=100):
     factors_set = set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
     factors_list = [i for i in factors_set if i <= threshold]
     factors_list.sort()
     return factors_list[-1]
+
 
 def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1./255)
