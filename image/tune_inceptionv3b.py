@@ -1,34 +1,37 @@
 """
-python -m image.tune_vgg16
+python -m image.tune_inceptionv3b
 nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
 """
-from keras.models import Model
+from keras.models import Model, Sequential
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
-from dl_models.vgg16 import VGG16
+from dl_models.inception_v3 import InceptionV3
 from utils.logger import logger
 
 
-img_width = 224
-img_height = 224
+img_width = 299
+img_height = 299
 train_dir = 'data/images_clothes/train'
 val_dir = 'data/images_clothes/val'
 
 # create the base pre-trained model
-base_model = VGG16(include_top=False, weights='imagenet', input_tensor=None)
+base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
 
 logger.info('Base model loaded')
 
-# add top model
-x = base_model.output
-x = Flatten(name='flatten')(x)
-x = Dense(512, activation='relu', init='glorot_uniform')(x)
-x = Dropout(0.5)(x)
-x = Dense(512, activation='relu', init='glorot_uniform')(x)
-x = Dropout(0.5)(x)
-pred_layer = Dense(output_dim=65, activation='softmax')(x)
+# Create top model
+top_model = Sequential()
+top_model.add(Flatten(input_shape=(1, 1, 2048)))
+top_model.add(Dense(512, activation='relu', init='glorot_uniform'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(512, activation='relu', init='glorot_uniform'))
+top_model.add(Dropout(0.5))
+top_model.add(Dense(output_dim=65, activation='softmax'))
 
-model = Model(input=base_model.input, output=pred_layer)
+# Load weights
+top_model.load_weights('data/images_clothes/model/final_layer_weights_inception3.h5')
+
+model = Model(input=base_model.input, output=top_model(base_model.output))
 
 logger.info('Pred layer added')
 
@@ -71,19 +74,6 @@ validation_generator = validation_datagen.flow_from_directory(val_dir,
                                                               seed=1368)
 
 logger.info('Train and val generators created')
-logger.info('Train samples: {}'.format(train_generator.N))
-logger.info('Validation samples: {}'.format(validation_generator.N))
-
-# train the model on the new data for a few epochs
-model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
-                    validation_data=validation_generator,
-                    nb_val_samples=validation_generator.N)
-
-logger.info('Pred layer trained. Starting fine-tuning')
-
-# at this point, the top layers are well trained and we can start fine-tuning
-# convolutional layers from inception V3. We will freeze the bottom N layers
-# and train the remaining top layers.
 
 # let's visualize layer names and layer indices to see how many layers
 # we should freeze:
@@ -91,10 +81,10 @@ for i, layer in enumerate(base_model.layers):
    print(i, layer.name)
 
 # we chose to train the top 2 inception blocks, i.e. we will freeze
-# the first 25 layers and unfreeze the rest:
-for layer in model.layers[:14]:
+# the first 172 layers and unfreeze the rest:
+for layer in model.layers[:172]:
    layer.trainable = False
-for layer in model.layers[14:]:
+for layer in model.layers[172:]:
    layer.trainable = True
 
 # we need to recompile the model for these modifications to take effect
@@ -106,12 +96,12 @@ logger.info('Model to be fine-tuned compiled')
 
 # we train our model again (this time fine-tuning the top 2 inception blocks
 # alongside the top Dense layers
-model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=68,
+model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=168,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
 
 logger.info('Model fine-tuned')
 
-model.save_weights('Vgg_finetuned.h5')  # always save your weights after training or during training
+model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
 
 logger.info('Weights saved')
