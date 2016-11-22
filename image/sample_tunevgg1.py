@@ -23,6 +23,11 @@ nb_train_samples = 950
 nb_validation_samples = 50
 nb_epoch = 20
 
+def largest_divisor(n, threshold=100):
+    factors_set = set(reduce(list.__add__, ([i, n//i] for i in range(1, int(n**0.5) + 1) if n % i == 0)))
+    factors_list = [i for i in factors_set if i <= threshold]
+    factors_list.sort()
+    return factors_list[-1]
 
 def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1./255)
@@ -85,25 +90,25 @@ def save_bottleneck_features():
 
     datagen = ImageDataGenerator(rescale=1./255)
 
-    generator = datagen.flow_from_directory(
+    generator_train = datagen.flow_from_directory(
         train_data_dir,
-        target_size=(img_width, img_height),
-        batch_size=50,
+        target_size=(224, 224),
+        batch_size=largest_divisor(nb_train_samples),
         class_mode=None,
         shuffle=False,
         seed=1368)
-    bottleneck_features_train = model.predict_generator(generator, nb_train_samples)
+    bottleneck_features_train = model.predict_generator(generator_train, nb_train_samples)
     np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
     print ('Train bottleneck features created')
 
-    generator = datagen.flow_from_directory(
+    generator_val = datagen.flow_from_directory(
         validation_data_dir,
-        target_size=(img_width, img_height),
-        batch_size=50,
+        target_size=(224, 224),
+        batch_size=largest_divisor(nb_validation_samples),
         class_mode=None,
         shuffle=False,
         seed=1368)
-    bottleneck_features_val = model.predict_generator(generator, nb_validation_samples)
+    bottleneck_features_val = model.predict_generator(generator_val, nb_validation_samples)
     np.save(open('bottleneck_features_val.npy', 'w'), bottleneck_features_val)
     print ('Val bottleneck features created')
 
@@ -129,31 +134,7 @@ def train_top_model():
     model.save_weights(top_model_weights_path)
 
 
-model = VGG16(include_top=False, weights='imagenet', input_tensor=None)
-print('Model loaded.')
+if __name__ == '__main__':
 
-datagen = ImageDataGenerator(rescale=1./255)
-
-generator = datagen.flow_from_directory(
-    train_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=50,
-    class_mode=None,
-    shuffle=False,
-    seed=1368)
-bottleneck_features_train = model.predict_generator(generator, nb_train_samples)
-np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
-print ('Train bottleneck features created')
-
-generator = datagen.flow_from_directory(
-    validation_data_dir,
-    target_size=(img_width, img_height),
-    batch_size=50,
-    class_mode=None,
-    shuffle=False,
-    seed=1368)
-bottleneck_features_val = model.predict_generator(generator, nb_validation_samples)
-np.save(open('bottleneck_features_val.npy', 'w'), bottleneck_features_val)
-print ('Val bottleneck features created')
-# save_bottleneck_features()
-train_top_model()
+    save_bottleneck_features()
+    train_top_model()
