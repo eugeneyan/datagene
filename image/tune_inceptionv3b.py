@@ -90,7 +90,7 @@ for layer in model.layers[172:]:
 # we need to recompile the model for these modifications to take effect
 # we use SGD with a low learning rate
 from keras.optimizers import SGD
-model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
+model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
 
 logger.info('Model to be fine-tuned compiled')
 
