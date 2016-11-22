@@ -3,6 +3,7 @@ Loads pre-trained model and prepares bottleneck features
 
 python -m image.prep_bottleneck_feats images_clothes vgg16 subset
 python -m image.prep_bottleneck_feats images_clothes inception3 subset
+python -m image.prep_bottleneck_feats images_clothes resnet50 subset
 nohup python -m image.prep_bottleneck_feats images_clothes inception3 >> bottleneck.log 2>&1&
 nohup python -m image.prep_bottleneck_feats images_clothes vgg16 >> bottleneck.log 2>&1&
 """
@@ -14,6 +15,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical
 from dl_models.vgg16 import VGG16
 from dl_models.inception_v3 import InceptionV3
+from dl_models.resnet50 import ResNet50
 from utils.logger import logger
 from utils.create_dir import create_dir
 
@@ -98,6 +100,10 @@ if __name__ == '__main__':
         model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
         img_width = 299
         img_height = 299
+    elif dl_model == 'resnet50':
+        model = ResNet50(include_top=False, weights='imagenet', input_tensor=None)
+        img_width = 224
+        img_height = 224
     else:
         raise ValueError('Model should be either "vgg16" or "inception3"')
 

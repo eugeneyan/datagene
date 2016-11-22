@@ -1,6 +1,6 @@
 """
 python -m image.tune_resnet50
-nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
+nohup python -m image.tune_inceptionv3.py >> fine_resnet50.log 2>&1&
 """
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
