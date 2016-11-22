@@ -1,10 +1,12 @@
 """
+python -m image.tune_inceptionv3.py
 nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
 """
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
 from dl_models.inception_v3 import InceptionV3
+from utils.logger import logger
 
 
 img_width = 299
@@ -14,6 +16,8 @@ val_dir = 'data/images_clothes/val_subset'
 
 # create the base pre-trained model
 base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
+
+logger.info('Base model loaded')
 
 # add top model
 x = base_model.output
@@ -26,6 +30,8 @@ pred_layer = Dense(output_dim=65, activation='softmax')(x)
 
 model = Model(input=base_model.input, output=pred_layer)
 
+logger.info('Pred layer added')
+
 # first: train only the top layers (which were randomly initialized)
 # i.e. freeze all convolutional InceptionV3 layers
 for layer in base_model.layers:
@@ -33,6 +39,8 @@ for layer in base_model.layers:
 
 # compile the model (should be done *after* setting layers to non-trainable)
 model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
+
+logger.info('Full model compiled')
 
 # Load Data Genenerator
 def load_data_generator():
@@ -62,10 +70,14 @@ validation_generator = validation_datagen.flow_from_directory(val_dir,
                                                               shuffle=True,
                                                               seed=1368)
 
+logger.info('Train and val generators created')
+
 # train the model on the new data for a few epochs
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
+
+logger.info('Pred layer trained. Starting fine-tuning')
 
 # at this point, the top layers are well trained and we can start fine-tuning
 # convolutional layers from inception V3. We will freeze the bottom N layers
@@ -88,10 +100,16 @@ for layer in model.layers[172:]:
 from keras.optimizers import SGD
 model.compile(optimizer=SGD(lr=0.0001, momentum=0.9), loss='categorical_crossentropy')
 
+logger.info('Model to be fine-tuned compiled')
+
 # we train our model again (this time fine-tuning the top 2 inception blocks
 # alongside the top Dense layers
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=68,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
 
+logger.info('Model fine-tuned')
+
 model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
+
+logger.info('Weights saved')
