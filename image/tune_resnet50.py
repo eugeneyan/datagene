@@ -11,8 +11,8 @@ from utils.logger import logger
 
 img_width = 224
 img_height = 224
-train_dir = 'data/images_clothes/train'
-val_dir = 'data/images_clothes/val'
+train_dir = 'data/images_clothes/train_subset'
+val_dir = 'data/images_clothes/val_subset'
 
 # create the base pre-trained model
 base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=None)
