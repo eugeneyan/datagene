@@ -24,7 +24,7 @@ nb_validation_samples = 50
 nb_epoch = 20
 
 
-def save_bottlebeck_features():
+def save_bottleneck_features():
     datagen = ImageDataGenerator(rescale=1./255)
 
     # # build the VGG16 network
@@ -88,28 +88,24 @@ def save_bottlebeck_features():
     generator = datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
-        batch_size=25,
+        batch_size=50,
         class_mode=None,
         shuffle=False,
         seed=1368)
-
-    print(generator.N)
-
-    bottleneck_features_train = model.predict_generator(generator, generator.N)
+    bottleneck_features_train = model.predict_generator(generator, nb_train_samples)
     np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
+    print ('Train bottleneck features created')
 
     generator = datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_width, img_height),
-        batch_size=25,
+        batch_size=50,
         class_mode=None,
         shuffle=False,
         seed=1368)
-
-    print(generator.N)
-
-    bottleneck_features_validation = model.predict_generator(generator, generator.N)
-    np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_validation)
+    bottleneck_features_val = model.predict_generator(generator, nb_validation_samples)
+    np.save(open('bottleneck_features_val.npy', 'w'), bottleneck_features_val)
+    print ('Val bottleneck features created')
 
 
 def train_top_model():
@@ -133,5 +129,5 @@ def train_top_model():
     model.save_weights(top_model_weights_path)
 
 
-save_bottlebeck_features()
+save_bottleneck_features()
 train_top_model()
