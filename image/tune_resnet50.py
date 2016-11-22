@@ -11,8 +11,8 @@ from utils.logger import logger
 
 img_width = 224
 img_height = 224
-train_dir = 'data/images_clothes/train_subset'
-val_dir = 'data/images_clothes/val_subset'
+train_dir = 'data/images_clothes/train'
+val_dir = 'data/images_clothes/val'
 
 # create the base pre-trained model
 base_model = ResNet50(include_top=False, weights='imagenet', input_tensor=None)
@@ -59,14 +59,14 @@ validation_datagen = ImageDataGenerator(rescale=1./255)
 
 train_generator = train_datagen.flow_from_directory(train_dir,
                                                     target_size=(img_width, img_height),
-                                                    batch_size=32,
+                                                    batch_size=128,
                                                     class_mode='categorical',
                                                     shuffle=True,
                                                     seed=1368)
 
 validation_generator = validation_datagen.flow_from_directory(val_dir,
                                                               target_size=(img_width, img_height),
-                                                              batch_size=32,
+                                                              batch_size=128,
                                                               class_mode='categorical',
                                                               shuffle=True,
                                                               seed=1368)
