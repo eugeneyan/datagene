@@ -4,16 +4,16 @@ nohup python -m image.tune_inceptionv3.py >> finetune.log 2>&1&
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
-from dl_models.inception_v3 import InceptionV3
+from dl_models.vgg16 import VGG16
 
 
-img_width = 299
-img_height = 299
+img_width = 224
+img_height = 224
 train_dir = 'data/images_clothes/train_subset'
 val_dir = 'data/images_clothes/val_subset'
 
 # create the base pre-trained model
-base_model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
+base_model = VGG16(include_top=False, weights='imagenet', input_tensor=None)
 
 # add top model
 x = base_model.output
@@ -78,9 +78,9 @@ for i, layer in enumerate(base_model.layers):
 
 # we chose to train the top 2 inception blocks, i.e. we will freeze
 # the first 172 layers and unfreeze the rest:
-for layer in model.layers[:172]:
+for layer in model.layers[:25]:
    layer.trainable = False
-for layer in model.layers[172:]:
+for layer in model.layers[25:]:
    layer.trainable = True
 
 # we need to recompile the model for these modifications to take effect
@@ -94,4 +94,4 @@ model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epo
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N)
 
-model.save_weights('Inception_finetuned.h5')  # always save your weights after training or during training
+model.save_weights('Vgg_finetuned.h5')  # always save your weights after training or during training
