@@ -2,7 +2,7 @@
 Build final layer of deep learning network (for classification of bottleneck features)
 
 python -m image.build_final_layer images_clothes vgg16 20 subset
-python -m image.build_final_layer images_clothes inception3 30
+python -m image.build_final_layer images_clothes inception3 38
 nohup python -m image.build_final_layer images_clothes inception3 68 >> final_layer.log 2>&1&
 """
 import os
@@ -20,12 +20,6 @@ from image.prep_bottleneck_feats import create_category_dict, create_labels
 sgd = SGD(lr=0.01, momentum=0.00, decay=0.00, nesterov=False)
 rmsprop = RMSprop(lr=0.01, rho=0.9, epsilon=1e-08, decay=0.0, clipnorm=1.0, clipvalue=1.0)
 
-# Initializers
-# g_uniform = initializations.glorot_uniform()
-
-# Metrics
-# top_n = metrics.top_k_categorical_accuracy()
-
 
 def build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, optimizer, nb_epoch,
                             top_model_weights_path):
@@ -37,7 +31,7 @@ def build_final_layer_vgg16(train_data, train_labels, val_data, val_labels, opti
     model.add(Dropout(0.5))
     model.add(Dense(output_dim=train_labels.shape[1], activation='softmax'))
 
-    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy'])
+    model.compile(optimizer=optimizer, loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
 
     model.fit(train_data, train_labels,
               nb_epoch=nb_epoch, batch_size=32,

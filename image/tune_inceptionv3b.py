@@ -21,7 +21,7 @@ logger.info('Base model loaded')
 
 # Create top model
 top_model = Sequential()
-top_model.add(Flatten(input_shape=(1, 1, 2048)))
+top_model.add(Flatten(input_shape=base_model.output_shape[1:]))
 top_model.add(Dense(512, activation='relu', init='glorot_uniform'))
 top_model.add(Dropout(0.5))
 top_model.add(Dense(512, activation='relu', init='glorot_uniform'))
@@ -34,16 +34,6 @@ top_model.load_weights('data/images_clothes/model/final_layer_weights_inception3
 model = Model(input=base_model.input, output=top_model(base_model.output))
 
 logger.info('Pred layer added')
-
-# first: train only the top layers (which were randomly initialized)
-# i.e. freeze all convolutional InceptionV3 layers
-for layer in base_model.layers:
-    layer.trainable = False
-
-# compile the model (should be done *after* setting layers to non-trainable)
-model.compile(optimizer='rmsprop', loss='categorical_crossentropy', metrics=['accuracy', 'top_k_categorical_accuracy'])
-
-logger.info('Full model compiled')
 
 # Load Data Genenerator
 def load_data_generator():
