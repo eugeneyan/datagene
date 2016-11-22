@@ -77,7 +77,8 @@ logger.info('Validation samples: {}'.format(validation_generator.N))
 # train the model on the new data for a few epochs
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
                     validation_data=validation_generator,
-                    nb_val_samples=validation_generator.N)
+                    nb_val_samples=validation_generator.N,
+                    max_q_size=20, nb_worker=4)
 
 logger.info('Pred layer trained. Starting fine-tuning')
 
@@ -108,7 +109,8 @@ logger.info('Model to be fine-tuned compiled')
 # alongside the top Dense layers
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=68,
                     validation_data=validation_generator,
-                    nb_val_samples=validation_generator.N)
+                    nb_val_samples=validation_generator.N,
+                    max_q_size=20, nb_worker=4)
 
 logger.info('Model fine-tuned')
 
