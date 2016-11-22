@@ -79,7 +79,7 @@ logger.info('Validation samples: {}'.format(validation_generator.N))
 model.fit_generator(train_generator, samples_per_epoch=train_generator.N, nb_epoch=18,
                     validation_data=validation_generator,
                     nb_val_samples=validation_generator.N,
-                    max_q_size=104)
+                    max_q_size=10, nb_worker=4)
 
 logger.info('Pred layer trained. Starting fine-tuning')
 
