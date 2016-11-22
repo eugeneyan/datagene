@@ -83,10 +83,12 @@ def save_bottlebeck_features():
     generator = datagen.flow_from_directory(
         train_data_dir,
         target_size=(img_width, img_height),
-        batch_size=50,
+        batch_size=25,
         class_mode=None,
         shuffle=False,
         seed=1368)
+
+    print(generator.N)
 
     bottleneck_features_train = model.predict_generator(generator, generator.N)
     np.save(open('bottleneck_features_train.npy', 'w'), bottleneck_features_train)
@@ -94,10 +96,12 @@ def save_bottlebeck_features():
     generator = datagen.flow_from_directory(
         validation_data_dir,
         target_size=(img_width, img_height),
-        batch_size=50,
+        batch_size=25,
         class_mode=None,
         shuffle=False,
         seed=1368)
+
+    print(generator.N)
 
     bottleneck_features_validation = model.predict_generator(generator, generator.N)
     np.save(open('bottleneck_features_validation.npy', 'w'), bottleneck_features_validation)
