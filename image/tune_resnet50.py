@@ -7,10 +7,10 @@ import os
 
 
 # Parameters for retraining
-train_dir = 'data/images_clothes/train_subset'
-val_dir = 'data/images_clothes/val_subset'
+train_dir = 'data/images_clothes/train'
+val_dir = 'data/images_clothes/val'
 model_name = 'resnet50'
-output_classes = 8
+output_classes = 65
 model_save_path = 'data/images_clothes/model/'
 img_width = 224
 img_height = 224
