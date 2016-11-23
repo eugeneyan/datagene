@@ -16,7 +16,7 @@ img_width = 224
 img_height = 224
 batch_size = 38
 
-# Initialize optimizers
+# Initialize optimizer
 mini_sgd = SGD(lr=0.0001, momentum=0.9)
 
 
@@ -45,6 +45,7 @@ if __name__ == '__main__':
         compile_model(model, mini_sgd)
         logger.info('Model compiled with {} trainable block(s)'.format(i))
 
+        logger.info('Model training with {} trainable blocks for {} epoches'.format(i, i*5))
         fit_model(model, train_generator, validation_generator, epoches=i*5)
         logger.info('Model fitted with {} trainable block(s)'.format(i))
 
