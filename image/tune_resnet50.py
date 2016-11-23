@@ -11,7 +11,6 @@ train_dir = 'data/images_clothes/train_subset'
 val_dir = 'data/images_clothes/val_subset'
 model_name = 'resnet50'
 output_classes = 8
-epoches = 18
 model_save_path = 'data/images_clothes/model/'
 img_width = 224
 img_height = 224
@@ -42,11 +41,11 @@ if __name__ == '__main__':
         logger.info('{} trainable block(s) for model set'.format(i))
         logger.debug(model)
 
-        # Compile and train model for 18 epoches
+        # Compile and train model for i * 5 epoches
         compile_model(model, mini_sgd)
         logger.info('Model compiled with {} trainable block(s)'.format(i))
 
-        fit_model(model, train_generator, validation_generator, epoches=epoches)
+        fit_model(model, train_generator, validation_generator, epoches=i*5)
         logger.info('Model fitted with {} trainable block(s)'.format(i))
 
         # Save weights
