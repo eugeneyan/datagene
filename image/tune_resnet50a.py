@@ -1,5 +1,5 @@
 """
-python -m image.tune_resnet50b
+python -m image.tune_resnet50a
 """
 from image.tune_utils import *
 from utils.logger import logger
