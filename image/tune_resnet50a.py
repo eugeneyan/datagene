@@ -16,6 +16,10 @@ img_width = 224
 img_height = 224
 batch_size = 38
 
+# Initialize optimizers
+sgd = SGD(lr=0.01, momentum=0.9, decay=0.00, nesterov=False)
+mini_sgd = SGD(lr=0.0001, momentum=0.9)
+
 
 if __name__ == '__main__':
 
@@ -30,15 +34,32 @@ if __name__ == '__main__':
     validation_generator = create_validation_datagen(val_dir, batch_size, img_width, img_height)
     logger.info('Validation generator created')
 
-    for i in range(0, 10):
+    # Train pred layer first
+    model = set_trainable_blocks(model_name, model, 0)
+    logger.info('{} trainable block(s) for model set'.format(0))
+    logger.debug(model)
 
-        # Train pred layer first
+    # Compile and train model for 18 epoches
+    compile_model(model, sgd)
+    logger.info('Model compiled with {} trainable block(s)'.format(0))
+
+    fit_model(model, train_generator, validation_generator, epoches=epoches)
+    logger.info('Model fitted with {} trainable block(s)'.format(0))
+
+    # Save weights
+    weights_save_path = os.path.join(model_save_path, model_name + '_finetuned_' + str(i) + 'block.h5')
+    model.save_weights(weights_save_path)
+    logger.info('Weights saved here: {}'.format(weights_save_path))
+
+    for i in range(1, 10):
+
+        # Train conv blocks
         model = set_trainable_blocks(model_name, model, i)
         logger.info('{} trainable block(s) for model set'.format(i))
         logger.debug(model)
 
         # Compile and train model for 18 epoches
-        compile_model(model)
+        compile_model(model, mini_sgd)
         logger.info('Model compiled with {} trainable block(s)'.format(i))
 
         fit_model(model, train_generator, validation_generator, epoches=epoches)

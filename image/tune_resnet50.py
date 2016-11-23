@@ -1,5 +1,5 @@
 """
-python -m image.tune_resnet50b >> tune_resnet50b.log 2>&1&
+python -m image.tune_resnet50 >> tune_resnet50b.log 2>&1&
 """
 from image.tune_utils import *
 from utils.logger import logger
@@ -16,6 +16,9 @@ model_save_path = 'data/images_clothes/model/'
 img_width = 224
 img_height = 224
 batch_size = 38
+
+# Initialize optimizers
+mini_sgd = SGD(lr=0.0001, momentum=0.9)
 
 
 if __name__ == '__main__':
@@ -40,7 +43,7 @@ if __name__ == '__main__':
         logger.debug(model)
 
         # Compile and train model for 18 epoches
-        compile_model(model)
+        compile_model(model, mini_sgd)
         logger.info('Model compiled with {} trainable block(s)'.format(i))
 
         fit_model(model, train_generator, validation_generator, epoches=epoches)

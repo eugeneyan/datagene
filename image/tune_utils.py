@@ -10,6 +10,29 @@ from utils.logger import logger
 conv_block = {'resnet50': {0: 176, 1: 164, 2: 154, 3: 142, 4: 132, 5: 122, 6: 112, 7: 102, 8: 92, 9: 80}}
 
 
+def load_untrained_model(model_name, output_classes):
+    # Load base model
+    if model_name == 'resnet50':
+        base_model = ResNet50(include_top=False, weights=None, input_tensor=None)
+        logger.info('Untrained {} loaded'.format(model_name))
+    else:
+        raise Exception('Base model not loaded correctly')
+
+    # Create top block
+    x = base_model.output
+    x = Flatten(name='flatten')(x)
+    x = Dense(512, activation='relu', init='glorot_uniform', name='relu_1')(x)
+    x = Dropout(0.5)(x)
+    x = Dense(512, activation='relu', init='glorot_uniform', name='relu_2')(x)
+    x = Dropout(0.5)(x)
+    pred_layer = Dense(output_dim=output_classes, activation='softmax', name='softmax_output')(x)
+
+    # Create overall model
+    model = Model(input=base_model.input, output=pred_layer)
+
+    return model
+
+
 def load_pretrained_model(model_name, output_classes, weights_path='original'):
     # Load base model
     if model_name == 'resnet50' and weights_path == 'original':
@@ -83,8 +106,8 @@ def create_validation_datagen(val_dir, batch_size, img_width, img_height):
     return val_datagen
 
 
-def compile_model(model):
-    model.compile(optimizer=SGD(lr=0.0001, momentum=0.9),
+def compile_model(model, optimizer):
+    model.compile(optimizer=optimizer,
                   loss='categorical_crossentropy',
                   metrics=['accuracy', 'top_k_categorical_accuracy'])
 
