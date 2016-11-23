@@ -11,7 +11,6 @@ train_dir = 'data/images_clothes/train_subset'
 val_dir = 'data/images_clothes/val_subset'
 model_name = 'resnet50'
 output_classes = 8
-epoches = 18
 model_save_path = 'data/images_clothes/model/'
 img_width = 224
 img_height = 224
