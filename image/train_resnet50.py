@@ -1,5 +1,5 @@
 """
-python -m image.tune_resnet50a
+python -m image.train_resnet50 >> train_resnet50.log 2>&1&
 """
 from image.tune_utils import *
 from utils.logger import logger
@@ -36,7 +36,7 @@ if __name__ == '__main__':
     logger.info('Validation generator created')
 
     # Compile and train model for 38 epoches
-    compile_model(model, rmsprop)
+    compile_model(model, sgd)
     logger.info('Model compiled')
 
     fit_model(model, train_generator, validation_generator, epoches=32)
