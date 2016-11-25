@@ -356,7 +356,7 @@ def remove_numeric(df, title='title_processed'):
 
 
 # Remove words with character count below threshold from string
-def remove_chars(title, word_len=1):
+def remove_chars(title, word_len=2):
     """ (list(str), int) -> list(str)
 
     Returns a list of str (tokenized titles) where tokens of character length =< word_len is removed.
@@ -376,7 +376,7 @@ def remove_chars(title, word_len=1):
 
 
 # Remove words that have words == 1 char from title
-def remove_one_char_words(df, word_len=1, title='title_processed'):
+def remove_one_char_words(df, word_len=2, title='title_processed'):
     """ (DataFrame, int, str) -> DataFrame
 
     Returns a DataFrame where tokens of character length <= word_len is removed
