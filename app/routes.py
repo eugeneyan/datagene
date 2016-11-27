@@ -107,6 +107,6 @@ def image_categorize_web():
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
-        logger.info('Time taken: {} sec'.format(elapsed_time))
+        logger.info('Time taken: {} ms'.format(elapsed_time))
 
     return render_template('image_categorize_web.html', result=result, elapsed_time=elapsed_time)
