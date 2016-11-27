@@ -29,7 +29,7 @@
 
     <p>Suggests five Amazon fashion categories to place a product in based on image. Works best with e-commerce
         fashion images on white background (because that's what it's trained on). </p>
-    <p> Accuracy: 0.760, Top 5 Accuracy: 0.974 </p>
+    <p> Top-1 validation accuracy: 0.760, Top-5 validation accuracy: 0.974 </p>
 
     <form enctype="multipart/form-data" action="{{ url_for('image_categorize_web') }}" method="POST">
         <!--<div class="form-group">-->
