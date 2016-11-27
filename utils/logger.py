@@ -9,7 +9,7 @@ log_file = 'utils.log'
 
 # Logger config
 logger = logging.getLogger('__log__')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 formatter = logging.Formatter('%(asctime)s - %(message)s')
 
 # create console handler and set level to debug
