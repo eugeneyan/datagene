@@ -1,7 +1,8 @@
 """
 python -m image.train_resnet50 >> train_resnet50.log 2>&1&
 """
-from image.tune_utils import *
+from image.image_utils import *
+from keras.optimizers import SGD, RMSprop
 from utils.logger import logger
 import os
 

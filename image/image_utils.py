@@ -1,7 +1,6 @@
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
-from keras.optimizers import SGD, RMSprop
 from dl_models.resnet50 import ResNet50
 from utils.logger import logger
 

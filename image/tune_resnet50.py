@@ -2,7 +2,7 @@
 python -m image.tune_resnet50
 python -m image.tune_resnet50 >> tune_resnet50b.log 2>&1&
 """
-from image.tune_utils import *
+from image.image_utils import *
 from utils.logger import logger
 import os
 

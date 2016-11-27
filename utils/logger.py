@@ -15,7 +15,7 @@ formatter = logging.Formatter('%(asctime)s - %(message)s')
 # create console handler and set level to debug
 ch = logging.StreamHandler()
 ch.setFormatter(formatter)
-ch.setLevel(logging.INFO)
+ch.setLevel(logging.DEBUG)
 
 # # create file handler that logs debug messages
 # fh = logging.FileHandler(log_file)
