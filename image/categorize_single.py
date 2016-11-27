@@ -18,14 +18,14 @@ class Image:
     def __init__(self, image_path):
         self.image_path = image_path
         self.image = None
-        logger.debug('Image received')
+        logger.info('Image received')
 
     def prepare(self):
         self.image = image.load_img(self.image_path, target_size=(224, 224))
         self.image = image.img_to_array(self.image)
         self.image = np.multiply(self.image, 1. / 255)
         self.image = np.expand_dims(self.image, axis=0)
-        logger.debug('Image prepared')
+        logger.info('Image prepared')
 
         return self
 

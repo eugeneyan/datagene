@@ -93,8 +93,12 @@ def image_categorize_web():
             # Read the posted values
             result, elapsed_time = image_categorize_single(_image_savepath)
 
-        else:
+        elif _image and not allowed_file(_image.filename):
             result = {0: ('Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)', 0)}
+            elapsed_time = 0
+
+        else:
+            result = {0: ('Select an image', 0)}
             elapsed_time = 0
 
     else:
