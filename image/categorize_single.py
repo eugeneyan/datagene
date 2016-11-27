@@ -2,14 +2,14 @@ import datetime
 import numpy as np
 from keras.preprocessing import image
 from image_utils import load_pretrained_model
-from prep_bottleneck_feats import create_category_dict
+from categorize.categorize_utils import load_dict
 from utils.logger import logger
 
 
 # Load deep learning model and dictionary
 model = load_pretrained_model(model_name='resnet50', output_classes=65,
                               weights_path='data/images_clothes/model/resnet50_finetuned_4block.h5')
-category_dict = create_category_dict('data/images_clothes/train/')
+category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
 logger.info('Deep learning model and image category dictionary loaded')
 
 

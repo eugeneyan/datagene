@@ -2,10 +2,6 @@
 """
 Takes in a single title and provides three category options
 """
-import cPickle as pickle
-import os
-from collections import defaultdict
-import heapq
 from utils.logger import logger
 from data_prep.clean_titles import encode_string, tokenize_title_string, remove_words_list, remove_numeric_list, \
     remove_chars, STOP_WORDS, HTML_PARSER
