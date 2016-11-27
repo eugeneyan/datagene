@@ -4,6 +4,7 @@ from werkzeug.utils import secure_filename
 import os
 from categorize.categorize_single import categorize_single
 from image.categorize_single import image_categorize_single
+from route_utils import allowed_file
 from utils.logger import logger
 
 
@@ -70,10 +71,6 @@ def categorize():
     return jsonify(result)
 
 
-def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1] in {'png', 'jpg', 'jpeg'}
-
-
 @app.route('/image_categorize_web', methods=['GET', 'POST'])
 def image_categorize_web():
     """
@@ -97,7 +94,7 @@ def image_categorize_web():
             result, elapsed_time = image_categorize_single(_image_savepath)
 
         else:
-            result = {0: ('Image should have either .png, .jpg, or .jpeg extensions', 0)}
+            result = {0: ('Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)', 0)}
             elapsed_time = 0
 
     else:

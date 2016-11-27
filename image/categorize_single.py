@@ -37,7 +37,7 @@ class Image:
         end_time = datetime.datetime.now()
         elapsed_time = end_time - start_time
         elapsed_time = elapsed_time.total_seconds()
-        logger.info('Time taken: {} secs'.format(elapsed_time))
+        logger.debug('Time taken: {} secs'.format(elapsed_time))
 
         top = 5
         results = dict()
