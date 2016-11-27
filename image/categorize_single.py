@@ -10,6 +10,7 @@ from utils.logger import logger
 model = load_pretrained_model(model_name='resnet50', output_classes=65,
                               weights_path='data/images_clothes/model/resnet50_finetuned_4block.h5')
 category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
+logger.debug(category_dict)
 logger.info('Deep learning model and image category dictionary loaded')
 
 
