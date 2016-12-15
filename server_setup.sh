@@ -32,3 +32,4 @@ pip install regex
 
 # Install nltk stop words
 python -m nltk.downloader stopwords
+python -m nltk.downloader wordnet

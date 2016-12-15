@@ -28,10 +28,16 @@ import sys
 import os
 import matplotlib
 from HTMLParser import HTMLParser
+from nltk import PorterStemmer
+from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.cross_validation import train_test_split
 from utils.logger import logger
 from utils.create_dir import create_output_dir
 
+
+# Create stemmer and lemmatizer
+stemmer = PorterStemmer()
+lemmatizer = WordNetLemmatizer()
 
 # Initialize stopwords
 STOP_WORDS = set(stopwords.words('english'))
@@ -452,6 +458,64 @@ def remove_empty_titles(df, title='title_processed'):
     """
     df['title_len'] = df[title].apply(title_token_count)
     df = df[df['title_len'] > 0]
+    return df
+
+
+# Lemmatize title
+def lemmatize_string(title, lemmatize_function=lemmatizer.lemmatize):
+    """ (lst(str)) -> lst(str)
+
+    Returns a lemmatized string
+
+    :param title:
+    :param singularize_function:
+    :return:
+    """
+    return str(lemmatize_function(title))
+
+
+# Lemmatize df
+def lemmatize_df(df, title='search_term', lemmatize_function=lemmatizer.lemmatize):
+    """
+
+    Returns a dataframe where search term has been lemmatized
+
+    :param df:
+    :param title:
+    :param lemmatize_function:
+    :return:
+    """
+    df[title] = df[title].apply(lemmatize_string)
+    logger.info('{}: lemmatized'.format(title))
+    return df
+
+
+# Singularize plural tokens
+def singularize_list(title, singularize_function=lemmatizer.lemmatize):
+    """ (lst(str)) -> lst(str)
+
+    Returns a list of tokens where the tokens have been singularized
+
+    :param title:
+    :param singularize_function:
+    :return:
+    """
+    return [str(singularize_function(token)) for token in title]
+
+
+# Singularize plural tokens in dataframe
+def singularize_df(df, title='title_processed', singularize_function=lemmatizer.lemmatize):
+    """ (DataFrame, str, function) -> Dataframe
+
+    Returns a DataFrame where title tokens are singularized
+
+    :param df:
+    :param title:
+    :param singularize_function:
+    :return:
+    """
+    df[title] = df[title].apply(singularize_list, args=(singularize_function, ))
+    logger.info('{}: Tokens singularized'.format(title))
     return df
 
 

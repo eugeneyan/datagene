@@ -2,14 +2,15 @@
 """
 Takes in a single title and provides three category options
 """
+import datetime
 from utils.logger import logger
 from data_prep.clean_titles import encode_string, tokenize_title_string, remove_words_list, remove_numeric_list, \
-    remove_chars, STOP_WORDS, HTML_PARSER
+    remove_chars, STOP_WORDS, singularize_list, HTML_PARSER
 from categorize.categorize_utils import load_dict, get_score
 
 
 # Load dictionaries
-tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts')
+tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts_small')
 logger.info('Dictionary loaded in categorized.categorize_single')
 
 
@@ -40,6 +41,7 @@ class Title:
         self.title = remove_words_list(self.title, STOP_WORDS)
         self.title = remove_numeric_list(self.title)
         self.title = remove_chars(self.title, 1)
+        self.title = singularize_list(self.title)
         logger.info('Title after preparation: {}'.format(self.title))
         return self
 
@@ -54,6 +56,7 @@ class Title:
         2: 'Electronics -> Computers & Accessories -> Data Storage -> USB Flash Drives',
         3: 'Home & Kitchen -> Furniture -> Home Office Furniture -> Bookcases'}
         """
+        start_time = datetime.datetime.now()
 
         result_list = get_score(self.title, tfidf_dict, int_to_category_dict, 3)
         result_dict = dict()
@@ -71,4 +74,13 @@ def categorize_single(title):
     :param title:
     :return:
     """
-    return Title(title).prepare().categorize()
+    start_time = datetime.datetime.now()
+
+    result = Title(title).prepare().categorize()
+
+    end_time = datetime.datetime.now()
+    elapsed_time = end_time - start_time
+    elapsed_time = elapsed_time.total_seconds() * 1000
+    logger.debug('Time taken: {} ms'.format(elapsed_time))
+
+    return result, elapsed_time

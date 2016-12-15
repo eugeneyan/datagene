@@ -42,14 +42,16 @@ def categorize_web():
         # Read the posted values
         _title = request.form['title'].encode('utf-8')  # encode to utf 8
         logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
-        result = categorize_single(_title)
+        result, elapsed_time = categorize_single(_title)
     else:
         result = {0: 'Type something in the Product Title field =)'}
+        elapsed_time = 0
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
+        logger.info('Time taken: {} ms'.format(elapsed_time))
 
-    return render_template('categorize_web.html', result=result)
+    return render_template('categorize_web.html', result=result, elapsed_time=elapsed_time)
 
 
 @app.route('/categorize', methods=['POST'])
