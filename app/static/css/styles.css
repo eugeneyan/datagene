@@ -9,3 +9,9 @@
   top: -2px;
   left:8px;
 }
+
+nav ul {
+    position: relative;
+    float: right;
+    top: -40px;
+}
