@@ -1,0 +1,11 @@
+.header img {
+  float: left;
+  width: 38px;
+  height: 38px;
+}
+
+.header h3 {
+  position: relative;
+  top: -2px;
+  left:8px;
+}
