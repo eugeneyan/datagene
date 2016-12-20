@@ -1,13 +1,4 @@
 // Place your settings in this file to overwrite default and user settings.
 {
-    "python.pythonPath": "/Users/eugeneyan/.virtualenvs/datagene/bin/python",
-    "files.exclude": {
-        "**/.git": true,
-        "**/.DS_Store": true,
-        "**/data": true,
-        "**/*.pyc": true
-    },
-    "files.autoSave": "afterDelay",
-    "files.autoSaveDelay": 1000,
-    "python.linting.pep8Enabled": false
+    "python.pythonPath": "/Users/eugeneyan/.virtualenvs/datagene/bin/python"
 }

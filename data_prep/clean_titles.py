@@ -22,15 +22,15 @@ import unicodedata
 import string
 import sys
 import os
-import matplotlib
 import pandas as pd
 import numpy as np
 import regex as re
+import matplotlib
 from nltk.corpus import stopwords
-from HTMLParser import HTMLParser
 from nltk import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.cross_validation import train_test_split
+from HTMLParser import HTMLParser
 from utils.logger import logger
 from utils.create_dir import create_output_dir
 
