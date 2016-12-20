@@ -1,0 +1,10 @@
+// Place your settings in this file to overwrite default and user settings.
+{
+    "python.pythonPath": "/Users/eugeneyan/.virtualenvs/datagene/bin/python",
+    "files.exclude": {
+        "**/.git": true,
+        "**/.DS_Store": true,
+        "**/data": true,
+        "**/*.pyc": true
+    }
+}

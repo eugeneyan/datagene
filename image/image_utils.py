@@ -75,6 +75,7 @@ def set_trainable_blocks(model_name, model, blocks=2):
 
     return model
 
+
 def create_train_datagen(train_dir, batch_size, img_width, img_height):
     datagen = ImageDataGenerator(rescale=1. / 255,
                                  rotation_range=15,

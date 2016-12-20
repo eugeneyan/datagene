@@ -5,6 +5,7 @@ Prepares images by:
 - Splitting images into train and test
 
 python -m image.prep_image_dir images_clothes
+python -m image.prep_image_dir images
 """
 import os
 import shutil
@@ -74,8 +75,10 @@ def discard_duplicate_images(current_dir, duplicate_dir):
                 duplicate_path = os.path.join(duplicate_dir, image_dir, hash_str + '_' + image)
                 shutil.move(image_path, duplicate_path)
 
-            logger.info('{} has {}/{} duplicate images moved'.format(image_dir, duplicate_images, initial_count))
-            logger.info('Images remaining: {}'.format(initial_count - duplicate_images))
+            logger.info('{} has {}/{} ({0:.2f})duplicate images moved'.format(image_dir, duplicate_images, initial_count,
+                                                                         float(duplicate_images)/initial_count))
+            logger.info('Images remaining: {} ({0:.2f})'.format(initial_count - duplicate_images,
+                                                           float(initial_count - duplicate_images)/initial_count))
 
 
 # Copy images into a directory (from current dir to new dir)
@@ -126,22 +129,22 @@ if __name__ == '__main__':
     discard_dir = os.path.join('data', main_dir, 'discard')
     duplicate_dir = os.path.join('data', main_dir, 'duplicate')
 
-    # # Create dir structure for discard and remove images that are too small in size
-    # # Usually, these images are incorrect
-    # mirror_dir_structure(train_dir, discard_dir)
-    # discard_images_below_size(train_dir, discard_dir, 4000)
+    # Create dir structure for discard and remove images that are too small in size
+    # Usually, these images are incorrect
+    mirror_dir_structure(train_dir, discard_dir)
+    discard_images_below_size(train_dir, discard_dir, 4000)
+
+    # Create dir structure for duplicate and remove duplicate images (only keeping one)
+    mirror_dir_structure(train_dir, duplicate_dir)
+    discard_duplicate_images(train_dir, duplicate_dir)
+
+    # # Create dir structure for train sample and copy 1000 images
+    # mirror_dir_structure(train_dir, train_samp_dir)
+    # copy_to_dir(train_dir, train_samp_dir, 500)
     #
-    # # Create dir structure for duplicate and remove duplicate images (only keeping one)
-    # mirror_dir_structure(train_dir, duplicate_dir)
-    # discard_duplicate_images(train_dir, duplicate_dir)
-
-    # Create dir structure for train sample and copy 1000 images
-    mirror_dir_structure(train_dir, train_samp_dir)
-    copy_to_dir(train_dir, train_samp_dir, 500)
-
-    # Split sample into train and val, with 0.1 split
-    mirror_dir_structure(train_samp_dir, val_samp_dir)
-    move_to_dir(train_samp_dir, val_samp_dir, 0.05)
+    # # Split sample into train and val, with 0.1 split
+    # mirror_dir_structure(train_samp_dir, val_samp_dir)
+    # move_to_dir(train_samp_dir, val_samp_dir, 0.05)
 
     # # Split test sample into val and test, with 0.05 split
     # mirror_dir_structure(val_samp_dir, test_samp_dir)
