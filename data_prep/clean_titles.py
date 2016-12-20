@@ -18,15 +18,15 @@ Cleans SKUs titles by:
 Sample call:
 python -m data_prep.clean_titles title_category
 """
-import pandas as pd
-import numpy as np
-import regex as re
-from nltk.corpus import stopwords
 import unicodedata
 import string
 import sys
 import os
 import matplotlib
+import pandas as pd
+import numpy as np
+import regex as re
+from nltk.corpus import stopwords
 from HTMLParser import HTMLParser
 from nltk import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
@@ -284,6 +284,7 @@ def tokenize_title_string(title, excluded):
 
     return re.split("[^" + excluded + "\w]+", title)
 
+
 # Tokenize titles in df
 def tokenize_title(df, excluded, title='title'):
     """ (DataFrame, str) -> DataFrame
@@ -356,6 +357,11 @@ def remove_numeric_list(title):
 
 # Remove words that are solely numeric from df
 def remove_numeric(df, title='title_processed'):
+    """
+
+    Remove tokens that are solely numenic from a list
+
+    """
     df[title] = df[title].apply(remove_numeric_list)
     logger.info('{}: solely numeric words removed'.format(title))
     return df
@@ -378,7 +384,6 @@ def remove_chars(title, word_len=2):
     """
 
     return [token for token in title if len(token) > word_len]
-
 
 
 # Remove words that have words == 1 char from title
@@ -485,7 +490,7 @@ def lemmatize_df(df, title='search_term', lemmatize_function=lemmatizer.lemmatiz
     :param lemmatize_function:
     :return:
     """
-    df[title] = df[title].apply(lemmatize_string)
+    df[title] = df[title].apply(lemmatize_function)
     logger.info('{}: lemmatized'.format(title))
     return df
 
@@ -541,8 +546,7 @@ def split_to_keep_and_discard(df, title='title_processed_str', category='categor
     sku_count_df = df.groupby(title).agg({title: 'count'}).rename(columns={title: 'sku_count'}).reset_index()
 
     # Merge in counts of category and sku
-    df = df.merge(cat_count_df, how='left', left_on=title, right_on=title)\
-         .merge(sku_count_df, how='left', left_on=title, right_on=title)
+    df = df.merge(cat_count_df, how='left', left_on=title, right_on=title).merge(sku_count_df, how='left', left_on=title, right_on=title)
 
     # Split into df for keeping and discarding, and sort
     discard_df = df[df['category_count'] > 1]
