@@ -2,7 +2,8 @@
 python -m image.tune_resnet50
 python -m image.tune_resnet50 >> tune_resnet50b.log 2>&1&
 """
-from image.image_utils import *
+from image_utils import *
+from keras.optimizers import SGD
 from utils.logger import logger
 import os
 

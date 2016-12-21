@@ -1,9 +1,10 @@
 """
 python -m image.tune_resnet50a
 """
-from image.image_utils import *
-from utils.logger import logger
 import os
+from image_utils import *
+from keras.optimizers import SGD
+from utils.logger import logger
 
 
 # Parameters for retraining
@@ -15,6 +16,7 @@ model_save_path = 'data/images_clothes/model/'
 img_width = 224
 img_height = 224
 batch_size = 38
+epoches = 18
 
 # Initialize optimizers
 sgd = SGD(lr=0.01, momentum=0.9, decay=0.00, nesterov=False)
@@ -47,7 +49,7 @@ if __name__ == '__main__':
     logger.info('Model fitted with {} trainable block(s)'.format(0))
 
     # Save weights
-    weights_save_path = os.path.join(model_save_path, model_name + '_finetuned_' + str(i) + 'block.h5')
+    weights_save_path = os.path.join(model_save_path, model_name + '_finetuned_' + str(0) + 'block.h5')
     model.save_weights(weights_save_path)
     logger.info('Weights saved here: {}'.format(weights_save_path))
 

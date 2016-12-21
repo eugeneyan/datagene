@@ -15,7 +15,6 @@ import imagehash
 from utils.logger import logger
 
 
-
 # Create new directory structure to directory
 def mirror_dir_structure(current_dir, new_dir):
     for image_dir in os.listdir(current_dir):
@@ -75,10 +74,12 @@ def discard_duplicate_images(current_dir, duplicate_dir):
                 duplicate_path = os.path.join(duplicate_dir, image_dir, hash_str + '_' + image)
                 shutil.move(image_path, duplicate_path)
 
-            logger.info('{} has {}/{} ({0:.2f})duplicate images moved'.format(image_dir, duplicate_images, initial_count,
-                                                                         float(duplicate_images)/initial_count))
-            logger.info('Images remaining: {} ({0:.2f})'.format(initial_count - duplicate_images,
-                                                           float(initial_count - duplicate_images)/initial_count))
+            logger.info('{} has {}/{} ({0:.2f})duplicate images moved'
+                        .format(image_dir, duplicate_images, initial_count,
+                                float(duplicate_images)/initial_count))
+            logger.info('Images remaining: {} ({0:.2f})'
+                        .format(initial_count - duplicate_images,
+                                float(initial_count - duplicate_images)/initial_count))
 
 
 # Copy images into a directory (from current dir to new dir)

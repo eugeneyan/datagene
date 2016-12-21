@@ -161,6 +161,7 @@ if __name__ == '__main__':
     # Count number of products in each category path
     category_counts = df[['category_path', 'asin']].groupby('category_path').count().sort_values(by='asin',
                                                                                   ascending=False).reset_index()
+    
     category_counts.rename(columns={'asin': 'count'}, inplace=True)
 
     # # Keep only rows where category in filter_df (only specific to Amazon data)

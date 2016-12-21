@@ -32,7 +32,7 @@ from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.cross_validation import train_test_split
 from HTMLParser import HTMLParser
 from utils.logger import logger
-from utils.create_dir import create_output_dir
+from utils.create_dir import create_dir
 
 
 # Create stemmer and lemmatizer
@@ -589,7 +589,7 @@ def save_keep_and_discard(keep_df, discard_df, data_dir, input_file):
     discard_file_path = os.path.join(output_dir_path, discard_file)
 
     # Create output directory
-    create_output_dir(data_dir)
+    create_dir(data_dir)
 
     keep_df.to_csv(keep_file_path, index=False)
     discard_df.to_csv(discard_file_path, index=False)
