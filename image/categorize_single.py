@@ -4,6 +4,7 @@ from keras.preprocessing import image
 from image_utils import load_pretrained_model
 from categorize.categorize_utils import load_dict
 from utils.logger import logger
+from utils.decorators import timer
 
 
 # Load deep learning model and dictionary
@@ -44,14 +45,16 @@ class Image:
         return results
 
 
+@timer
 def image_categorize_single(image_path):
-    start_time = datetime.datetime.now()
+    """ (str) -> dict
+
+    Initializes given image path as Image class and returns a dictionary of top 3 options
+
+    :param title:
+    :return:
+    """
 
     result = Image(image_path).prepare().categorize()
 
-    end_time = datetime.datetime.now()
-    elapsed_time = end_time - start_time
-    elapsed_time = elapsed_time.total_seconds() * 1000
-    logger.debug('Time taken: {} ms'.format(elapsed_time))
-
-    return result, elapsed_time
+    return result

@@ -4,6 +4,7 @@ Takes in a single title and provides three category options
 """
 import datetime
 from utils.logger import logger
+from utils.decorators import timer
 from data_prep.clean_titles import encode_string, tokenize_title_string, remove_words_list, remove_numeric_list, \
     remove_chars, STOP_WORDS, singularize_list, HTML_PARSER
 from categorize.categorize_utils import load_dict, get_score
@@ -66,21 +67,15 @@ class Title:
         return result_dict
 
 
+@timer
 def categorize_single(title):
     """ (str) -> dict
 
-    Initializes given title as CategorizeSingle class and returns a dictionary of top 3 options
+    Initializes given title as Title class and returns a dictionary of top 3 options
 
     :param title:
     :return:
     """
-    start_time = datetime.datetime.now()
-
     result = Title(title).prepare().categorize()
 
-    end_time = datetime.datetime.now()
-    elapsed_time = end_time - start_time
-    elapsed_time = elapsed_time.total_seconds() * 1000
-    logger.debug('Time taken: {} ms'.format(elapsed_time))
-
-    return result, elapsed_time
+    return result

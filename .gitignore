@@ -1,7 +1,7 @@
 .idea/
 .cache/
 data/
-notebooks/
+# notebooks/
 config.py
 useful.txt
 *.pyc
@@ -10,3 +10,6 @@ useful.txt
 *.tar.gz
 */old/
 *.pptx
+*.rst
+/docs
+notebooks/.ipynb_checkpoints

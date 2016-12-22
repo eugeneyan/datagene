@@ -39,7 +39,8 @@ TF_WEIGHTS_PATH_NO_TOP = 'https://github.com/fchollet/deep-learning-models/relea
 def conv2d_bn(x, nb_filter, nb_row, nb_col,
               border_mode='same', subsample=(1, 1),
               name=None):
-    '''Utility function to apply conv + BN.
+    '''
+    Utility function to apply conv + BN.
     '''
     if name is not None:
         bn_name = name + '_bn'
