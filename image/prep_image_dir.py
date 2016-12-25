@@ -118,36 +118,6 @@ def move_to_dir(current_dir, new_dir, percentage_to_move=0.1):
             logger.info('{} has {} images moved'.format(image_dir, moved_count))
 
 
-# Copy images from directory and sub directories into a single new directory.
-# Used for ease of serving images for image search
-def copy_to_single_dir(current_dir, new_dir):
-    """
-
-    Copies all images from current dir and sub dir into a single new dir
-
-    :param current_dir:
-    :param new_dir:
-    :return:
-    """
-    images_copied = 0
-
-    for image_dir in os.listdir(current_dir):
-        if not image_dir.startswith('.'):
-            image_paths = os.listdir(os.path.join(current_dir, image_dir))
-            image_count = len(image_paths)
-
-            logger.info('{}: {} being copied'.format(image_dir, image_count))
-
-            for image in image_paths:
-                if not image.startswith('.'):
-                    original_image_path = os.path.join(current_dir, image_dir, image)
-                    new_image_path = os.path.join(new_dir, image)
-                    shutil.copy(original_image_path, new_image_path)
-
-            images_copied += image_count
-            logger.info('{} images copied so far'.format(images_copied))
-
-
 if __name__ == '__main__':
 
     main_dir = sys.argv[1]  # images_clothes

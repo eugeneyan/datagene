@@ -120,8 +120,8 @@ if __name__ == '__main__':
                                          'bottleneck_feat_' + train + '.npy')
     val_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
                                        'bottleneck_feat_' + val + '.npy')
-    # test_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
-    #                                     'bottleneck_feat_' + test + '.npy')
+    test_bottleneck_path = os.path.join('data', main_dir, 'bottleneck_features', bottleneck_feature_dir,
+                                        'bottleneck_feat_' + test + '.npy')
 
     # Create category dictionary
     category_dict = create_category_dict(train_dir)
@@ -129,12 +129,12 @@ if __name__ == '__main__':
     # Create labels
     train_labels = create_labels(train_dir, category_dict)
     val_labels = create_labels(val_dir, category_dict)
-    # test_labels = create_labels(test_dir, category_dict)
+    test_labels = create_labels(test_dir, category_dict)
 
     # Create data generator
     datagen = load_data_generator()
 
     # Create bottleneck features
-    create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
-    create_bottleneck_features(datagen, val_dir, model, val_labels, val_bottleneck_path, img_width, img_height)
-    # create_bottleneck_features(datagen, test_dir, model, test_labels, test_bottleneck_path, img_width, img_height)
+    # create_bottleneck_features(datagen, train_dir, model, train_labels, train_bottleneck_path, img_width, img_height)
+    # create_bottleneck_features(datagen, val_dir, model, val_labels, val_bottleneck_path, img_width, img_height)
+    create_bottleneck_features(datagen, test_dir, model, test_labels, test_bottleneck_path, img_width, img_height)

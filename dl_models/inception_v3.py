@@ -118,13 +118,14 @@ def InceptionV3(include_top=True, weights='imagenet',
         channel_axis = 3
 
     x = conv2d_bn(img_input, 32, 3, 3, subsample=(2, 2), border_mode='valid')
-    x = conv2d_bn(x, 32, 3, 3, border_mode='valid')
-    x = conv2d_bn(x, 64, 3, 3)
-    x = MaxPooling2D((3, 3), strides=(2, 2))(x)
+    # with stride=2 border='valid', output becomes (299-1)/2 = 149 x 149
+    x = conv2d_bn(x, 32, 3, 3, border_mode='valid')  # 149 - 2 = 147 x 147
+    x = conv2d_bn(x, 64, 3, 3)  # 147 x 147
+    x = MaxPooling2D((3, 3), strides=(2, 2))(x)  # 147/2 = 73  => This is dependent on stride
 
-    x = conv2d_bn(x, 80, 1, 1, border_mode='valid')
-    x = conv2d_bn(x, 192, 3, 3, border_mode='valid')
-    x = MaxPooling2D((3, 3), strides=(2, 2))(x)
+    x = conv2d_bn(x, 80, 1, 1, border_mode='valid')  # 73
+    x = conv2d_bn(x, 192, 3, 3, border_mode='valid')  # 71 due to valid border
+    x = MaxPooling2D((3, 3), strides=(2, 2))(x)  # 71/2 = 35 due to stride 2
 
     # mixed 0, 1, 2: 35 x 35 x 256
     for i in range(3):
