@@ -65,6 +65,7 @@ def copy_to_top_level_dir(train_dir, train_top_level_dir):
     for image_dir in os.listdir(train_dir):
         if not image_dir.startswith('.'):
             image_paths = os.listdir(os.path.join(train_dir, image_dir))
+            image_paths = [image_path for image_path in image_paths if not image_path.startswith('.')]
             image_count = len(image_paths)
             top_level_image_dir = image_dir.split('->')[0].strip()
 
