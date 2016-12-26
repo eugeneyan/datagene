@@ -1,6 +1,12 @@
 #!/usr/bin/env bash
 
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
+SERVER=ubuntu@ec2-54-254-198-240.ap-southeast-1.compute.amazonaws.com
+CATEGORIZATION_DIR=~/eugeneyan/datagene/data/model
+IMAGE_CATEGORIZATION_DIR=~/eugeneyan/datagene/data/images_clothes/model
+IMAGE_SEARCH_DIR=~/eugeneyan/datagene/data/images/search_features
+
+ssh -i ~/.ssh/eugene_aws.pem ${SERVER}
 
 # Set up environment
 sudo apt-get -y update
@@ -18,13 +24,27 @@ PATH="$HOME/bin:$HOME/.local/bin:/home/ubuntu/anaconda2/bin:$PATH"
 
 # Update all packages
 conda update --all -y
+conda install keras -y
 
 # Pip install other essentials (not available on conda)
 pip install regex
+pip install docker-compose==1.2.0
 
 # Install nltk stop words
 python -m nltk.downloader stopwords
 python -m nltk.downloader wordnet
+
+# Change to use theano backend
+cd ~/.keras
+nano keras.json
+# Set the following
+{
+    "image_dim_ordering": "th",
+    "epsilon": 1e-07,
+    "floatx": "float32",
+    "backend": "theano"
+}
+
 
 # Create new key
 ssh-keygen -t rsa -C "eugeneyanziyou@gmail.com"
@@ -33,13 +53,23 @@ cat ~/.ssh/id_rsa.pub
 # Clone datagene
 git clone git@gitlab.com:eugeneyan/datagene.git
 mkdir -p datagene/data/model
+mkdir -p datagene/data/images_clothes/model
+mkdir -p datagene/data/images_clothes/pred_images
 
 # Upload models
-scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.pickle ubuntu@ec2-54-254-198-240.ap-southeast-1.compute.amazonaws.com:datagene/data/model
-scp -i ~/.ssh/eugene_aws.pem categorization_dicts.tar.gz ubuntu@ec2-52-76-234-207.ap-southeast-1.compute.amazonaws.com:datagene/data/model
+scp -i ~/.ssh/eugene_aws.pem ${CATEGORIZATION_DIR}/categorization_dicts_small.pickle ${SERVER}:datagene/data/model
+scp -i ~/.ssh/eugene_aws.pem ${CATEGORIZATION_DIR}/categorization_dicts.tar.gz ${SERVER}:datagene/data/model
+scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/resnet50_finetuned_4block.h5 ${SERVER}:datagene/data/images_clothes/model
+scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/image_category_dict.pickle ${SERVER}:datagene/data/images_clothes/model
 
 # Test datagene
 python run.py 0.0.0.0 6688
+
+
+# To associate datagene with ec2
+# - Get elastic IP and associate with EC2 instance
+# - Route 53 > Domain > Manage DNS
+# - Update datagene.io record set (with type A) with elastic IP
 
 # Set up proxy
 cd /etc/nginx/sites-enabled/
