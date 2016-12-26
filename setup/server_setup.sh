@@ -81,6 +81,7 @@ gem regenerate_binstubs
 sudo docker-compose run app script/setup
 bundle install
 sudo docker-compose build
+screen -S skillsort
 sudo docker-compose up
 
 
