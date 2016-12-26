@@ -25,4 +25,4 @@ nginx:
   links:
       - app
   ports:
-    - "80:80"
+    - "6689:6689"

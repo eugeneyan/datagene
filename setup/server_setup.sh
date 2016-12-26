@@ -28,7 +28,7 @@ conda install keras -y
 
 # Pip install other essentials (not available on conda)
 pip install regex
-pip install docker-compose==1.2.0
+sudo pip install docker-compose==1.2.0  # need sudo for this!
 
 # Install nltk stop words
 python -m nltk.downloader stopwords
@@ -64,6 +64,24 @@ scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/image_category_dict.pic
 
 # Test datagene
 python run.py 0.0.0.0 6688
+
+
+# Install RVM and update Ruby
+gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+curl -sSL https://get.rvm.io | bash -s stable --rails
+source /home/ubuntu/.rvm/scripts/rvm
+rvmsudo gem install pg -v '0.19.0'
+cd datagene/skillsort
+rvmsudo bundle install
+gem install rubygems-bundler
+sudo chmod -R 1777 /home/ubuntu/.rvm/gems/ruby-2.3.3/bin
+gem regenerate_binstubs
+
+# Set up SortMySkills Docker
+sudo docker-compose run app script/setup
+bundle install
+sudo docker-compose build
+sudo docker-compose up
 
 
 # To associate datagene with ec2
