@@ -29,3 +29,53 @@ python -m nltk.downloader wordnet
 # Create new key
 ssh-keygen -t rsa -C "eugeneyanziyou@gmail.com"
 cat ~/.ssh/id_rsa.pub
+
+# Clone datagene
+git clone git@gitlab.com:eugeneyan/datagene.git
+mkdir -p datagene/data/model
+
+# Upload models
+scp -i ~/.ssh/eugene_aws.pem categorization_dicts_small.pickle ubuntu@ec2-54-254-198-240.ap-southeast-1.compute.amazonaws.com:datagene/data/model
+scp -i ~/.ssh/eugene_aws.pem categorization_dicts.tar.gz ubuntu@ec2-52-76-234-207.ap-southeast-1.compute.amazonaws.com:datagene/data/model
+
+# Test datagene
+python run.py 0.0.0.0 6688
+
+# Set up proxy
+cd /etc/nginx/sites-enabled/
+sudo nano datagene.conf
+
+# Paste this in
+server {
+    listen 80;
+    server_name datagene.io;
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:6688;
+    }
+}
+
+server {
+    listen 6689;
+    server_name datagene.io;
+
+    proxy_redirect off;
+    proxy_buffering off;
+    proxy_set_header Host $host;
+    proxy_set_header X-Real-IP $remote_addr;
+    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+    location / {
+        proxy_set_header   X-Real-IP $remote_addr;
+        proxy_set_header   Host      $http_host;
+        proxy_pass         http://127.0.0.1:5555;
+    }
+}
+
+# Remove existing configuration files
+sudo rm /etc/nginx/sites-available/default
+sudo rm /etc/nginx/sites-enabled/default
+
+# Restart nginx
+sudo service nginx restart
