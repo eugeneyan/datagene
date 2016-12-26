@@ -1,6 +1,7 @@
 """
 Prepare image features for image search
 
+python -m image_search.prep_search_feats images train_top_level >> prep.log 2>&1
 python -m image_search.prep_search_feats images_sample train_top_level
 """
 import sys

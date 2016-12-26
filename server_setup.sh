@@ -8,8 +8,8 @@ sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2
 pip install --upgrade pip
 
 # Download and install anaconda
-wget http://repo.continuum.io/archive/Anaconda2-4.0.0-Linux-x86_64.sh
-bash Anaconda2-4.0.0-Linux-x86_64.sh -b -p /home/ubuntu/anaconda2  # silent installation without answering options
+wget http://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
+bash Anaconda2-4.2.0-Linux-x86_64.sh -b -p /home/ubuntu/anaconda2  # silent installation without answering options
 
 # Source add anaconda to path and source
 export PATH=/home/ubuntu/anaconda2/bin:$PATH
