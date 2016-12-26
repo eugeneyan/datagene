@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+
+# Initialize variables
+# ======================================================================================================================
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
 SERVER=ubuntu@ec2-54-254-198-240.ap-southeast-1.compute.amazonaws.com
 CATEGORIZATION_DIR=~/eugeneyan/datagene/data/model
@@ -8,13 +11,18 @@ IMAGE_SEARCH_DIR=~/eugeneyan/datagene/data/images/search_features
 
 ssh -i ~/.ssh/eugene_aws.pem ${SERVER}
 
-# Set up environment
+
+# Set up linux environment
+# ======================================================================================================================
 sudo apt-get -y update
 sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libhdf5-dev libx11-dev llvm libpq-dev
 sudo apt-get -y install uwsgi-core libapache2-mod-wsgi nginx
 sudo apt-get -y install git python-pip docker.io
 sudo apt-get -y dist-upgrade
 
+
+# Set up python environment
+# ======================================================================================================================
 # Download and install anaconda
 wget http://repo.continuum.io/archive/Anaconda2-4.2.0-Linux-x86_64.sh
 bash Anaconda2-4.2.0-Linux-x86_64.sh -b -p /home/ubuntu/anaconda2  # silent installation without answering options
@@ -46,6 +54,8 @@ nano keras.json
 }
 
 
+# Set up datagene.io environment
+# ======================================================================================================================
 # Create new key
 ssh-keygen -t rsa -C "eugeneyanziyou@gmail.com"
 cat ~/.ssh/id_rsa.pub
@@ -66,6 +76,8 @@ scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/image_category_dict.pic
 python run.py 0.0.0.0 6688
 
 
+# Set up ruby environment
+# ======================================================================================================================
 # Install RVM and update Ruby
 gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
 curl -sSL https://get.rvm.io | bash -s stable --rails
@@ -85,6 +97,8 @@ screen -S skillsort
 sudo docker-compose up
 
 
+# Set up nginx
+# ======================================================================================================================
 # To associate datagene with ec2
 # - Get elastic IP and associate with EC2 instance
 # - Route 53 > Domain > Manage DNS
@@ -128,3 +142,10 @@ sudo rm /etc/nginx/sites-enabled/default
 
 # Restart nginx
 sudo service nginx restart
+
+
+# Start datagene.io
+# ======================================================================================================================
+cd ~/datagene
+screen -S web
+python run.py 127.0.0.1 6688 >> web.log 2>&1
