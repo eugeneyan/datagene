@@ -10,20 +10,22 @@ python -m image_search.prep_search_dicts images train_top_level
 import os
 import cPickle as pickle
 from collections import defaultdict
+import pandas as pd
 import sys
 from utils.logger import logger
 from utils.create_dir import create_dir
 
-def create_index_path_dict(train_top_level_dir):
+
+def create_index_asin_dict(train_top_level_dir):
     """
 
-    Returns a dictionary of each image's index mapped to each image's path.
-    {Image index (in search features): Image path}
+    Returns a dictionary of each image's index mapped to each image's asin.
+    {Image index (in search features): Image asin}
 
     :param train_top_level_dir:
     :return:
     """
-    index_path_dict = defaultdict()
+    index_asin_dict = defaultdict()
     index = 0
 
     for image_dir in os.listdir(train_top_level_dir):
@@ -32,12 +34,12 @@ def create_index_path_dict(train_top_level_dir):
 
             for image_name in image_names:
                 if not image_name.startswith('.'):  # Remove .DS_Store
-                    image_path = os.path.join(train_top_level_dir, image_dir, image_name)
-                    index_path_dict[index] = image_path
+                    # image_path = os.path.join(train_top_level_dir, image_dir, image_name)
+                    index_asin_dict[index] = image_name.split('.')[0]
                     index += 1
 
-    logger.info('Index path dictionary created with {} entries'.format(len(index_path_dict)))
-    return index_path_dict
+    logger.info('Index asin dictionary created with {} entries'.format(len(index_asin_dict)))
+    return index_asin_dict
 
 
 def create_category_index_dict(train_top_level_dir):
@@ -64,39 +66,85 @@ def create_category_index_dict(train_top_level_dir):
     return category_index_dict
 
 
-def create_index_path_filter_dict(train_top_level_dir, category_index_dict):
+def create_index_asin_filter_dict(train_top_level_dir, category_index_dict):
     """
 
-    Returns a dictionary, of dictionaries, of each image's index mapped to each image's path, where category
+    Returns a dictionary, of dictionaries, of each image's index mapped to each image's asin, where category
     index is the main dictionary's key
-    {Category index: {Image index (in category): Image path}}
+    {Category index: {Image index (in category): Image asin}}
 
     :param train_top_level_dir:
     :param category_index_dict: Category Index dict to get index for each category
     :return:
     """
-    index_path_filter_dict = defaultdict()
+    index_asin_filter_dict = defaultdict()
 
     for image_dir in os.listdir(train_top_level_dir):
         if not image_dir.startswith('.'):
             image_dir_index = category_index_dict[image_dir][0]
 
-            index_path_filter_dict[image_dir_index] = defaultdict()
+            index_asin_filter_dict[image_dir_index] = defaultdict()
             image_index = 0
 
             image_names = os.listdir(os.path.join(train_top_level_dir, image_dir))
 
             for image_name in image_names:
                 if not image_name.startswith('.'):
-                    image_path = os.path.join(train_top_level_dir, image_dir, image_name)
-                    index_path_filter_dict[image_dir_index][image_index] = image_path
+                    # image_path = os.path.join(train_top_level_dir, image_dir, image_name)
+                    index_asin_filter_dict[image_dir_index][image_index] = image_name.split('.')[0]
                     image_index += 1
 
-    logger.info('Index path filter dictionary created with {} entries'.format(len(index_path_filter_dict)))
-    return index_path_filter_dict
+    logger.info('Index asin filter dictionary created with {} entries'.format(len(index_asin_filter_dict)))
+    return index_asin_filter_dict
 
 
-def save_search_dicts(index_path_dict, category_index_dict, index_path_filter_dict, output_dir, output_name):
+def create_asin_path_dict(train_top_level_dir):
+    """
+
+    Returns a dictionary mapping each asin to its image path
+    {Image asin: Image path}
+
+    :param train_top_level_dir:
+    :return:
+    """
+    asin_path_dict = defaultdict()
+    for image_dir in os.listdir(train_top_level_dir):
+        if not image_dir.startswith('.'):
+            image_names = os.listdir(os.path.join(train_top_level_dir, image_dir))
+
+            for image_name in image_names:
+                if not image_name.startswith('.'):
+                    asin = image_name.split('.')[0]
+                    image_path = os.path.join(train_top_level_dir, image_dir, image_name)
+                    asin_path_dict[asin] = image_path
+
+    logger.info('Asin path dictionary created with {} entries'.format(len(asin_path_dict)))
+    return asin_path_dict
+
+
+def create_asin_dict(df, asin_path_dict):
+    """
+
+    Returns a dictionary mapping each asin to a tuple of image_path, title, category
+    {Image asin: (Image path, Image title, Image category)
+
+    :param df:
+    :return:
+    """
+    asin_dict = defaultdict()
+    for index, row in df.iterrows():
+        asin = row['asin']
+        image_path = asin_path_dict[asin]
+        title = row['title']
+        category = row['category_path']
+
+        asin_dict[asin] = (image_path, title, category)
+
+    logger.info('Asin dictionary created with {} entries'.format(len(asin_dict)))
+    return asin_dict
+
+
+def save_search_dicts(index_path_dict, category_index_dict, index_path_filter_dict, asin_dict, output_dir, output_name):
     """
 
     Saves search dictionaries into pickle format, in output dir with output name
@@ -111,7 +159,7 @@ def save_search_dicts(index_path_dict, category_index_dict, index_path_filter_di
     output_path = os.path.join(output_dir, output_name + '.pickle')
 
     with open(output_path, 'wb') as handle:
-        pickle.dump((index_path_dict, category_index_dict, index_path_filter_dict), handle, protocol=2)
+        pickle.dump((index_path_dict, category_index_dict, index_path_filter_dict, asin_dict), handle, protocol=2)
         logger.info('Search dictionaries saved in {}'.format(output_path))
 
 
@@ -129,9 +177,27 @@ if __name__ == '__main__':
     create_dir(output_dir)
 
     # Create dictionaries
-    index_path_dict = create_index_path_dict(train_dir)
+    index_asin_dict = create_index_asin_dict(train_dir)
     category_index_dict = create_category_index_dict(train_dir)
-    index_path_filter_dict = create_index_path_filter_dict(train_dir, category_index_dict)
+    index_asin_filter_dict = create_index_asin_filter_dict(train_dir, category_index_dict)
+    asin_path_dict = create_asin_path_dict(train_dir)
+
+    # Load title and category df
+    df = pd.read_csv('data/asin_title_category.csv')
+    logger.info('Asin df loaded: {}'.format(df.shape))
+
+    # Filter df
+    valid_images = index_asin_dict.values()
+    valid_images = [img.split('.')[0] for img in valid_images]
+    df = df[df['asin'].isin(valid_images)]
+
+    logger.info('Asin df filtered: {}'.format(df.shape))
+
+    df['title'].fillna('TITLE MISSING', inplace=True)
+    df['category_path'].fillna('CATEGORY MISSING', inplace=True)
+
+    # Create asin dictionary
+    asin_dict = create_asin_dict(df, asin_path_dict)
 
     # Save dictionaries
-    save_search_dicts(index_path_dict, category_index_dict, index_path_filter_dict, output_dir, output_name)
+    save_search_dicts(index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict, output_dir, output_name)
