@@ -183,11 +183,11 @@ def save_dict(tfidf_dict, int_to_category_dict, output_dir, output_name):
     :param output_name:
     :return:
     """
-    output_dir_path = os.path.join(output_dir, output_name + '.pickle')
+    output_path = os.path.join(output_dir, output_name + '.pickle')
 
-    with open(output_dir_path, 'wb') as handle:
+    with open(output_path, 'wb') as handle:
         pickle.dump((tfidf_dict, int_to_category_dict), handle, protocol=2)
-        logger.info('Dict saved in {}'.format(output_dir_path))
+        logger.info('Dict saved in {}'.format(output_path))
 
 
 if __name__ == '__main__':
