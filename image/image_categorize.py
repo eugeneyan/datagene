@@ -1,5 +1,5 @@
-from image.image_utils import prepare_image
-from image_utils import load_pretrained_model
+from image.image_categorize_utils import prepare_image
+from image_categorize_utils import load_pretrained_model
 from categorize.categorize_utils import load_dict
 from utils.logger import logger
 from utils.decorators import timer
@@ -23,6 +23,7 @@ class ImageCategorize:
 
     def prepare(self):
         self.image = prepare_image(self.image_path, self.image_width, self.image_height)
+        logger.info('Image (categorize) prepared')
         return self
 
     def categorize(self):
@@ -37,6 +38,7 @@ class ImageCategorize:
             prob = preds[0][idx]
             results[i] = (category, prob)
 
+        logger.info('Image (categorize) categorized')
         return results
 
 
