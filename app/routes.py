@@ -2,8 +2,8 @@ from app import app
 from flask import request, jsonify, render_template
 from werkzeug.utils import secure_filename
 import os
-from categorize.categorize_single import categorize_single
-from image.categorize_single import image_categorize_single
+from categorize.title_categorize import title_categorize
+from image.image_categorize import image_categorize
 from route_utils import allowed_file
 from utils.logger import logger
 
@@ -42,7 +42,7 @@ def categorize_web():
         # Read the posted values
         _title = request.form['title'].encode('utf-8')  # encode to utf 8
         logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
-        result, elapsed_time = categorize_single(_title)
+        result, elapsed_time = title_categorize(_title)
     else:
         result = {0: 'Type something in the Product Title field =)'}
         elapsed_time = 0
@@ -69,7 +69,7 @@ def categorize():
     logger.debug('_title from json: {}; type({})'.format(_title, type(_title)))
 
     # Categorize title
-    result = categorize_single(_title)
+    result = title_categorize(_title)
     return jsonify(result)
 
 
@@ -93,7 +93,7 @@ def image_categorize_web():
             _image.save(_image_savepath)
 
             # Read the posted values
-            result, elapsed_time = image_categorize_single(_image_savepath)
+            result, elapsed_time = image_categorize(_image_savepath)
 
         elif _image and not allowed_file(_image.filename):
             result = {0: ('Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)', 0)}

@@ -1,6 +1,4 @@
-import datetime
-import numpy as np
-from keras.preprocessing import image
+from image.image_utils import prepare_image
 from image_utils import load_pretrained_model
 from categorize.categorize_utils import load_dict
 from utils.logger import logger
@@ -15,19 +13,16 @@ logger.debug(category_dict)
 logger.info('Deep learning model and image category dictionary loaded')
 
 
-class Image:
+class ImageCategorize:
     def __init__(self, image_path):
         self.image_path = image_path
         self.image = None
-        logger.info('Image received')
+        self.image_width = 224
+        self.image_height = 224
+        logger.info('Image (categorize) initialized')
 
     def prepare(self):
-        self.image = image.load_img(self.image_path, target_size=(224, 224))
-        self.image = image.img_to_array(self.image)
-        self.image = np.multiply(self.image, 1. / 255)
-        self.image = np.expand_dims(self.image, axis=0)
-        logger.info('Image prepared')
-
+        self.image = prepare_image(self.image_path, self.image_width, self.image_height)
         return self
 
     def categorize(self):
@@ -46,7 +41,7 @@ class Image:
 
 
 @timer
-def image_categorize_single(image_path):
+def image_categorize(image_path):
     """ (str) -> dict
 
     Initializes given image path as Image class and returns a dictionary of top 3 options
@@ -55,6 +50,6 @@ def image_categorize_single(image_path):
     :return:
     """
 
-    result = Image(image_path).prepare().categorize()
+    result = ImageCategorize(image_path).prepare().categorize()
 
     return result

@@ -15,7 +15,7 @@ tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts
 logger.info('Dictionary loaded in categorized.categorize_single')
 
 
-class Title:
+class TitleCategorize:
 
     def __init__(self, title):
         self.title = title
@@ -26,13 +26,13 @@ class Title:
         Returns the title after it has been prepared by the process from clean titles
 
         :return:
-        >>> Title('Crème brûlée &quot; &amp; &nbsp;').prepare()
+        >>> TitleCategorize('Crème brûlée &quot; &amp; &nbsp;').prepare()
         ['creme', 'brulee']
-        >>> Title('test hyphen-word 0.9 20% green/blue').prepare()
+        >>> TitleCategorize('test hyphen-word 0.9 20% green/blue').prepare()
         ['test', 'hyphen-word', '0.9']
-        >>> Title('grapes come in purple and green').prepare()
+        >>> TitleCategorize('grapes come in purple and green').prepare()
         ['grapes', 'come']
-        >>> Title('what remains of a word ! if wordlen is 2').prepare()
+        >>> TitleCategorize('what remains of a word ! if wordlen is 2').prepare()
         ['remains', 'word', 'wordlen']
         """
 
@@ -52,13 +52,11 @@ class Title:
         Categorizes prepared title and returns a dictionary of form {1: 'Cat1', 2: 'Cat2', 3: 'Cat3}
 
         :return:
-        >>> Title('This is a bookshelf with wood and a clock').prepare().categorize()
+        >>> TitleCategorize('This is a bookshelf with wood and a clock').prepare().categorize()
         {1: 'Electronics -> Home Audio -> Stereo Components -> Speakers -> Bookshelf Speakers',
         2: 'Electronics -> Computers & Accessories -> Data Storage -> USB Flash Drives',
         3: 'Home & Kitchen -> Furniture -> Home Office Furniture -> Bookcases'}
         """
-        start_time = datetime.datetime.now()
-
         result_list = get_score(self.title, tfidf_dict, int_to_category_dict, 3)
         result_dict = dict()
         for i, category in enumerate(result_list):
@@ -68,7 +66,7 @@ class Title:
 
 
 @timer
-def categorize_single(title):
+def title_categorize(title):
     """ (str) -> dict
 
     Initializes given title as Title class and returns a dictionary of top 3 options
@@ -76,6 +74,6 @@ def categorize_single(title):
     :param title:
     :return:
     """
-    result = Title(title).prepare().categorize()
+    result = TitleCategorize(title).prepare().categorize()
 
     return result

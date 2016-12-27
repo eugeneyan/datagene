@@ -1,6 +1,8 @@
+import numpy as np
 from keras.models import Model
 from keras.layers import Dense, Flatten, Dropout
 from keras.preprocessing.image import ImageDataGenerator
+from keras.preprocessing import image
 from dl_models.resnet50 import ResNet50
 from utils.logger import logger
 
@@ -117,3 +119,21 @@ def fit_model(model, train_generator, validation_generator, epoches):
                         validation_data=validation_generator,
                         nb_val_samples=validation_generator.N,
                         max_q_size=20, nb_worker=4)
+
+
+def prepare_image(image_path, img_width, img_height):
+    """
+
+    Returns an image array given of the image in path
+
+    :param image_path:
+    :param img_width:
+    :param img_height:
+    :return:
+    """
+    img = image.load_img(image_path, target_size=(img_width, img_height))
+    img = image.img_to_array(img)
+    img = np.multiply(img, 1. / 255)
+    img = np.expand_dims(img, axis=0)
+
+    return img
