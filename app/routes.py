@@ -2,14 +2,16 @@ from app import app
 from flask import request, jsonify, render_template
 from werkzeug.utils import secure_filename
 import os
-from categorize.title_categorize import title_categorize
-from image.image_categorize import image_categorize
+# from categorize.title_categorize import title_categorize
+# from image.image_categorize import image_categorize
+from image_search.image_search import image_search
 from route_utils import allowed_file
 from utils.logger import logger
 
 
 # Set image upload folder
-image_upload_folder = 'data/images_clothes/pred_images'
+image_categorization_upload_folder = 'data/images_clothes/pred_images'
+image_search_upload_folder = 'data/images_sample/search_image'
 
 
 @app.route('/')
@@ -77,22 +79,21 @@ def categorize():
 def image_categorize_web():
     """
 
-    Returns top three category options for uploaded image in web. If input form is empty, returns result suggesting user
-    to type something in input form.
+    Returns top three category options for uploaded image in web.
 
     :return:
     """
     if request.method == 'POST':
         _image = request.files['image']
-        logger.debug('Image received: {}'.format(_image.filename))
+        logger.debug('Image (categorize) received: {}'.format(_image.filename))
 
         # Check if file is allowed
         if _image and allowed_file(_image.filename):
             _image_filename = secure_filename(_image.filename)
-            _image_savepath = os.path.join(image_upload_folder, _image_filename)
+            _image_savepath = os.path.join(image_categorization_upload_folder, _image_filename)
             _image.save(_image_savepath)
 
-            # Read the posted values
+            # Image categorize
             result, elapsed_time = image_categorize(_image_savepath)
 
         elif _image and not allowed_file(_image.filename):
@@ -112,3 +113,46 @@ def image_categorize_web():
         logger.info('Time taken: {} ms'.format(elapsed_time))
 
     return render_template('image_categorize_web.html', result=result, elapsed_time=elapsed_time)
+
+
+@app.route('/image_search_web', methods=['GET', 'POST'])
+def image_search_web():
+    """
+
+    Returns top ten similar image options for uploaded image in web.
+
+    :return:
+    """
+    if request.method == 'POST':
+        _image = request.files['image']
+        logger.debug('Image (search) received: {}'.format(_image.filename))
+
+        # Check if file is allowed
+        if _image and allowed_file(_image.filename):
+            _image_filename = secure_filename(_image.filename)
+            _image_savepath = os.path.join(image_search_upload_folder, _image_filename)
+            _image.save(_image_savepath)
+
+            # Image Search
+            result, elapsed_time = image_search(_image_savepath, 'All')
+
+        elif _image and not allowed_file(_image.filename):
+            result = {0: ('Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)', 0)}
+            elapsed_time = 0
+
+        else:
+            result = {0: ('Select an image', 0)}
+            elapsed_time = 0
+
+    else:
+        result = {0: ('data/images_sample/train_top_level/Toys & Games/B00HCP0VTQ.jpg', 'Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title', 'Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title Product Title'),
+                  1: ('data/images_sample/train_top_level/Toys & Games/B00I3VWMP4.jpg', 'Product Title', ''),
+                  2: ('data/images_sample/train_top_level/Toys & Games/B00GLZR92A.jpg', 'Product Title', '')}
+        elapsed_time = 0
+
+    logger.info('Result: {}'.format(result))
+    for key, value in result.iteritems():
+        logger.info('Result {}: {}'.format(key, value))
+        logger.info('Time taken: {} ms'.format(elapsed_time))
+
+    return render_template('image_search_web.html', result=result, elapsed_time=elapsed_time)

@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
+# For setting up an empty server from scratch
 
 
 # Initialize variables
 # ======================================================================================================================
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
-SERVER=ubuntu@ec2-54-254-235-60.ap-southeast-1.compute.amazonaws.com
+SERVER=ubuntu@ec2-54-169-95-226.ap-southeast-1.compute.amazonaws.com
 CATEGORIZATION_DIR=~/eugeneyan/datagene/data/model
 IMAGE_CATEGORIZATION_DIR=~/eugeneyan/datagene/data/images_clothes/model
 SEARCH_IMAGE_DIR=~/eugeneyan/datagene/data/images/
@@ -76,7 +77,7 @@ scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/resnet50_finetuned_4blo
 scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/image_category_dict.pickle ${SERVER}:datagene/data/images_clothes/model
 scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/train_top_level.tar.gz ${SERVER}:datagene/data/images
 scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/search_features/search_features.tar.gz ${SERVER}:datagene/data/images/search_features
-scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/search_dicts/search_dicts.tar.gz ${SERVER}:datagene/data/images/search_dicts
+scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/search_dicts/search_dicts.pickle ${SERVER}:datagene/data/images/search_dicts
 
 # Test datagene
 python run.py 0.0.0.0 6688

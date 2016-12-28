@@ -16,7 +16,7 @@ from app.routes import app
 if __name__ == '__main__':
     host = sys.argv[1]
     port_number = sys.argv[2]
-    # app.run(host=host, port=int(port_number))
+    app.run(host=host, port=int(port_number))
     # app.run(host=host, port=int(port_number), debug=True)  # Note: this will run two instances of the app
-    while True:
-        app.run(host=host, port=int(port_number))
+    # while True:
+    #     app.run(host=host, port=int(port_number))

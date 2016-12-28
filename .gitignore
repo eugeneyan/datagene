@@ -13,3 +13,4 @@ useful.txt
 *.rst
 /docs
 notebooks/.ipynb_checkpoints
+app/static/train_top_level/
