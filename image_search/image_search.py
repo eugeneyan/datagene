@@ -14,7 +14,9 @@ MAIN_DIR = 'images'
 # Load search dictionaries and features
 index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict('data/' + MAIN_DIR + '/search_dicts',
                                                                                     'search_dicts')
+logger.info('Dictionary loaded in image_search.image_search')
 search_features = np.load(open('data/' + MAIN_DIR + '/search_features/search_features.npy'))
+logger.info('Search features loaded in image_search.image_search')
 
 # Add index to search features
 category_labels = list(itertools.chain.from_iterable([tup[0]] * tup[1] for tup in category_index_dict.values()))
