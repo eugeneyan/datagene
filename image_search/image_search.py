@@ -9,7 +9,7 @@ from utils.logger import logger
 from utils.decorators import timer
 
 # Initialize main dir
-MAIN_DIR = 'images_sample'
+MAIN_DIR = 'images'
 
 # Load search dictionaries and features
 index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict('data/' + MAIN_DIR + '/search_dicts',
