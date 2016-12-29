@@ -6,11 +6,10 @@ from utils.decorators import timer
 
 
 # Load deep learning model and dictionary
+category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
 model = load_pretrained_model(model_name='resnet50', output_classes=65,
                               weights_path='data/images_clothes/model/resnet50_finetuned_4block.h5')
-category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
-logger.debug(category_dict)
-logger.info('Deep learning model and image category dictionary loaded')
+logger.info('Resnet50 loaded in image.image_categorize')
 
 
 class ImageCategorize:
