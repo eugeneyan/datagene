@@ -123,12 +123,16 @@ server {
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   Host      $http_host;
         proxy_pass         http://127.0.0.1:6688;
+        proxy_connect_timeout       600;
+        proxy_send_timeout          600;
+        proxy_read_timeout          600;
+        send_timeout                600;
     }
 }
 
 server {
     listen 6689;
-    server_name datagene.io;
+    server_name datagene.io/sortmyskills;
 
     proxy_redirect off;
     proxy_buffering off;
