@@ -2,7 +2,6 @@
 """
 Takes in a single title and provides three category options
 """
-import datetime
 from utils.logger import logger
 from utils.decorators import timer
 from data_prep.clean_titles import encode_string, tokenize_title_string, remove_words_list, remove_numeric_list, \
