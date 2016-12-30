@@ -31,4 +31,4 @@ sudo docker-compose up
 # ======================================================================================================================
 cd ~/datagene
 screen -S web
-python run.py 127.0.0.1 6688 >> web.log 2>&1
+uwsgi --socket 127.0.0.1:6688 --ini uwsgi.ini >> web.log 2>&1

@@ -9,7 +9,7 @@ from data_prep.clean_titles import encode_string, tokenize_title_string, remove_
 from categorize_title.categorize_utils import load_dict, get_score
 
 # Load dictionaries
-tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts_small')
+tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts')
 logger.info('Dictionary loaded in categorized.categorize_single')
 
 
