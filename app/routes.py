@@ -2,8 +2,8 @@ from app import app
 from flask import request, jsonify, render_template
 from werkzeug.utils import secure_filename
 import os
-from categorize.title_categorize import title_categorize
-from image.image_categorize import image_categorize
+from categorize_title.title_categorize import title_categorize
+from categorize_image.image_categorize import image_categorize
 from image_search.image_search import image_search
 from image_search.template_results import default_result, no_similar_result, bad_format_result, empty_submit_result
 from route_utils import allowed_file
