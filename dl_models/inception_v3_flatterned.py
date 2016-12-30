@@ -259,7 +259,7 @@ def InceptionV3(include_top=True, weights='imagenet',
                   name='mixed' + str(9 + i))
 
     x = AveragePooling2D((8, 8), strides=(8, 8), name='avg_pool')(x)  # Moved here for transfer learning
-    x = Flatten(name='flatten')(x)  # Moved here for image search
+    x = Flatten(name='flatten')(x)  # Moved here for categorize_image search
 
     if include_top:
         # Classification block

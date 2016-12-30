@@ -1,4 +1,4 @@
-from image.image_categorize_utils import prepare_image
+from categorize_image.image_categorize_utils import prepare_image
 from image_categorize_utils import load_pretrained_model
 from categorize_title.categorize_utils import load_dict
 from utils.logger import logger
@@ -8,7 +8,7 @@ from utils.decorators import timer
 category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
 model = load_pretrained_model(model_name='resnet50', output_classes=65,
                               weights_path='data/images_clothes/model/resnet50_finetuned_4block.h5')
-logger.info('Resnet50 loaded in image.image_categorize')
+logger.info('Resnet50 loaded in categorize_image.image_categorize')
 
 
 class ImageCategorize:
