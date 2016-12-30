@@ -19,6 +19,7 @@ sudo apt-get -y update
 sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libhdf5-dev libx11-dev llvm libpq-dev
 sudo apt-get -y install uwsgi-core libapache2-mod-wsgi nginx
 sudo apt-get -y install git python-pip docker.io
+sudo apt-get install uwsgi-plugin-python
 sudo apt-get -y dist-upgrade
 
 
@@ -30,10 +31,12 @@ bash Anaconda2-4.2.0-Linux-x86_64.sh -b -p /home/ubuntu/anaconda2  # silent inst
 nano .profile
 # Set the following as path
 PATH="$HOME/bin:$HOME/.local/bin:/home/ubuntu/anaconda2/bin:$PATH"
+PYTHONHOME="/home/ubuntu/anaconda2/bin"
 
 # Update all packages
 conda update --all -y
 conda install keras -y
+conda install -c conda-forge uwsgi=2.0.12
 
 # Pip install other essentials (not available on conda)
 pip install regex
