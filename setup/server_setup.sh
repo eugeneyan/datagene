@@ -106,6 +106,7 @@ bundle install
 sudo docker-compose build
 screen -S skillsort
 sudo docker-compose up
+sudo rm tmp/pids/server.pid  # If "a server is already running error"
 
 
 # Set up nginx
@@ -127,6 +128,7 @@ server {
         proxy_set_header   X-Real-IP $remote_addr;
         proxy_set_header   Host      $http_host;
         proxy_pass         http://127.0.0.1:6688;
+        client_max_body_size 3M;
     }
 }
 

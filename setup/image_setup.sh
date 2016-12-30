@@ -22,6 +22,7 @@ git pull
 # Set up SortMySkills
 # ======================================================================================================================
 # Set up SortMySkills Docker
+cd skillsort
 sudo docker-compose build
 screen -S skillsort
 sudo docker-compose up
@@ -37,6 +38,5 @@ uwsgi --socket 127.0.0.1:6688 --ini uwsgi.ini >> web.log 2>&1
 # Associate datagene.io with EC2 instance
 # ======================================================================================================================
 # To associate datagene with ec2
-# - Get elastic IP and associate with EC2 instance
-# - Route 53 > Domain > Manage DNS
-# - Update datagene.io record set (with type A) with elastic IP
+# Network & Security -> Elastic IPs
+# Disassociate from existing EC2 instance and associate with new EC2 instance
