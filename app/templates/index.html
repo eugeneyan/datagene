@@ -7,14 +7,14 @@
   <meta name="google-site-verification" content="NnCBmfLBxVuWwl7qAkA-NhGcOT006AY7R4AqBGUfbsg"/>
   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <!--<link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">-->
   <link rel="stylesheet" href="app/static/css/styles.css">
 </head>
 
 <body>
 <div class="container">
   <div class="header">
-    <img src="app/static/favicon.ico" alt="datagene logo" style="width:38px;height:38px;">
+    <img src="app/static/img/favicon.ico" alt="datagene logo" style="width:38px;height:38px;">
     <h3 class="text-muted">APIs built while exploring new techniques / technologies</h3>
   </div>
 
@@ -31,6 +31,7 @@
       <p>Searches for similar products based on image.</p>
 
       <p><br></p>
+
     </div>
 
     <div class="col-lg-6">
@@ -51,11 +52,13 @@
 
     <a href="{{ url_for('acknowledgements') }}">Acknowledgements</a>
     <b>&emsp;</b>
+
     <a href="https://blog.datagene.io">Blog</a>
     <b>&emsp;</b>
-    <a href="{{ url_for('about_me') }}">About Me</a>
 
+    <a href="{{ url_for('about_me') }}">About Me</a>
     <p>
+
     <p>&copy; eugeneyan 2016</p>
   </footer>
 </div>
@@ -80,5 +83,4 @@
     ga('send', 'pageview');
 
 </script>
-
 </html>

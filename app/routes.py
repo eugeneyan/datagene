@@ -42,19 +42,26 @@ def categorize_web():
     :return:
     """
     if request.method == 'POST':
-        logger.info('Title form input: {}'.format(request.form['title']))
-
         # Read the posted values
         _title = request.form['title'].encode('utf-8')  # encode to utf 8
-        logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
-        result, elapsed_time = title_categorize(_title)
+        logger.info('Title form input: {}'.format(_title))
+
+        if len(_title) > 0:
+            logger.debug('title from form: {}; type({})'.format(_title, type(_title)))
+            result, elapsed_time = title_categorize(_title)
+
+        else:  # No input
+            result = {0: 'Enter a product title before submitting!'}
+            elapsed_time = 0
+
     else:
-        result = {0: 'Type something in the Product Title field =)'}
+        result = {0: 'Type something in the product title field.'}
         elapsed_time = 0
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
-        logger.info('Time taken: {} ms'.format(elapsed_time))
+
+    logger.info('Time taken: {} ms'.format(elapsed_time))
 
     return render_template('categorize_web.html', result=result, elapsed_time=elapsed_time)
 
@@ -100,11 +107,11 @@ def image_categorize_web():
             result, elapsed_time = image_categorize(_image_savepath)
 
         elif _image and not allowed_file(_image.filename):
-            result = {0: ('Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)', 0)}
+            result = {0: ('Image should have .png, .jpg, or .jpeg extension (case-insensitive).', 0)}
             elapsed_time = 0
 
         else:
-            result = {0: ('Select an image', 0)}
+            result = {0: ('Browse for an image before submitting!', 0)}
             elapsed_time = 0
 
     else:  # Request method is 'GET'
@@ -113,7 +120,8 @@ def image_categorize_web():
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
-        logger.info('Time taken: {} ms'.format(elapsed_time))
+
+    logger.info('Time taken: {} ms'.format(elapsed_time))
 
     return render_template('image_categorize_web.html', result=result, elapsed_time=elapsed_time)
 
@@ -127,7 +135,7 @@ def image_search_web():
     :return:
     """
     if request.method == 'POST':
-        logger.info('Request form: {}'.format(request.form))
+        logger.debug('Request form: {}'.format(request.form))
         _category = request.form['category']
         _image = request.files['image']
         logger.info('Image (search) category received: {}'.format(_category))
@@ -159,9 +167,10 @@ def image_search_web():
     if len(result) == 0:
         result = no_similar_result
 
-    logger.info('Result: {}'.format(result))
+    logger.debug('Result: {}'.format(result))
     for key, value in result.iteritems():
-        logger.info('Result {}: {}'.format(key, value))
-        logger.info('Time taken: {} ms'.format(elapsed_time))
+        logger.info('Result {}: {}'.format(key, value[1]))
+
+    logger.info('Time taken: {} ms'.format(elapsed_time))
 
     return render_template('image_search_web.html', result=result, elapsed_time=elapsed_time)

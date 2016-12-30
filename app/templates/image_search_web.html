@@ -2,7 +2,7 @@
 <html lang="en">
 
 <head>
-  <title>Image Search</title>
+  <title>Image Search (beta)</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="http://getbootstrap.com/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="http://getbootstrap.com/examples/jumbotron-narrow/jumbotron-narrow.css" rel="stylesheet">
@@ -21,10 +21,10 @@
   </nav>
 
   <div class="header">
-    <h3 class="text-muted">Image Search</h3>
+    <h3 class="text-muted">Image Search (beta)</h3>
   </div>
 
-  <p>Searches for products based on image, from ~200k items across 8 categories.</p>
+  <p>Searches, using uploaded image, from ~200k products across 8 categories.</p>
 
   <form enctype="multipart/form-data" action="{{ url_for('image_search_web') }}" method="POST">
     <div class="input-group">
@@ -35,9 +35,7 @@
       </label>
       <input type="text" class="form-control" readonly>
     </div>
-    <span class="help-block">
-            Browse and select a file
-        </span>
+    <span class="help-block">Browse and select a file</span>
 
     <div class="form-inline">
       <div class="form-group">
@@ -73,9 +71,7 @@
       <div class="form-group">
         <label class="btn btn-primary"> Submit <input type="submit" style="display: none;" value="submit"> </label>
       </div>
-
     </div>
-
   </form>
 
   <br>
@@ -221,5 +217,6 @@
     ga('create', 'UA-85787628-1', 'auto');
     ga('require', 'displayfeatures');
     ga('send', 'pageview');
+
 </script>
 </html>

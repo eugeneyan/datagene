@@ -1,5 +1,5 @@
 """
-Utils for use in routes
+Utilities for use in app serving
 """
 
 
