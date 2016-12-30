@@ -4,7 +4,7 @@
 # Initialize variables and access AMI
 # ======================================================================================================================
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
-SERVER=ubuntu@ec2-54-169-238-164.ap-southeast-1.compute.amazonaws.com
+SERVER=ubuntu@ec2-54-255-182-11.ap-southeast-1.compute.amazonaws.com
 ssh -i ~/.ssh/eugene_aws.pem ${SERVER}
 
 
@@ -32,3 +32,11 @@ sudo docker-compose up
 cd ~/datagene
 screen -S web
 uwsgi --socket 127.0.0.1:6688 --ini uwsgi.ini >> web.log 2>&1
+
+
+# Associate datagene.io with EC2 instance
+# ======================================================================================================================
+# To associate datagene with ec2
+# - Get elastic IP and associate with EC2 instance
+# - Route 53 > Domain > Manage DNS
+# - Update datagene.io record set (with type A) with elastic IP
