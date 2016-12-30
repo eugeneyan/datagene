@@ -1,10 +1,14 @@
+"""
+Class to suggest similar images and products given an input image.
+"""
 import numpy as np
 import itertools
 from sklearn.metrics.pairwise import cosine_similarity
 from dl_models.inception_v3_flatterned import InceptionV3
-from categorize.categorize_utils import load_dict
-from image.image_categorize_utils import prepare_image
-from image_search_utils import cosine_similarity_scipy
+from categorize_title.categorize_utils import load_dict
+from categorize_image.image_categorize_utils import prepare_image
+from image_search_utils import cosine_similarity_scipy, cdist_scipy
+from scipy.spatial.distance import cdist
 from utils.logger import logger
 from utils.decorators import timer
 
@@ -12,25 +16,33 @@ from utils.decorators import timer
 MAIN_DIR = 'images'
 
 # Load search dictionaries and features
-index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict('data/' + MAIN_DIR + '/search_dicts',
-                                                                                    'search_dicts')
+index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict(
+    'data/' + MAIN_DIR + '/search_dicts', 'search_dicts')
 logger.info('Dictionary loaded in image_search.image_search')
-search_features = np.load(open('data/' + MAIN_DIR + '/search_features/search_features.npy'))
+
+search_features_path = 'data/' + MAIN_DIR + '/search_features/search_features.npy'
+logger.info('Loading image features from {}'.format(search_features_path))
+search_features = np.load(open(search_features_path))
 logger.info('Search features loaded in image_search.image_search')
 
 # Add index to search features
 category_labels = list(itertools.chain.from_iterable([tup[0]] * tup[1] for tup in category_index_dict.values()))
-category_labels.reverse()
+category_labels.sort()
 search_features = np.insert(search_features, 0, category_labels, axis=1)
+logger.info('Category labels added in search features')
 
 # Create list of valid categories
 valid_categories = category_index_dict.keys() + ['All']
 
 # Load model
 model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)
+logger.info('InceptionV3 loaded in image_search.image_search')
 
 
 class ImageSearch:
+    """
+    Class to suggest similar images and products given an input image.
+    """
 
     def __init__(self, image_path, category_filter='All'):
         self.image_path = image_path
@@ -43,15 +55,20 @@ class ImageSearch:
         self.n_results = 12
         logger.info('Image (search) initialized')
 
+        # If category_filter missing, set to 'All'
+        if self.category_filter == '':
+            self.category_filter = 'All'
+
         assert self.category_filter in valid_categories, 'Category "{}" invalid'.format(self.category_filter)
 
     def get_category_filter_index(self):
+        logger.info('Category filter: {}'.format(self.category_filter))
         if self.category_filter == 'All':
             self.category_filter_index = -1
         else:
             self.category_filter_index = category_index_dict[self.category_filter][0]
 
-        logger.info('Image (search) category filter index derived')
+        logger.info('Image (search) category filter index derived: {}'.format(self.category_filter_index))
         return self
 
     def prepare(self):
@@ -67,16 +84,19 @@ class ImageSearch:
 
         # Filter search features if necessary
         if self.category_filter_index == -1:
+            logger.info('No filter applied')
             search_features_filtered = search_features[:, 1:]
             image_lookup_dict = index_asin_dict
         else:
+            logger.info('Filter applied: {}'.format(self.category_filter_index))
             category_filter = search_features[:, 0] == self.category_filter_index
             search_features_filtered = search_features[category_filter, 1:]
             image_lookup_dict = index_asin_filter_dict[self.category_filter_index]
 
         # Get cosine similarity
-        # csim = cosine_similarity(search_image, search_features_filtered)[0]  # Uses too much memory
-        csim = cosine_similarity_scipy(search_image, search_features_filtered)  # Slower but use less memory
+        csim = cosine_similarity(search_image, search_features_filtered)[0]  # Fastest with using most memory
+        # csim = cosine_similarity_scipy(search_image, search_features_filtered)  # Slowest but use least memory
+        # csim = cdist_scipy(search_image, search_features_filtered)  # Faster with moderate memory use
         logger.info('Image (search) cosine similiarity calculated')
 
         # Get index of similar features
@@ -92,14 +112,11 @@ class ImageSearch:
 
         for index in similar_images:
             asin = image_lookup_dict[index]
-            # image_path, title, category = asin_dict[asin]
-            # image_path = image_path.replace('data/' + MAIN_DIR, '../static')
-            # results[result_index] = (image_path, title, category)
             results[result_index] = asin_dict[asin]
             result_index += 1
 
         logger.info('Image (search) searched')
-        logger.info('Image (search) result: {}'.format(results))
+        logger.debug('Image (search) result: {}'.format(results))
         return results
 
 

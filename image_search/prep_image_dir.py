@@ -11,7 +11,7 @@ from utils.logger import logger
 
 
 # Copy images from directory and sub directories into a single new directory.
-# Used for ease of serving images for image search
+# Used for ease of serving images for categorize_image search
 # NOT USED
 def copy_to_single_dir(current_dir, new_dir):
     """
@@ -82,7 +82,6 @@ def copy_to_top_level_dir(train_dir, train_top_level_dir):
 
 
 if __name__ == '__main__':
-
     main_dir = sys.argv[1]
 
     train_dir = os.path.join('data', main_dir, 'train')

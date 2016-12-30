@@ -164,7 +164,6 @@ def save_search_dicts(index_path_dict, category_index_dict, index_path_filter_di
 
 
 if __name__ == '__main__':
-
     main_dir = sys.argv[1]  # images_sample
     train_dir = sys.argv[2]  # train_top_level
 

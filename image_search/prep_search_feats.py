@@ -7,7 +7,7 @@ python -m image_search.prep_search_feats images_sample train_top_level
 import sys
 import os
 import numpy as np
-from image.prep_bottleneck_feats import load_data_generator, largest_divisor
+from categorize_image.prep_bottleneck_feats import load_data_generator, largest_divisor
 from dl_models.inception_v3_flatterned import InceptionV3
 from utils.create_dir import create_dir
 from utils.logger import logger
@@ -43,7 +43,6 @@ def create_search_features(datagen, load_dir, model, image_count, save_path, img
 
 
 if __name__ == '__main__':
-
     main_dir = sys.argv[1]  # images
     train_dir = sys.argv[2]  # train_top_level
 
@@ -67,4 +66,3 @@ if __name__ == '__main__':
 
     # Create bottleneck features
     create_search_features(datagen, train_dir, model, image_count, search_features_path, img_width, img_height)
-

@@ -1,3 +1,10 @@
+"""
+Template results used in image search. Includes
+- default_result: displayed when user first lands on image search page.
+- no_similar_result: displayed if there are no similar images.
+- bad_format_result: displayed if the image uploaded is of incorrect format.
+- empty_submit_result: displayed if user clicks submit without selecting an image.
+"""
 default_result = {0: ('data/images/train_top_level/Sports & Outdoors/B00INYMGAW.jpg',
                       'Oakley Flak Jacket XLJ 03-917 Polished White/Black Iridium Sunglasses',
                       'Sports & Outdoors -> Accessories -> Sports Sunglasses'),
@@ -33,7 +40,7 @@ no_similar_result = {1: ('data/images/train_top_level/Toys & Games/B00005201N.jp
                          'Sad Panda')}
 
 bad_format_result = {0: ('data/images/train_top_level/Toys & Games/B003CTH3TW.jpg',
-                         'Image should have either .png, .jpg, or .jpeg extensions (case-insensitive)...',
+                         'Image should have .png, .jpg, or .jpeg extension (case-insensitive).',
                          'Shy Domo')}
 
 empty_submit_result = {0: ('data/images/train_top_level/Toys & Games/B004FVWH1K.jpg',
