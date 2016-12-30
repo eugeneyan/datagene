@@ -8,7 +8,7 @@ import os
 from utils.logger import logger
 
 
-def load_dict(dict_dir='categorize_title', dict_name='tfidf_dict'):
+def load_dict(dict_dir='categorize', dict_name='tfidf_dict'):
     """ (str, str) -> defaultdict
 
     Loads a dictionary for categorization into memory

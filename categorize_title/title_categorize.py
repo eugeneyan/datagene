@@ -9,7 +9,7 @@ from data_prep.clean_titles import encode_string, tokenize_title_string, remove_
 from categorize_title.categorize_utils import load_dict, get_score
 
 # Load dictionaries
-tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts')
+tfidf_dict, int_to_category_dict = load_dict('data/model', 'categorization_dicts_small')
 logger.info('Dictionary loaded in categorized.categorize_single')
 
 
@@ -53,7 +53,7 @@ class TitleCategorize:
         Categorizes prepared title and returns a dictionary of form {1: 'Cat1', 2: 'Cat2', 3: 'Cat3}
 
         :return:
-        >>> TitleCategorize('This is a bookshelf with wood and a clock').prepare().categorize_title()
+        >>> TitleCategorize('This is a bookshelf with wood and a clock').prepare().categorize()
         {1: 'Electronics -> Home Audio -> Stereo Components -> Speakers -> Bookshelf Speakers',
         2: 'Electronics -> Computers & Accessories -> Data Storage -> USB Flash Drives',
         3: 'Home & Kitchen -> Furniture -> Home Office Furniture -> Bookcases'}
