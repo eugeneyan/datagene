@@ -1,4 +1,4 @@
-from categorize_image.image_categorize_utils import prepare_image
+from image.image_categorize_utils import prepare_image
 from image_categorize_utils import load_pretrained_model
 from categorize_title.categorize_utils import load_dict
 from utils.logger import logger
@@ -8,7 +8,7 @@ from utils.decorators import timer
 category_dict = load_dict('data/images_clothes/model/', dict_name='image_category_dict')
 model = load_pretrained_model(model_name='resnet50', output_classes=65,
                               weights_path='data/images_clothes/model/resnet50_finetuned_4block.h5')
-logger.info('Resnet50 loaded in categorize_image.image_categorize')
+logger.info('Resnet50 loaded in image.image_categorize')
 
 
 class ImageCategorize:
@@ -17,11 +17,11 @@ class ImageCategorize:
         self.image = None
         self.image_width = 224
         self.image_height = 224
-        logger.info('Image (categorize_title) initialized')
+        logger.info('Image (categorize) initialized')
 
     def prepare(self):
         self.image = prepare_image(self.image_path, self.image_width, self.image_height)
-        logger.info('Image (categorize_title) prepared')
+        logger.info('Image (categorize) prepared')
         return self
 
     def categorize(self):
@@ -36,7 +36,7 @@ class ImageCategorize:
             prob = preds[0][idx]
             results[i] = (category, prob)
 
-        logger.info('Image (categorize_title) categorized')
+        logger.info('Image (categorize) categorized')
         return results
 
 
@@ -44,7 +44,7 @@ class ImageCategorize:
 def image_categorize(image_path):
     """ (str) -> dict
 
-    Initializes given categorize_image path as Image class and returns a dictionary of top 3 options
+    Initializes given image path as Image class and returns a dictionary of top 3 options
 
     :param title:
     :return:

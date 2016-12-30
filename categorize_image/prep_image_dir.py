@@ -45,7 +45,7 @@ def discard_images_below_size(current_dir, discard_dir, threshold_size=4000):
             logger.info('{} has {} images discarded'.format(image_dir, discarded_images))
 
 
-# Check for duplicate images and move all but one to duplicate categorize_image dir
+# Check for duplicate images and move all but one to duplicate image dir
 def discard_duplicate_images(current_dir, duplicate_dir):
     for image_dir in os.listdir(current_dir):
         if not image_dir.startswith('.'):

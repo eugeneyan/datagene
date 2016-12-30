@@ -123,7 +123,7 @@ def fit_model(model, train_generator, validation_generator, epoches):
 def prepare_image(image_path, img_width, img_height):
     """
 
-    Returns an categorize_image array given of the categorize_image in path
+    Returns an image array given of the image in path
 
     :param image_path:
     :param img_width:

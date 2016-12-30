@@ -26,7 +26,7 @@ def download_images(df, output_dir, nthreads):
     INFO: 20,000 images downloaded
     INFO: Image downloads complete!
 
-    :param df: Dataframe containing product ID (asin), categorize_image url (imUrl), and category (category_path)
+    :param df: Dataframe containing product ID (asin), image url (imUrl), and category (category_path)
     :param output_dir: Directory path to where to store images (../data/images)
     """
 

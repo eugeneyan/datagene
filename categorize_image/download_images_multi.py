@@ -17,7 +17,7 @@ from utils.logger import logger
 def download_image(url, product_id, save_path):
     """
 
-    Downloads categorize_image from url and saves to save path, naming the categorize_image product ID
+    Downloads image from url and saves to save path, naming the image product ID
 
     :param url:
     :param product_id:
@@ -37,7 +37,7 @@ def download_image_worker(url_q, log_q):
     """
 
     Gets url, product ID, and save path from the queue, downloads images
-    For each categorize_image url, adds log dictionary to queue indicated product ID, url, and download status for tracking
+    For each image url, adds log dictionary to queue indicated product ID, url, and download status for tracking
 
     :param url_q: Queue of urls, product IDs and save path
     :return:
@@ -66,7 +66,7 @@ def download_image_worker(url_q, log_q):
 def image_log_worker(image_log_file, log_q, count, max_log_size=10000):
     """
 
-    Writes categorize_image download status to categorize_image log file based on log queue
+    Writes image download status to image log file based on log queue
 
     :param image_log_file:
     :param log_q:
@@ -116,7 +116,7 @@ def download_images_from_df(df, output_dir, nthreads):
     ...
     Image downloads complete!
 
-    :param df: Dataframe containing product ID (asin), categorize_image url (imUrl),
+    :param df: Dataframe containing product ID (asin), image url (imUrl),
     and category (category_path)
     :param output_dir: Directory path to where to store images (../data/images)
     :param nthreads: No. of threads to download images with
@@ -136,7 +136,7 @@ def download_images_from_df(df, output_dir, nthreads):
             log_file = os.path.join(log_dir, log_file)
 
             if log_file.endswith('.json'):
-                logger.info('loading categorize_image download logs from: {}'.format(log_file))
+                logger.info('loading image download logs from: {}'.format(log_file))
 
                 with open(log_file) as json_log:
                     i = 0
