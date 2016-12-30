@@ -1,3 +1,6 @@
+"""
+Class to predict product category given product image.
+"""
 from categorize_image.image_categorize_utils import prepare_image
 from image_categorize_utils import load_pretrained_model
 from categorize_title.categorize_utils import load_dict
@@ -12,6 +15,10 @@ logger.info('Resnet50 loaded in categorize_image.image_categorize')
 
 
 class ImageCategorize:
+    """
+    Class to predict product category given a product image.
+    """
+
     def __init__(self, image_path):
         self.image_path = image_path
         self.image = None
