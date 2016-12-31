@@ -130,17 +130,18 @@ server {
         proxy_pass         http://127.0.0.1:6688;
         client_max_body_size 3M;
     }
+
+#    Doesn't work
+#    location /sortmyskills {
+#        proxy_set_header   X-Real-IP $remote_addr;
+#        proxy_set_header   Host      $http_host;
+#        proxy_pass         http://127.0.0.1:5555/;
+#    }
 }
 
 server {
     listen 6689;
-    server_name datagene.io/sortmyskills;
-
-    proxy_redirect off;
-    proxy_buffering off;
-    proxy_set_header Host $host;
-    proxy_set_header X-Real-IP $remote_addr;
-    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    server_name datagene.io;
 
     location / {
         proxy_set_header   X-Real-IP $remote_addr;
