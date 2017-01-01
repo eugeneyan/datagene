@@ -51,12 +51,14 @@ def categorize_web():
             result, elapsed_time = title_categorize(_title)
 
         else:  # No input
-            result = {0: 'Enter a product title before submitting!'}
-            elapsed_time = 0
+            result, elapsed_time = {0: 'Enter a product title before submitting!'}, 0
 
     else:
-        result = {0: 'Type something in the product title field.'}
-        elapsed_time = 0
+        result, elapsed_time = {0: 'Type something in the product title field.'}, 0
+
+    # Check if empty results
+    if len(result) == 0:
+        result = {0: 'Sorry, unable to categorize. Please try another title!'}
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
@@ -107,16 +109,17 @@ def image_categorize_web():
             result, elapsed_time = image_categorize(_image_savepath)
 
         elif _image and not allowed_file(_image.filename):
-            result = {0: ('Image should have .png, .jpg, or .jpeg extension (case-insensitive).', 0)}
-            elapsed_time = 0
+            result, elapsed_time = {0: ('Image should have .png, .jpg, or .jpeg extension (case-insensitive).', 0)}, 0
 
-        else:
-            result = {0: ('Browse for an image before submitting!', 0)}
-            elapsed_time = 0
+        else:  # No input
+            result, elapsed_time = {0: ('Browse for an image before submitting!', 0)}, 0
 
     else:  # Request method is 'GET'
-        result = {0: ('Select an image', 0)}
-        elapsed_time = 0
+        result, elapsed_time = {0: ('Select an image', 0)}, 0
+
+    # Check if empty results
+    if len(result) == 0:
+        result = {0: ('Sorry, unable to categorize. Please try another image!', 1)}
 
     for key, value in result.iteritems():
         logger.info('Result {}: {}'.format(key, value))
@@ -151,21 +154,17 @@ def image_search_web():
             result, elapsed_time = image_search(_image_savepath, _category)
 
         elif _image and not allowed_file(_image.filename):
-            result = bad_format_result
-            elapsed_time = 0
+            result, elapsed_time = bad_format_result, 0
 
         else:
-            result = empty_submit_result
-            elapsed_time = 0
+            result, elapsed_time = empty_submit_result, 0
 
     else:  # Request method is 'GET'
-        result = default_result
-        elapsed_time = 0
+        result, elapsed_time = default_result, 0
 
     # Check if empty results
-
     if len(result) == 0:
-        result = no_similar_result
+        result = no_similar_result  # Elapsed time computed in image_search()
 
     logger.debug('Result: {}'.format(result))
     for key, value in result.iteritems():
