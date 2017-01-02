@@ -18,7 +18,8 @@ ssh -i ~/.ssh/eugene_aws.pem ${SERVER}
 sudo apt-get -y update
 sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2-dev libxslt1-dev libhdf5-dev libx11-dev llvm libpq-dev
 sudo apt-get -y install uwsgi-core libapache2-mod-wsgi nginx
-sudo apt-get -y install git python-pip docker.io
+sudo apt-get -y install git python-pip docker.io mailutils
+sudo apt-get -y install mailutils postfix
 sudo apt-get install uwsgi-plugin-python
 sudo apt-get -y dist-upgrade
 
