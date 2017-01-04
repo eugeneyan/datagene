@@ -156,17 +156,17 @@ def create_tfidf_dict(train, title='title', category='regional_key'):
 
     # For each token in idf dict, divide the total number of skus (logged) by the count of token value
     # Add 1 to the numerator to prevent zero divison error
-    for term, count in ngram_dict_idf.iteritems():
+    for term, count in ngram_dict_idf.items():
         ngram_dict_idf[term] = math.log(no_of_skus) / float(1 + count)
 
     logger.info('IDF dict done')
 
     # Multiple values in tf dictionary with idf dictionary to get tf-idf dictionary
-    for ngram, cat_dict in ngram_dict_tfidf.iteritems():
+    for ngram, cat_dict in ngram_dict_tfidf.items():
         # print ngram
         ngram_idf = ngram_dict_idf[ngram]
         # print ngram_idf
-        for regional_key, count in cat_dict.iteritems():
+        for regional_key, count in cat_dict.items():
             ngram_dict_tfidf[ngram][regional_key] = count * ngram_idf
 
     logger.info('TF-IDF dict done')

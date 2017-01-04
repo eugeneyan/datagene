@@ -13,6 +13,7 @@ useful.txt
 *.pptx
 *.rst
 *.egg-info
+bin/
 /docs
 notebooks/.ipynb_checkpoints
 app/static/train_top_level/

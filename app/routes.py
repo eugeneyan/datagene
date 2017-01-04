@@ -2,8 +2,8 @@ from app import app
 from flask import request, jsonify, render_template
 from werkzeug.utils import secure_filename
 import os
-# from categorize_title.title_categorize import title_categorize
-# from categorize_image.image_categorize import image_categorize
+from categorize_title.title_categorize import title_categorize
+from categorize_image.image_categorize import image_categorize
 from image_search.image_search import image_search
 from image_search.template_results import default_result, no_similar_result, bad_format_result, empty_submit_result
 from app.route_utils import allowed_file
@@ -43,7 +43,7 @@ def categorize_web():
     """
     if request.method == 'POST':
         # Read the posted values
-        _title = request.form['title'].encode('utf-8')  # encode to utf 8
+        _title = request.form['title']  # encode to utf 8
         logger.info('Title form input: {}'.format(_title))
 
         if len(_title) > 0:
@@ -60,7 +60,7 @@ def categorize_web():
     if len(result) == 0:
         result = {0: 'Sorry, unable to categorize. Please try another title!'}
 
-    for key, value in result.iteritems():
+    for key, value in result.items():
         logger.info('Result {}: {}'.format(key, value))
 
     logger.info('Time taken: {} ms'.format(elapsed_time))
@@ -121,7 +121,7 @@ def image_categorize_web():
     if len(result) == 0:
         result = {0: ('Sorry, unable to categorize. Please try another image!', 1)}
 
-    for key, value in result.iteritems():
+    for key, value in result.items():
         logger.info('Result {}: {}'.format(key, value))
 
     logger.info('Time taken: {} ms'.format(elapsed_time))
@@ -167,7 +167,7 @@ def image_search_web():
         result = no_similar_result  # Elapsed time computed in image_search()
 
     logger.debug('Result: {}'.format(result))
-    for key, value in result.iteritems():
+    for key, value in result.items():
         logger.info('Result {}: {}'.format(key, value[1]))
 
     logger.info('Time taken: {} ms'.format(elapsed_time))

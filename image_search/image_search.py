@@ -14,7 +14,7 @@ from utils.logger import logger
 from utils.decorators import timer
 
 # Initialize main dir
-MAIN_DIR = 'images_sample'
+MAIN_DIR = 'images'
 
 # Load search dictionaries and features
 index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict(
@@ -23,8 +23,7 @@ logger.info('Dictionary loaded in image_search.image_search')
 
 search_features_path = 'data/' + MAIN_DIR + '/search_features/search_features.npy'
 logger.info('Loading image features from {}'.format(search_features_path))
-search_features_open = open(search_features_path)
-search_features = np.load(search_features_open, encoding='latin1')
+search_features = np.load(open(search_features_path, 'rb'), encoding='latin1')
 logger.info('Search features loaded in image_search.image_search')
 
 # Add index to search features
@@ -34,7 +33,7 @@ search_features = np.insert(search_features, 0, category_labels, axis=1)
 logger.info('Category labels added in search features')
 
 # Create list of valid categories
-valid_categories = category_index_dict.keys() + ['All']
+valid_categories = list(category_index_dict.keys()) + ['All']
 
 # Load model
 model = InceptionV3(include_top=False, weights='imagenet', input_tensor=None)

@@ -38,7 +38,7 @@ def create_search_features(datagen, load_dir, model, image_count, save_path, img
         shuffle=False,
         seed=1368)
     search_features = model.predict_generator(generator, val_samples=image_count)
-    np.save(open(save_path, 'w'), search_features)
+    np.save(open(save_path, 'wb'), search_features)
     logger.info('{} search features created'.format(load_dir))
 
 

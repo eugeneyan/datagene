@@ -222,8 +222,8 @@ def encode_string(title, parser=HTML_PARSER):
     """
 
     try:
-        encoded_title = unicodedata.normalize('NFKD', unicode(title, 'utf-8', 'ignore')).encode('ascii', 'ignore')
-        encoded_title = parser.unescape(encoded_title).encode('ascii', 'ignore')
+        encoded_title = str(unicodedata.normalize('NFKD', title).encode('ascii', 'ignore'), 'utf-8')
+        encoded_title = str(parser.unescape(encoded_title).encode('ascii', 'ignore'), 'utf-8')
     except TypeError:  # if title is missing and a float
         encoded_title = 'NA'
 
