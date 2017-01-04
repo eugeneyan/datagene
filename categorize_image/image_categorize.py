@@ -2,7 +2,7 @@
 Class to predict product category given product image.
 """
 from categorize_image.image_categorize_utils import prepare_image
-from image_categorize_utils import load_pretrained_model
+from categorize_image.image_categorize_utils import load_pretrained_model
 from categorize_title.categorize_utils import load_dict
 from utils.logger import logger
 from utils.decorators import timer

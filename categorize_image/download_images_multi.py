@@ -7,7 +7,7 @@ import pandas as pd
 import urllib
 import os
 import sys
-import Queue
+import queue
 import threading
 import simplejson as json
 import logging
@@ -58,8 +58,8 @@ def download_image_worker(url_q, log_q):
 
             url_q.task_done()
 
-        except Queue.Empty:
-            logger.info('Queue Empty')
+        except queue.Empty:
+            logger.info('queue Empty')
             queue_full = False
 
 
@@ -108,14 +108,6 @@ def download_images_from_df(df, output_dir, nthreads):
     Downloads images from imUrl provided and saves them into directories
     based on the product category.
 
-    >>> download_images_from_df(df, output_dir):
-    Start downloading 20 images
-    No. of images downloaded: 15
-    ...
-    ...
-    ...
-    Image downloads complete!
-
     :param df: Dataframe containing product ID (asin), image url (imUrl),
     and category (category_path)
     :param output_dir: Directory path to where to store images (../data/images)
@@ -123,8 +115,8 @@ def download_images_from_df(df, output_dir, nthreads):
     """
     logger.info('Start downloading {} images'.format(df.shape[0]))
 
-    url_q = Queue.Queue()
-    log_q = Queue.Queue()
+    url_q = queue.queue()
+    log_q = queue.queue()
 
     # Load previous log files and loads list of successfully downloaded images
     log_dir = os.path.join(data_dir, 'image_download_logs')
@@ -155,7 +147,7 @@ def download_images_from_df(df, output_dir, nthreads):
         os.makedirs(log_dir)
 
     # Start download threads
-    for i in xrange(nthreads):
+    for i in range(nthreads):
         t = threading.Thread(target=download_image_worker, args=(url_q, log_q))
         t.daemon = True
         t.start()

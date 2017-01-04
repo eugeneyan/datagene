@@ -29,7 +29,7 @@ from keras.layers import Conv2D, SeparableConv2D, MaxPooling2D, GlobalAveragePoo
 from keras.preprocessing import image
 from keras.utils.data_utils import get_file
 from keras import backend as K
-from imagenet_utils import decode_predictions
+from dl_models.imagenet_utils import decode_predictions
 
 
 TF_WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.4/xception_weights_tf_dim_ordering_tf_kernels.h5'

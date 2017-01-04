@@ -2,7 +2,7 @@
 Utility decorators
 """
 import datetime
-from logger import logger
+from utils.logger import logger
 
 
 def timer(function_to_time):

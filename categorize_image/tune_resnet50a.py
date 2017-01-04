@@ -2,7 +2,7 @@
 python -m image.tune_resnet50a
 """
 import os
-from image_categorize_utils import *
+from categorize_image.image_categorize_utils import *
 from keras.optimizers import SGD
 from utils.logger import logger
 

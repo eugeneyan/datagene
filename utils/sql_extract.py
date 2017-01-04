@@ -5,15 +5,9 @@
 Runs sql query given the SQL and database URI
 """
 import pandas as pd
-import sqlalchemy
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import text
-import csv
-import os
-import codecs
-import cStringIO
-from prod_categorization.utils.logger import logger
+from utils.logger import logger
 
 
 # run sql query

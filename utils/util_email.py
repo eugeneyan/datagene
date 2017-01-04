@@ -2,7 +2,7 @@
 Email class for sending emails
 To run:
 cd ~/eugeneyan/kaggle/eutils
-python -m eutils.utils.util_email
+python -m utils.util_email
 """
 import smtplib
 import time
@@ -83,7 +83,7 @@ class Email(object):
         cc_addrs = cc_addrs or self.cc_addrs
         content_type = content_type or self.content_type
 
-        if isinstance(to_addrs, (str, unicode)):
+        if isinstance(to_addrs, (str)):
             to_addrs = [to_addrs]
         assert type(to_addrs in (list, set, tuple))
 
@@ -95,7 +95,7 @@ class Email(object):
         msg['Subject'] = subject
         msg['Date'] = utils.formatdate(timeval=time.time(), localtime=True)  # Local
         if self.verbose:
-            print msg
+            print(msg)
 
         with SMTPConnection(self.host, self.port, self.user, self.password) as s:
             s.sendmail(from_addr, to_addrs, msg.as_string())

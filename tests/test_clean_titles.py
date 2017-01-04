@@ -1,4 +1,7 @@
 # -*- coding: utf-8 -*-
+# import sys, os
+# myPath = os.path.dirname(os.path.abspath(__file__))
+# sys.path.insert(0, myPath + '/../')
 from data_prep.clean_titles import *
 from utils.logger import logger
 

@@ -7,13 +7,14 @@ from sklearn.metrics.pairwise import cosine_similarity
 from dl_models.inception_v3_flatterned import InceptionV3
 from categorize_title.categorize_utils import load_dict
 from categorize_image.image_categorize_utils import prepare_image
-from image_search_utils import cosine_similarity_scipy, cdist_scipy
+from image_search.image_search_utils import cosine_similarity_scipy, cdist_scipy
 from scipy.spatial.distance import cdist
+import pickle
 from utils.logger import logger
 from utils.decorators import timer
 
 # Initialize main dir
-MAIN_DIR = 'images'
+MAIN_DIR = 'images_sample'
 
 # Load search dictionaries and features
 index_asin_dict, category_index_dict, index_asin_filter_dict, asin_dict = load_dict(
@@ -22,7 +23,8 @@ logger.info('Dictionary loaded in image_search.image_search')
 
 search_features_path = 'data/' + MAIN_DIR + '/search_features/search_features.npy'
 logger.info('Loading image features from {}'.format(search_features_path))
-search_features = np.load(open(search_features_path))
+search_features_open = open(search_features_path)
+search_features = np.load(search_features_open, encoding='latin1')
 logger.info('Search features loaded in image_search.image_search')
 
 # Add index to search features

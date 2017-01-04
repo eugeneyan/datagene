@@ -8,7 +8,7 @@ python -m image_search.prep_search_dicts images_sample train_top_level
 python -m image_search.prep_search_dicts images train_top_level
 """
 import os
-import cPickle as pickle
+import pickle
 from collections import defaultdict
 import pandas as pd
 import sys

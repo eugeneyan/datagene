@@ -23,7 +23,7 @@ from keras.layers.advanced_activations import ELU
 from keras.layers.recurrent import GRU
 from keras.utils.data_utils import get_file
 from keras.utils.layer_utils import convert_all_kernels_in_model
-from audio_conv_utils import decode_predictions, preprocess_input
+from dl_models.audio_conv_utils import decode_predictions, preprocess_input
 
 TH_WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.3/music_tagger_crnn_weights_tf_kernels_th_dim_ordering.h5'
 TF_WEIGHTS_PATH = 'https://github.com/fchollet/deep-learning-models/releases/download/v0.3/music_tagger_crnn_weights_tf_kernels_tf_dim_ordering.h5'

@@ -11,6 +11,7 @@ import os
 import sys
 import numpy as np
 import itertools
+import functools
 from keras.preprocessing.image import ImageDataGenerator
 from keras.utils.np_utils import to_categorical
 from dl_models.vgg16 import VGG16
@@ -61,7 +62,7 @@ def load_data_generator():
 
 # Get biggest divisor below threshold for batch_size
 def largest_divisor(n, threshold=100):
-    factors_set = set(reduce(list.__add__, ([i, n // i] for i in range(1, int(n ** 0.5) + 1) if n % i == 0)))
+    factors_set = set(functools.reduce(list.__add__, ([i, n // i] for i in range(1, int(n ** 0.5) + 1) if n % i == 0)))
     factors_list = [i for i in factors_set if i <= threshold]
     factors_list.sort()
     return factors_list[-1]

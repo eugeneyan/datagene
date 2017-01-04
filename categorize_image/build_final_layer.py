@@ -11,7 +11,7 @@ import numpy as np
 from keras.models import Sequential
 from keras.layers import Dropout, Flatten, Dense
 from keras.optimizers import SGD, RMSprop
-from prep_bottleneck_feats import create_category_dict, create_labels
+from categorize_image.prep_bottleneck_feats import create_category_dict, create_labels
 
 # Optimizers
 sgd = SGD(lr=0.01, momentum=0.00, decay=0.00, nesterov=False)

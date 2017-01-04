@@ -10,21 +10,12 @@ import sys
 from utils.logger import logger
 
 
-def download_images(df, output_dir, nthreads):
+def download_images(df, output_dir):
     """
     (DataFrame) -> Images separated by categories into directories
 
     Downloads images from imUrl provided and saves them into directories
     based on the product category.
-
-    >>> download_images(df, output_dir):
-    INFO: 1,000 images downloaded
-    INFO: 2,000 images downloaded
-    ...
-    ...
-    ...
-    INFO: 20,000 images downloaded
-    INFO: Image downloads complete!
 
     :param df: Dataframe containing product ID (asin), image url (imUrl), and category (category_path)
     :param output_dir: Directory path to where to store images (../data/images)

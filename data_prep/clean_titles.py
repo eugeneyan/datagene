@@ -30,7 +30,7 @@ from nltk.corpus import stopwords
 from nltk import PorterStemmer
 from nltk.stem.wordnet import WordNetLemmatizer
 from sklearn.cross_validation import train_test_split
-from HTMLParser import HTMLParser
+from html.parser import HTMLParser
 from utils.logger import logger
 from utils.create_dir import create_dir
 
@@ -314,7 +314,7 @@ def remove_words_list(title, words_to_remove):
     ['python', 'best']
     >>> remove_words_list(['grapes', 'come', 'in', 'purple', 'and', 'green'], STOP_WORDS)
     ['grapes', 'come']
-    >>> remove_words_list(['spammy', 'title', 'intl', 'buyincoins', 'export'], STOP_WORDS)
+    >>> remove_words_list(['spammy', 'title', 'intl', 'export'], STOP_WORDS)
     ['spammy', 'title']
     """
 

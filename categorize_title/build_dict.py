@@ -10,7 +10,7 @@ python -m categorize.create_dict title_category_keep categorization_dicts
 import math
 import os
 import sys
-import cPickle as pickle
+import pickle
 from collections import defaultdict
 from data_prep.clean_titles import load_data, remove_no_category, encode_title, lowercase_title, tokenize_title, \
     remove_stopwords, remove_numeric, remove_one_char_words, remove_empty_titles, STOP_WORDS
