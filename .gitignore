@@ -1,5 +1,6 @@
 .idea/
 .cache/
+*.env
 data/
 # notebooks/
 config.py
@@ -11,6 +12,7 @@ useful.txt
 */old/
 *.pptx
 *.rst
+*.egg-info
 /docs
 notebooks/.ipynb_checkpoints
 app/static/train_top_level/
