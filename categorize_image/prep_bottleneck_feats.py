@@ -17,23 +17,9 @@ from keras.utils.np_utils import to_categorical
 from dl_models.vgg16 import VGG16
 from dl_models.inception_v3 import InceptionV3
 from dl_models.resnet50 import ResNet50
+from categorize_image.prep_categorize_image_dict import create_category_dict
 from utils.logger import logger
 from utils.create_dir import create_dir
-
-
-# Create dictionary mapping index to category path {0: Belts, 1: Shoes, ...}
-def create_category_dict(train_dir):
-    categories = os.listdir(train_dir)
-
-    # Initialize category dict
-    category_dict = dict()
-    idx = 0
-    for category in categories:
-        if not category.startswith('.'):
-            category_dict[idx] = category
-            idx += 1
-
-    return category_dict
 
 
 # Create labels for training and testing.
@@ -79,7 +65,7 @@ def create_bottleneck_features(datagen, load_dir, model, labels, save_path, img_
         shuffle=False,
         seed=1368)
     bottleneck_features = model.predict_generator(generator, labels.shape[0])
-    np.save(open(save_path, 'w'), bottleneck_features)
+    np.save(open(save_path, 'wb'), bottleneck_features)
     logger.info('{} bottleneck features created'.format(load_dir))
 
 

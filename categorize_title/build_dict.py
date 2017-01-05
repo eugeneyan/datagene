@@ -187,7 +187,7 @@ def save_dict(tfidf_dict, int_to_category_dict, output_dir, output_name):
     output_path = os.path.join(output_dir, output_name + '.pickle')
 
     with open(output_path, 'wb') as handle:
-        pickle.dump((tfidf_dict, int_to_category_dict), handle, protocol=2)
+        pickle.dump((tfidf_dict, int_to_category_dict), handle, protocol=pickle.HIGHEST_PROTOCOL)
         logger.info('Dict saved in {}'.format(output_path))
 
 

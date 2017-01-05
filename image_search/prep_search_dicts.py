@@ -159,7 +159,8 @@ def save_search_dicts(index_path_dict, category_index_dict, index_path_filter_di
     output_path = os.path.join(output_dir, output_name + '.pickle')
 
     with open(output_path, 'wb') as handle:
-        pickle.dump((index_path_dict, category_index_dict, index_path_filter_dict, asin_dict), handle, protocol=2)
+        pickle.dump((index_path_dict, category_index_dict, index_path_filter_dict, asin_dict), handle,
+                    protocol=pickle.HIGHEST_PROTOCOL)
         logger.info('Search dictionaries saved in {}'.format(output_path))
 
 

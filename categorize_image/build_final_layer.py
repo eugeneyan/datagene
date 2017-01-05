@@ -60,6 +60,7 @@ def build_final_layer_inception3(train_data, train_labels, val_data, val_labels,
 
 def get_test_accuracy(model, test_data, test_labels):
     preds = model.predict_classes(test_data)
+    return preds
 
 
 if __name__ == '__main__':
