@@ -5,7 +5,7 @@
 # Initialize variables
 # ======================================================================================================================
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
-SERVER=ubuntu@ec2-54-169-238-164.ap-southeast-1.compute.amazonaws.com
+SERVER=ubuntu@ec2-52-77-223-31.ap-southeast-1.compute.amazonaws.com
 CATEGORIZATION_DIR=~/eugeneyan/datagene/data/model
 IMAGE_CATEGORIZATION_DIR=~/eugeneyan/datagene/data/images_clothes/model
 SEARCH_IMAGE_DIR=~/eugeneyan/datagene/data/images/
@@ -20,8 +20,10 @@ sudo apt-get -y install build-essential python-dev libffi-dev libssl-dev libxml2
 sudo apt-get -y install uwsgi-core libapache2-mod-wsgi nginx
 sudo apt-get -y install git python-pip docker.io mailutils
 sudo apt-get -y install mailutils postfix
-sudo apt-get install uwsgi-plugin-python
+sudo apt-get -y install uwsgi-plugin-python
+sudo apt-get -y install python-pip
 sudo apt-get -y dist-upgrade
+sudo apt-get -y update
 
 
 # Set up python environment
@@ -37,11 +39,11 @@ PYTHONHOME="/home/ubuntu/anaconda2/bin"
 # Update all packages
 conda update --all -y
 conda install keras -y
-conda install -c conda-forge uwsgi=2.0.12
+conda install -c conda-forge uwsgi=2.0.12 -y
 
 # Pip install other essentials (not available on conda)
 pip install regex
-pip instal uwsgi
+pip install uwsgi
 sudo pip install docker-compose==1.2.0  # need sudo for this!
 
 # Install nltk stop words
@@ -49,6 +51,7 @@ python -m nltk.downloader stopwords
 python -m nltk.downloader wordnet
 
 # Change to use theano backend
+# Start python and import Keras at least once
 cd ~/.keras
 nano keras.json
 # Set the following
@@ -76,11 +79,11 @@ mkdir -p datagene/data/images/search_dicts
 mkdir -p datagene/data/images/search_image
 
 # Upload models
+scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/train_top_level.tar.gz ${SERVER}:datagene/data/images
 scp -i ~/.ssh/eugene_aws.pem ${CATEGORIZATION_DIR}/categorization_dicts_small.pickle ${SERVER}:datagene/data/model
 scp -i ~/.ssh/eugene_aws.pem ${CATEGORIZATION_DIR}/categorization_dicts.tar.gz ${SERVER}:datagene/data/model
 scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/resnet50_finetuned_4block.h5 ${SERVER}:datagene/data/images_clothes/model
 scp -i ~/.ssh/eugene_aws.pem ${IMAGE_CATEGORIZATION_DIR}/image_category_dict.pickle ${SERVER}:datagene/data/images_clothes/model
-scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/train_top_level.tar.gz ${SERVER}:datagene/data/images
 scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/search_features/search_features.npy ${SERVER}:datagene/data/images/search_features
 scp -i ~/.ssh/eugene_aws.pem ${SEARCH_IMAGE_DIR}/search_dicts/search_dicts.pickle ${SERVER}:datagene/data/images/search_dicts
 
