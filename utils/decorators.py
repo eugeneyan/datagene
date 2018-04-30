@@ -20,7 +20,7 @@ def timer(function_to_time):
         end_time = datetime.datetime.now()
         elapsed_time = end_time - start_time
         elapsed_time = elapsed_time.total_seconds() * 1000
-        logger.debug('Time taken: {} ms'.format(elapsed_time))
+        # logger.debug('Time taken: {} ms'.format(elapsed_time))
 
         return result, elapsed_time
 
