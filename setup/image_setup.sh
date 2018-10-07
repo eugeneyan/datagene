@@ -6,7 +6,7 @@
 # Launch an Ubuntu AMI under EC2 (currently using 16.04)
 SERVER=ubuntu@ec2-52-76-234-207.ap-southeast-1.compute.amazonaws.com
 ssh-keygen -R ec2-52-76-234-207.ap-southeast-1.compute.amazonaws.com
-ssh -i ~/.ssh/eugene_aws.pem ${SERVER}
+ssh -i ~/.ssh/datagene_aws.pem ${SERVER}
 
 # Set up datagene.io environment
 # ======================================================================================================================

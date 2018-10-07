@@ -73,6 +73,7 @@ def categorize():
     """
 
     Returns top three category options for the title
+    curl -d '{"title":"dress"}' -H "Content-Type: application/json" -X POST http://datagene.io/categorize
 
     :return:
     """
